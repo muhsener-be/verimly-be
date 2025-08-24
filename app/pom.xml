@@ -22,7 +22,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>app.verimly</groupId>
+            <artifactId>commons-core</artifactId>
+        </dependency>
     </dependencies>
+
+
     <build>
         <plugins>
             <plugin>

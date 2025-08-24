@@ -23,6 +23,7 @@
     </developers>
     <modules>
         <module>app</module>
+        <module>commons-core</module>
     </modules>
     <scm>
         <connection/>
@@ -45,6 +46,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>app.verimly</groupId>
+                <artifactId>commons-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
