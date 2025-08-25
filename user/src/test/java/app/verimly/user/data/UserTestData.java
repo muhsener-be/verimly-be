@@ -8,9 +8,13 @@ import app.verimly.user.application.usecase.command.create.CreateUserCommand;
 import app.verimly.user.application.usecase.command.create.UserCreationResponse;
 import app.verimly.user.domain.entity.User;
 import app.verimly.user.domain.vo.PersonName;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.javafaker.Faker;
 
 public class UserTestData {
+
+    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
 
     private final static UserTestData INSTANCE = new UserTestData();
 
@@ -80,5 +84,14 @@ public class UserTestData {
                 .lastName(personName.getLastName())
                 .email(EMAIL_VALUE)
                 .build();
+    }
+
+
+    public String toJson(Object object) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(object);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 }
