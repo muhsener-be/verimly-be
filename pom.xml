@@ -33,6 +33,7 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <commons-validator.version>1.10.0</commons-validator.version>
     </properties>
     <dependencies>
         <dependency>
@@ -53,6 +54,11 @@
                 <groupId>app.verimly</groupId>
                 <artifactId>commons-core</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>${commons-validator.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
