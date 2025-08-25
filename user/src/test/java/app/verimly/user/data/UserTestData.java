@@ -2,6 +2,8 @@ package app.verimly.user.data;
 
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
+import app.verimly.user.adapter.web.dto.response.UserCreationWebResponse;
 import app.verimly.user.application.usecase.command.create.CreateUserCommand;
 import app.verimly.user.application.usecase.command.create.UserCreationResponse;
 import app.verimly.user.domain.entity.User;
@@ -18,7 +20,7 @@ public class UserTestData {
 
 
     private static final Faker FAKER = new Faker();
-    private static final String EMAIL_VALUE = "tester@email.com";
+    public static final String EMAIL_VALUE = "tester@email.com";
 
 
     public User user() {
@@ -56,7 +58,27 @@ public class UserTestData {
         );
     }
 
+    public CreateUserWebRequest createUserWebRequest() {
+        return CreateUserWebRequest.builder()
+                .firstName(FAKER.name().firstName())
+                .lastName(FAKER.name().lastName())
+                .email(EMAIL_VALUE)
+                .password(password().raw().getRaw())
+                .build();
+
+    }
+
     public UserCreationResponse userCreationResponse() {
         return UserCreationResponse.of(userId(), personName(), email());
+    }
+
+    public UserCreationWebResponse userCreationWebResponse() {
+        PersonName personName = personName();
+        return UserCreationWebResponse.builder()
+                .id(userId().getValue())
+                .firstName(personName.getFirstName())
+                .lastName(personName.getLastName())
+                .email(EMAIL_VALUE)
+                .build();
     }
 }

@@ -3,6 +3,8 @@ package app.verimly.commons.core.domain.vo;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.InvalidDomainObjectException;
 import app.verimly.commons.core.domain.validation.InputValidator;
+import org.mapstruct.Builder;
+import org.mapstruct.ObjectFactory;
 
 /**
  * Value object representing an email address.
@@ -30,6 +32,7 @@ public class Email extends ValueObject<String> {
      * @return a validated {@code Email} object or {@code null}
      * @throws InvalidDomainObjectException if the email format is invalid
      */
+
     public static Email of(String value) {
         if (value == null) {
             return null;
