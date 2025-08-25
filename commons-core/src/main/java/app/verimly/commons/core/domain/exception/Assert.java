@@ -7,4 +7,10 @@ public class Assert {
             throw new IllegalArgumentException(message);
         return object;
     }
+
+    public static String notBlank(String value, String message) {
+        if (notNull(value, message).isBlank())
+            throw new IllegalArgumentException(message);
+        return value;
+    }
 }

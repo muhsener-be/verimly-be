@@ -1,6 +1,5 @@
 package app.verimly.commons.core.domain.vo;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class UserId extends BaseId<UUID> {

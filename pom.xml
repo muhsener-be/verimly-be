@@ -24,6 +24,7 @@
     <modules>
         <module>app</module>
         <module>commons-core</module>
+        <module>user</module>
     </modules>
     <scm>
         <connection/>
@@ -56,10 +57,16 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>app.verimly</groupId>
+                <artifactId>user</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-validator</groupId>
                 <artifactId>commons-validator</artifactId>
                 <version>${commons-validator.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 

@@ -9,8 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AssertTest {
 
     public static final String AN_OBJECT = "anObject";
-    public static final String MESSAGE = "anObject cannot be null";
+    public static final String MESSAGE = "message provided.";
     public static final Object NULL_OBJECT = null;
+    public static final String BLANK_STRING = "   ";
 
     @Test
     public void notNull_whenValueIsNotNull_doesNotThrowAndReturnValue() {
@@ -18,7 +19,7 @@ public class AssertTest {
         String expected = AN_OBJECT;
 
         //Act
-        assertDoesNotThrow(() -> Assert.notNull(AN_OBJECT,MESSAGE));
+        assertDoesNotThrow(() -> Assert.notNull(AN_OBJECT, MESSAGE));
         String actual = Assert.notNull(expected, MESSAGE);
 
         //Assert
@@ -35,6 +36,23 @@ public class AssertTest {
         //Assert
         assertEquals(MESSAGE, exception.getMessage());
 
+    }
+
+
+    @Test
+    public void notBlank_whenValueIsNull_throws() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> Assert.notBlank(null, MESSAGE));
+
+        assertEquals(MESSAGE, exception.getMessage());
+    }
+
+    @Test
+    public void notBlank_whenValueIsBlank_throws() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> Assert.notBlank(BLANK_STRING, MESSAGE));
+
+        assertEquals(MESSAGE, exception.getMessage());
     }
 
 }
