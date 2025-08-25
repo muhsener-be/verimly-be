@@ -2,6 +2,8 @@ package app.verimly.user.data;
 
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.user.application.usecase.command.create.CreateUserCommand;
+import app.verimly.user.application.usecase.command.create.UserCreationResponse;
 import app.verimly.user.domain.entity.User;
 import app.verimly.user.domain.vo.PersonName;
 import com.github.javafaker.Faker;
@@ -43,5 +45,18 @@ public class UserTestData {
 
     public UserId userId() {
         return UserId.random();
+    }
+
+
+    public CreateUserCommand createUserCommand() {
+        return CreateUserCommand.of(
+                personName(),
+                email(),
+                password().raw()
+        );
+    }
+
+    public UserCreationResponse userCreationResponse() {
+        return UserCreationResponse.of(userId(), personName(), email());
     }
 }

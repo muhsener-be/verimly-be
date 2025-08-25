@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserWriteRepository {
 
-    User save(User user);
+    User save(User user) throws UserDataAccessException;
 
-    Optional<User> findById(UserId id);
+    Optional<User> findById(UserId id) throws UserDataAccessException;
 }
