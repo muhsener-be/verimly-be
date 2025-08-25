@@ -7,5 +7,12 @@ public abstract class SecurityException extends ApplicationException {
         super(message);
     }
 
+    public SecurityException(ErrorMessage errorMessage, String message) {
+        super(errorMessage,message);
+    }
 
+
+    public SecurityException(ErrorMessage errorMessage, String message, Throwable cause) {
+        super(errorMessage, message, cause);
+    }
 }

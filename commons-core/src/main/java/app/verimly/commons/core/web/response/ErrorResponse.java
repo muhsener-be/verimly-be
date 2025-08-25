@@ -33,4 +33,25 @@ public class ErrorResponse {
     }
 
 
+    public static ErrorResponse conflict(String message, String path) {
+        return ErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(409)
+                .error("Conflict.")
+                .message(message)
+                .path(path)
+                .additional(null)
+                .build();
+    }
+
+    public static ErrorResponse internalServerError(String message, String path) {
+        return ErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(500)
+                .error("Internal server error.")
+                .message(message)
+                .path(path)
+                .additional(null)
+                .build();
+    }
 }

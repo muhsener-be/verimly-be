@@ -1,18 +1,24 @@
 package app.verimly.user.application.usecase.command.create;
 
 import app.verimly.commons.core.domain.exception.ErrorMessage;
+import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.user.application.event.UserCreatedApplicationEvent;
+import app.verimly.user.application.exception.DuplicateEmailException;
+import app.verimly.user.application.exception.UserBusinessException;
+import app.verimly.user.application.exception.UserSystemException;
 import app.verimly.user.application.mapper.UserAppMapper;
 import app.verimly.user.application.ports.out.EncryptionException;
 import app.verimly.user.application.ports.out.SecurityPort;
 import app.verimly.user.data.UserTestData;
 import app.verimly.user.domain.entity.User;
-import app.verimly.user.domain.exception.UserDomainException;
 import app.verimly.user.domain.repository.UserDataAccessException;
 import app.verimly.user.domain.repository.UserWriteRepository;
 import app.verimly.user.domain.vo.Password;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,6 +30,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CreateUserCommandHandlerTest {
 
+
     UserTestData DATA = UserTestData.getInstance();
     CreateUserCommand command = DATA.createUserCommand();
     User user = DATA.user();
@@ -31,6 +38,8 @@ public class CreateUserCommandHandlerTest {
     UserCreatedApplicationEvent event = UserCreatedApplicationEvent.of(user);
     Password encryptedPassword = DATA.password().encrypted();
     Password rawPassword = DATA.password().raw();
+
+    private final Email COMMAND_EMAIL = command.email();
 
 
     @Mock
@@ -57,59 +66,105 @@ public class CreateUserCommandHandlerTest {
     }
 
 
-    @Test
-    void handle_happy_path() {
-        when(securityPort.encrypt(command.password())).thenReturn(encryptedPassword);
-        when(userWriteRepository.save(any(User.class))).thenReturn(user);
-        doNothing().when(eventPublisher).publishEvent(any(UserCreatedApplicationEvent.class));
-        when(userAppMapper.toUserCreationResponse(user)).thenReturn(userCreationResponse);
+    @BeforeEach
+    public void setup() {
+        lenient().when(userWriteRepository.existsByEmail(COMMAND_EMAIL)).thenReturn(false);
+        lenient().when(securityPort.encrypt(command.password())).thenReturn(encryptedPassword);
+        lenient().when(userWriteRepository.save(any(User.class))).thenReturn(user);
+        lenient().doNothing().when(eventPublisher).publishEvent(any(UserCreatedApplicationEvent.class));
+        lenient().when(userAppMapper.toUserCreationResponse(user)).thenReturn(userCreationResponse);
 
+
+    }
+
+
+    @Test
+    void handle_withValidCommand_shouldCreateAndReturnResponse() {
+
+        // ACT
         UserCreationResponse response = createUserCommandHandler.handle(command);
 
 
+        // ASSERT
         assertEquals(userCreationResponse, response);
+        verify(userWriteRepository).existsByEmail(command.email());
         verify(securityPort).encrypt(command.password());
         verify(userWriteRepository).save(any(User.class));
         verify(eventPublisher).publishEvent(any(UserCreatedApplicationEvent.class));
         verify(userAppMapper).toUserCreationResponse(user);
     }
 
-
     @Test
-    void handle_whenProblemInEncryption_thenDoesNotCreateUser() {
-        doThrow(EncryptionException.class).when(securityPort).encrypt(command.password());
+    @DisplayName("HAPPY PATH")
+    void handle_whenEmailAlreadyExists_thenThrowsDuplicateEmailException() {
+        // ARRANGE
+        when(userWriteRepository.existsByEmail(COMMAND_EMAIL)).thenReturn(true);
 
-        assertThrows(EncryptionException.class,
-                () -> createUserCommandHandler.handle(command));
+        // ACT
+        Executable action = () -> createUserCommandHandler.handle(command);
 
-        verify(securityPort).encrypt(command.password());
-        verifyNoInteractions(userWriteRepository, eventPublisher, userAppMapper);
+
+        // ASSERT
+        DuplicateEmailException exception = assertThrows(DuplicateEmailException.class, action);
+        assertEquals(COMMAND_EMAIL, exception.getEmail());
+        verify(userWriteRepository).existsByEmail(COMMAND_EMAIL);
+        verifyNoInteractions(securityPort, eventPublisher, userAppMapper);
+        verify(userWriteRepository, times(0)).save(any(User.class));
+
     }
 
     @Test
-    void handle_whenProblemInCreatingUser_thenDoesNotPersistUser() {
+    @DisplayName("ENCRYPTION PROBLEM")
+    void handle_whenProblemOccursDuringEncryption_thenThrowsUserSystemException() {
+        // ARRANGE
+        EncryptionException encryptionException = new EncryptionException("Encryption failed.");
+        doThrow(encryptionException).when(securityPort).encrypt(command.password());
+
+        // ACT
+        Executable action = () -> createUserCommandHandler.handle(command);
+
+        // ASSERT
+        UserSystemException systemException = assertThrows(UserSystemException.class, action);
+        assertNotNull(systemException.getErrorMessage());
+        verify(securityPort).encrypt(command.password());
+        verify(userWriteRepository).existsByEmail(COMMAND_EMAIL);
+        verify(userWriteRepository, times(0)).save(any(User.class));
+        verifyNoInteractions(eventPublisher, userAppMapper);
+    }
+
+    @Test
+    @DisplayName("DOMAIN INVARIANT PROBLEM")
+    void handle_whenDomainInvariantViolated_thenThrowsUserBusinessException() {
+        // ARRANGE
         when(securityPort.encrypt(command.password())).thenReturn(rawPassword);
 
+        // ACT
+        Executable action = () -> createUserCommandHandler.handle(command);
 
-        UserDomainException exception = assertThrows(UserDomainException.class,
-                () -> createUserCommandHandler.handle(command));
-
+        //ASSERT
+        UserBusinessException exception = assertThrows(UserBusinessException.class, action);
         ErrorMessage actualErrorMessage = exception.getErrorMessage();
-
         assertEquals(User.Errors.NOT_ENCRYPTED_PASSWORD, actualErrorMessage);
         verify(securityPort).encrypt(command.password());
-        verifyNoInteractions(userWriteRepository, eventPublisher, userAppMapper);
+        verify(userWriteRepository).existsByEmail(COMMAND_EMAIL);
+        verify(userWriteRepository, times(0)).save(any(User.class));
+        verifyNoInteractions(eventPublisher, userAppMapper);
     }
 
+
     @Test
-    void handle_whenProblemInPersistence_thenDoesNotPublishEvent() {
-        when(securityPort.encrypt(command.password())).thenReturn(encryptedPassword);
-        doThrow(UserDataAccessException.class).when(userWriteRepository).save(any(User.class));
+    @DisplayName("PERSISTENCE PROBLEM")
+    void handle_whenProblemOccursDuringPersistence_thenThrowsUserSystemException() {
+        // ARRANGE
+        doThrow(new UserDataAccessException("Cart curt")).when(userWriteRepository).save(any(User.class));
 
-        assertThrows(UserDataAccessException.class,
-                () -> createUserCommandHandler.handle(command));
+        //ACT
+        Executable action = () -> createUserCommandHandler.handle(command);
 
+        //ASSERT
+        assertThrows(UserSystemException.class, action);
         verify(securityPort).encrypt(command.password());
+        verify(userWriteRepository).existsByEmail(COMMAND_EMAIL);
         verify(userWriteRepository).save(any(User.class));
         verifyNoInteractions(eventPublisher, userAppMapper);
     }

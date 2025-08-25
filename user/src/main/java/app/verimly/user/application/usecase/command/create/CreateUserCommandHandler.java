@@ -1,14 +1,22 @@
 package app.verimly.user.application.usecase.command.create;
 
+import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.user.application.event.UserCreatedApplicationEvent;
+import app.verimly.user.application.exception.DuplicateEmailException;
+import app.verimly.user.application.exception.UserBusinessException;
+import app.verimly.user.application.exception.UserSystemException;
 import app.verimly.user.application.mapper.UserAppMapper;
+import app.verimly.user.application.ports.out.EncryptionException;
 import app.verimly.user.application.ports.out.SecurityPort;
 import app.verimly.user.domain.entity.User;
+import app.verimly.user.domain.exception.UserDomainException;
+import app.verimly.user.domain.repository.UserDataAccessException;
 import app.verimly.user.domain.repository.UserWriteRepository;
 import app.verimly.user.domain.vo.Password;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -20,9 +28,11 @@ public class CreateUserCommandHandler {
     private final SecurityPort securityPort;
 
 
+    @Transactional
     public UserCreationResponse handle(CreateUserCommand command) {
-        User user = createUser(command);
+        validateBusinessRules(command);
 
+        User user = createUser(command);
         User savedUser = persistUser(user);
 
         UserCreatedApplicationEvent event = prepareEvent(savedUser);
@@ -32,17 +42,44 @@ public class CreateUserCommandHandler {
 
     }
 
+    private void validateBusinessRules(CreateUserCommand command) {
+        ensureEmailIsUnique(command.email());
+    }
+
+    private void ensureEmailIsUnique(Email email) {
+        boolean exists = userWriteRepository.existsByEmail(email);
+        if (exists)
+            throw new DuplicateEmailException(email);
+    }
+
     protected User createUser(CreateUserCommand command) {
         Password encryptedPassword = encryptPassword(command.password());
-        return User.create(command.name(), command.email(), encryptedPassword);
+
+
+        try {
+            return User.create(command.name(), command.email(), encryptedPassword);
+        } catch (UserDomainException ex) {
+            throw new UserBusinessException(ex.getErrorMessage(), ex.getMessage(), ex);
+        }
+
+
     }
 
     protected Password encryptPassword(Password password) {
-        return securityPort.encrypt(password);
+        try {
+            return securityPort.encrypt(password);
+        } catch (EncryptionException e) {
+            throw new UserSystemException(e.getErrorMessage(), e.getMessage(), e);
+        }
+
     }
 
     protected User persistUser(User user) {
-        return userWriteRepository.save(user);
+        try {
+            return userWriteRepository.save(user);
+        } catch (UserDataAccessException exception) {
+            throw new UserSystemException(exception.getErrorMessage(), exception.getMessage(), exception);
+        }
     }
 
     protected UserCreatedApplicationEvent prepareEvent(User savedUser) {
