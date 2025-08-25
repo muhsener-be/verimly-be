@@ -31,6 +31,12 @@ public class Password {
         this.raw = "";
     }
 
+
+    public static Password reconstruct(String encrypted) {
+        return new Password("", encrypted);
+    }
+
+
     private static void ensureDoesNotContainWhiteSpace(String raw) {
         assert raw != null : "raw password argument cannot be null!";
         for (int i = 0; i < raw.length(); i++) {
@@ -46,6 +52,10 @@ public class Password {
         int length = raw.length();
         if (length < MIN_LENGTH || length > MAX_LENGTH)
             throw new InvalidDomainObjectException(Errors.LENGTH);
+    }
+
+    public boolean isEncrypted() {
+        return encrypted != null;
     }
 
 

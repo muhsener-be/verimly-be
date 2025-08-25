@@ -15,14 +15,15 @@ public class Email extends ValueObject<String> {
         if (value == null) {
             return null;
         }
-        return new Email(validateAndFormat(value));
+        String formattedEmail = validateAndFormat(value);
+        return new Email(formattedEmail);
     }
 
     private static String validateAndFormat(String value) {
         assert value != null;
 
         String trimmed = value.trim();
-        if(!InputValidator.isEmailValid(trimmed))
+        if (!InputValidator.isEmailValid(trimmed))
             throw new InvalidDomainObjectException(Errors.FORMAT);
 
         return trimmed;

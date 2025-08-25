@@ -23,7 +23,6 @@ public class PasswordTest {
     public static final String EMPTY_STRING = "";
 
 
-
     @Test
     @DisplayName("If raw is null, then return null.")
     public void withRaw_nullRawValue_thenReturnNull() {
@@ -79,6 +78,30 @@ public class PasswordTest {
 
         assertEquals(VALID_ENCRYPTED, VALID_PASSWORD.getEncrypted());
         assertEquals(EMPTY_STRING, VALID_PASSWORD.getRaw());
+    }
+
+    @Test
+    @DisplayName("isEncrypted: returns false")
+    public void isEncrypted_whenNotEncrypted_thenReturnFalse() {
+        boolean isEncrypted = VALID_PASSWORD.isEncrypted();
+        assertFalse(isEncrypted);
+    }
+
+    @Test
+    @DisplayName("isEncrypted: return true ")
+    public void isEncrypted_whenEncrypted_thenReturnTrue() {
+        VALID_PASSWORD.encrypt(VALID_ENCRYPTED);
+
+        boolean isEncrypted = VALID_PASSWORD.isEncrypted();
+        assertTrue(isEncrypted);
+    }
+
+
+    @Test
+    @DisplayName("Reconstruct: Does not check invariants")
+    public void reconstruct_doesNotCheckInvariants() {
+        Password actual = Password.reconstruct(null);
+        assertNotNull(actual);
     }
 
 
