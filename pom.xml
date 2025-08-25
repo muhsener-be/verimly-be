@@ -36,6 +36,7 @@
         <java.version>21</java.version>
         <commons-validator.version>1.10.0</commons-validator.version>
         <javafaker.version>1.0.2</javafaker.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
     <dependencies>
         <dependency>
@@ -48,6 +49,20 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-mapstruct-binding</artifactId>
+            <version>0.2.0</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -72,6 +87,16 @@
                 <artifactId>javafaker</artifactId>
                 <version>${javafaker.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -84,10 +109,27 @@
                 <configuration>
                     <release>${java.version}</release>
                     <annotationProcessorPaths>
+
+                        <!-- ÖNCE LOMBOK ÇALIŞIR -->
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version> <!-- Versiyonu parent'tan alır -->
                         </path>
+                        <!-- SONRA MAPSTRUCT ÇALIŞIR -->
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <!-- BU İKİSİNİN ARASINDAKİ BAĞLANTIYI SAĞLAR -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+
+
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

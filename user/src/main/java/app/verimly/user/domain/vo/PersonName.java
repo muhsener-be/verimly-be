@@ -95,6 +95,17 @@ public class PersonName {
     }
 
     /**
+     * Returns full name by concatenating {@link #firstName}
+     * and {@link #lastName} with an empty character between them as separator.
+     *
+     * @return full name
+     */
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
+
+    /**
      * Error messages for the PersonName value object.
      */
     public static final class Errors {

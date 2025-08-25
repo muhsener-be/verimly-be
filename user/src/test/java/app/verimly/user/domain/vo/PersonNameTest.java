@@ -16,6 +16,7 @@ public class PersonNameTest {
     public static final String BLANK_STRING = "  ";
     public static final String LAST_NAME = "Tester";
     public static final String FIRST_NAME = "Tester";
+    public static final String FULL_NAME = FIRST_NAME + " " + LAST_NAME;
     public static final String TOO_LONG_FIRST_NAME = MyStringUtils.generateString(51);
     public static final String TOO_LONG_LAST_NAME = MyStringUtils.generateString(51);
 
@@ -132,6 +133,15 @@ public class PersonNameTest {
         assertEquals(ANORMAL_NAME_PART, actual.getFirstName());
         assertEquals(TOO_LONG_LAST_NAME, actual.getLastName());
 
+
+    }
+
+    @Test
+    public void toString_thenReturnsFullName() {
+
+        PersonName actual = PersonName.of(FIRST_NAME, LAST_NAME);
+
+        assertEquals(FULL_NAME, actual.toString());
 
     }
 

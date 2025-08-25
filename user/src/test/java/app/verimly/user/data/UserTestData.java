@@ -1,6 +1,7 @@
 package app.verimly.user.data;
 
 import app.verimly.commons.core.domain.vo.Email;
+import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.user.domain.entity.User;
 import app.verimly.user.domain.vo.PersonName;
 import com.github.javafaker.Faker;
@@ -38,5 +39,9 @@ public class UserTestData {
         String firstName = FAKER.name().firstName();
         String lastName = FAKER.name().lastName();
         return PersonName.of(firstName, lastName);
+    }
+
+    public UserId userId() {
+        return UserId.random();
     }
 }

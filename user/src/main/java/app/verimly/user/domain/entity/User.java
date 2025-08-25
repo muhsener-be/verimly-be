@@ -5,9 +5,9 @@ import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.user.domain.event.UserCreated;
+import app.verimly.user.domain.exception.UserDomainException;
 import app.verimly.user.domain.vo.Password;
 import app.verimly.user.domain.vo.PersonName;
-import app.verimly.user.domain.exception.UserDomainException;
 import lombok.Getter;
 
 import static app.verimly.user.domain.entity.User.Errors.PASSWORD_NOT_EXIST;
