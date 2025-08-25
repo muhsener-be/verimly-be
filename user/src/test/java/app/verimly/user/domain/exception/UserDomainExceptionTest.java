@@ -1,4 +1,4 @@
-package app.verimly.user.exception;
+package app.verimly.user.domain.exception;
 
 public class UserDomainExceptionTest {
 

@@ -55,4 +55,16 @@ public class AssertTest {
         assertEquals(MESSAGE, exception.getMessage());
     }
 
+
+    @Test
+    public void notNegative_whenNegative_thenThrows() {
+        int negative = -10;
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> Assert.notNegative(negative, MESSAGE));
+
+        assertEquals(MESSAGE, exception.getMessage());
+
+    }
+
+
 }

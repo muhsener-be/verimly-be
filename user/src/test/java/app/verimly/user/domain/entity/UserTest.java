@@ -7,7 +7,7 @@ import app.verimly.user.data.UserTestData;
 import app.verimly.user.domain.event.UserCreated;
 import app.verimly.user.domain.vo.Password;
 import app.verimly.user.domain.vo.PersonName;
-import app.verimly.user.exception.UserDomainException;
+import app.verimly.user.domain.exception.UserDomainException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

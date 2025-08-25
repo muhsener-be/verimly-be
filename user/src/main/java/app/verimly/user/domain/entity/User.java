@@ -7,17 +7,25 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.user.domain.event.UserCreated;
 import app.verimly.user.domain.vo.Password;
 import app.verimly.user.domain.vo.PersonName;
-import app.verimly.user.exception.UserDomainException;
+import app.verimly.user.domain.exception.UserDomainException;
 import lombok.Getter;
 
 import static app.verimly.user.domain.entity.User.Errors.PASSWORD_NOT_EXIST;
 
+/**
+ * Domain entity representing a user.
+ * <p>
+ * Encapsulates user identity, name, email, and password.
+ * Provides factory methods for creation and reconstruction, as well as domain invariant checks.
+ * </p>
+ */
 @Getter
 public class User extends BaseEntity<UserId> {
 
     private PersonName name;
     private Email email;
     private Password password;
+
 
     protected User(UserId id, PersonName name, Email email, Password password) {
         this.id = id;
@@ -26,6 +34,15 @@ public class User extends BaseEntity<UserId> {
         this.password = password;
     }
 
+    /**
+     * Creates a new User entity, checking all invariants and publishing a UserCreated event.
+     *
+     * @param name     the user's name
+     * @param email    the user's email
+     * @param password the user's password
+     * @return a new User instance
+     * @throws UserDomainException if any invariant is violated
+     */
     @org.jetbrains.annotations.Contract("_, _, _ -> new")
     public static User create(PersonName name, Email email, Password password) {
         checkInvariants(name, email, password);
@@ -37,6 +54,7 @@ public class User extends BaseEntity<UserId> {
         user.addDomainEvent(userCreatedEvent);
         return user;
     }
+
 
     private static void checkInvariants(PersonName name, Email email, Password password) {
         ensureNameExists(name);
@@ -51,15 +69,18 @@ public class User extends BaseEntity<UserId> {
             throw new UserDomainException(Errors.NAME_NOT_EXIST);
     }
 
+
     private static void ensureEmailExists(Email email) {
         if (email == null)
             throw new UserDomainException(Errors.EMAIL_NOT_EXIST);
     }
 
+
     private static void ensurePasswordExists(Password password) {
         if (password == null)
             throw new UserDomainException(PASSWORD_NOT_EXIST);
     }
+
 
     private static void ensurePasswordEncrypted(Password password) {
         if (!password.isEncrypted())
@@ -83,7 +104,9 @@ public class User extends BaseEntity<UserId> {
         return new User(id, name, email, password);
     }
 
-
+    /**
+     * Error messages for the User entity.
+     */
     public static final class Errors {
         public static final ErrorMessage NAME_NOT_EXIST = ErrorMessage.of("user.name-not-exist", "User must have a name.");
         public static final ErrorMessage EMAIL_NOT_EXIST = ErrorMessage.of("user.email-not-exist", "User must have an email.");

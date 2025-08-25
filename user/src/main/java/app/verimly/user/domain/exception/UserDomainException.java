@@ -1,4 +1,4 @@
-package app.verimly.user.exception;
+package app.verimly.user.domain.exception;
 
 import app.verimly.commons.core.domain.exception.DomainException;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
