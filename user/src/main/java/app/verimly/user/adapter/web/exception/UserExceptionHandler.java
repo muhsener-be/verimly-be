@@ -97,6 +97,7 @@ public class UserExceptionHandler {
         if (code == null)
             return null;
 
+        //  If there is no message, then pass code as the default message.
         return messageSource.getMessage(code, null, code, locale);
 
     }

@@ -1,3 +1,9 @@
 spring:
+  profiles:
+    active: dev
+  application:
+    name: verimly
   config:
-    import: classpath:verimly.yml
+    import:
+      - classpath:verimly.yml
+      - classpath:verimly-dev.yml

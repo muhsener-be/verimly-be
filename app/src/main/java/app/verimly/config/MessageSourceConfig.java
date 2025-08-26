@@ -16,7 +16,6 @@ public class MessageSourceConfig {
         source.setBasename("messages");
         source.setDefaultLocale(Locale.US);
         source.setDefaultEncoding("UTF-8");
-
         return source;
     }
 

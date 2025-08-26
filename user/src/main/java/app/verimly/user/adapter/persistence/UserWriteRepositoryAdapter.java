@@ -26,7 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserWriteRepositoryAdapter implements UserWriteRepository {
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     private final UserDbMapper mapper;
 
@@ -66,8 +66,8 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
     @Override
     @Transactional
     public Optional<User> findById(UserId id) throws UserDataAccessException {
+        Assert.notNull(id, "UserId cannot be null to find by id");
         try {
-            Assert.notNull(id, "UserId cannot be null to find by id");
             UUID userUUID = id.getValue();
 
             return Optional.ofNullable(entityManager.find(UserEntity.class, userUUID))

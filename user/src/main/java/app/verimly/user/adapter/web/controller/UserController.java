@@ -1,5 +1,6 @@
 package app.verimly.user.adapter.web.controller;
 
+import app.verimly.user.adapter.web.doc.CreateUserSpringDoc;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
 import app.verimly.user.adapter.web.dto.response.UserCreationWebResponse;
 import app.verimly.user.adapter.web.mapper.UserWebMapper;
@@ -22,6 +23,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
+    @CreateUserSpringDoc
     public UserCreationWebResponse create(@RequestBody @Valid CreateUserWebRequest request) {
         CreateUserCommand command = webMapper.toCreateUserCommand(request);
         UserCreationResponse response = applicationService.create(command);

@@ -59,6 +59,27 @@ public class EmailTest {
         assertEquals(EMAIL_FORMAT_ERROR.defaultMessage(), actual.defaultMessage());
     }
 
+    static Stream<String> supplyInvalidEmails() {
+        return Stream.of(
+                "",
+                "     ",
+                "plainaddress",
+                "@missingusername.com",
+                "username@.com",
+                "username@com",
+                "username@domain..com",
+                "username@domain,com",
+                "username@domain@domain.com",
+                "username@domain .com",
+                "username@-domain.com",
+                "username@domain.com (Joe Smith)",
+                "username@domain..com",
+                "username@.domain.com",
+                "username@domain.com.",
+                "username@.com.com",
+                "username@domain..com"
+        );
+    }
 
 
 

@@ -124,9 +124,8 @@ class UserWriteRepositoryAdapterUnitTest {
             Executable executable = () -> adapter.findById(userId);
 
             //Assert
-            UserDataAccessException exception = assertThrows(UserDataAccessException.class, executable);
-            Throwable cause = exception.getCause();
-            assertInstanceOf(IllegalArgumentException.class, cause);
+            assertThrows(IllegalArgumentException.class, executable);
+
 
         }
 

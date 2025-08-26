@@ -99,9 +99,9 @@ public class PasswordTest {
 
     @Test
     @DisplayName("Reconstruct: Does not check invariants")
-    public void reconstruct_doesNotCheckInvariants() {
+    public void reconstruct_whenNullValeu_thenReturnsNull() {
         Password actual = Password.reconstruct(null);
-        assertNotNull(actual);
+        assertNull(actual);
     }
 
 

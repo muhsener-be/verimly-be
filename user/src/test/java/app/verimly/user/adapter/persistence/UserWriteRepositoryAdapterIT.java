@@ -1,5 +1,6 @@
 package app.verimly.user.adapter.persistence;
 
+import app.verimly.JpaTestConfig;
 import app.verimly.commons.core.domain.mapper.CoreVoMapperImpl;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.user.adapter.persistence.mapper.UserDbMapper;
@@ -20,7 +21,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({UserWriteRepositoryAdapter.class, UserDbMapperImpl.class, CoreVoMapperImpl.class})
+@Import({UserWriteRepositoryAdapter.class, UserDbMapperImpl.class, CoreVoMapperImpl.class, JpaTestConfig.class})
 public class UserWriteRepositoryAdapterIT {
     UserTestData DATA = UserTestData.getInstance();
 

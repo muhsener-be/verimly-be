@@ -12,9 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.util.Locale;
 
 @SpringBootConfiguration
-@EnableJpaRepositories
-@EntityScan(basePackages = "app.verimly.user.adapter.persistence.entity")
-@EnableJpaAuditing
 public class UserModuleTest {
 
 

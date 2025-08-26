@@ -1,9 +1,9 @@
 package app.verimly.commons.core.domain.exception;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InvalidDomainObjectExceptionTest {
 
@@ -35,17 +35,15 @@ public class InvalidDomainObjectExceptionTest {
     }
 
     @Test
-    public void constructWithErrorMessage_nullErrorMessage_unknownErrorMessage() {
+    public void constructWithErrorMessage_whenNullErrorMessage_thenThrowsIllegalArgumentException() {
         ErrorMessage nullErrorMessage = null;
 
-        InvalidDomainObjectException exception = new InvalidDomainObjectException(nullErrorMessage);
 
-        ErrorMessage actual = exception.getErrorMessage();
-        ErrorMessage expected = UNKNOWN_ERROR_MESSAGE;
+        Executable action = () -> new InvalidDomainObjectException(nullErrorMessage);
 
-        assertEquals(expected.code(), actual.code());
-        assertEquals(expected.defaultMessage(), actual.defaultMessage());
-        assertEquals(expected.defaultMessage(), exception.getMessage());
+
+        assertThrows(IllegalArgumentException.class, action);
+
     }
 
     @Test
