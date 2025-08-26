@@ -42,7 +42,7 @@ security:
     allow-credentials: true
     max-age: 3600
   jwt:
-    expires-in: 86400000
+    expires-in: 1000
     secret-key: mydevsecretkeymydevsecretkeymydevsecretkey
     issuer: verimly
     email-claim: email
