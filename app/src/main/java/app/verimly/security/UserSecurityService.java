@@ -26,7 +26,7 @@ public class UserSecurityService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optional = userWriteRepository.findByEmail(Email.of(username));
+                Optional<User> optional = userWriteRepository.findByEmail(Email.of(username));
         if (optional.isEmpty())
             throw new UsernameNotFoundException("User with email '%s' not found.".formatted(username));
 

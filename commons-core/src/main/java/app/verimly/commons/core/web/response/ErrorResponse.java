@@ -65,4 +65,15 @@ public class ErrorResponse {
                 .additional(null)
                 .build();
     }
+
+    public static ErrorResponse forbidden(String message, String path) {
+        return ErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(403)
+                .error("Forbidden")
+                .message(message)
+                .path(path)
+                .additional(null)
+                .build();
+    }
 }
