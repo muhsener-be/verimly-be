@@ -21,6 +21,7 @@ public class UserController {
     private final UserApplicationService applicationService;
 
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @CreateUserSpringDoc
