@@ -8,8 +8,8 @@ public class EncryptionException extends SecurityException {
     public static final ErrorMessage ERROR_MESSAGE =
             ErrorMessage.of("encryption.failed", "Password encryption failed.");
 
-    public EncryptionException(String message) {
-        super(ERROR_MESSAGE, message);
+    public EncryptionException(String message, Throwable cause) {
+        super(ERROR_MESSAGE, message, cause);
     }
 
 

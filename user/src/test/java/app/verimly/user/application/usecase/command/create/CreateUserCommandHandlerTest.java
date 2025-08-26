@@ -31,6 +31,7 @@ import static org.mockito.Mockito.*;
 public class CreateUserCommandHandlerTest {
 
 
+    public static final EncryptionException ENCRYPTION_EXCEPTION = new EncryptionException("Encryption failed.", new RuntimeException());
     UserTestData DATA = UserTestData.getInstance();
     CreateUserCommand command = DATA.createUserCommand();
     User user = DATA.user();
@@ -117,8 +118,7 @@ public class CreateUserCommandHandlerTest {
     @DisplayName("ENCRYPTION PROBLEM")
     void handle_whenProblemOccursDuringEncryption_thenThrowsUserSystemException() {
         // ARRANGE
-        EncryptionException encryptionException = new EncryptionException("Encryption failed.");
-        doThrow(encryptionException).when(securityPort).encrypt(command.password());
+        doThrow(ENCRYPTION_EXCEPTION).when(securityPort).encrypt(command.password());
 
         // ACT
         Executable action = () -> createUserCommandHandler.handle(command);

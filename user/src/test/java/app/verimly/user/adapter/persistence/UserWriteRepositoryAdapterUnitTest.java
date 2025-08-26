@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class UserWriteRepositoryAdapterUT {
+class UserWriteRepositoryAdapterUnitTest {
 
     UserTestData DATA = UserTestData.getInstance();
 
@@ -171,7 +171,5 @@ class UserWriteRepositoryAdapterUT {
             assertEquals(anException, exception.getCause());
 
         }
-
-
     }
 }

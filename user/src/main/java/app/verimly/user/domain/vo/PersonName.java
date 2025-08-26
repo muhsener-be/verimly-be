@@ -4,6 +4,8 @@ import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.InvalidDomainObjectException;
 import lombok.Getter;
 
+import java.util.Objects;
+
 /**
  * Value object representing a person's name.
  * <p>
@@ -103,6 +105,18 @@ public class PersonName {
     @Override
     public String toString() {
         return firstName + " " + lastName;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        PersonName that = (PersonName) object;
+        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName);
     }
 
     /**

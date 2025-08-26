@@ -67,6 +67,6 @@ public class UserId extends BaseId<UUID> {
      * @return a new {@code UserId} object
      */
     public static UserId reconstruct(UUID value) {
-        return new UserId(value);
+        return value == null ? null : new UserId(value);
     }
 }

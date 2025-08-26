@@ -1,12 +1,13 @@
 package app.verimly.user.application.mapper;
 
+import app.verimly.commons.core.domain.mapper.CoreVoMapper;
 import app.verimly.user.application.usecase.command.create.UserCreationResponse;
 import app.verimly.user.domain.entity.User;
 import app.verimly.user.domain.vo.Password;
 import app.verimly.user.domain.vo.PersonName;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CoreVoMapper.class)
 public interface UserAppMapper {
 
 
@@ -16,7 +17,7 @@ public interface UserAppMapper {
         return Password.withRaw(raw);
     }
 
-    default PersonName toPersonName(String firstName, String lastName){
-        return PersonName.of(firstName,lastName);
+    default PersonName toPersonName(String firstName, String lastName) {
+        return PersonName.of(firstName, lastName);
     }
 }

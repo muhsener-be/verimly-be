@@ -5,6 +5,8 @@ import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.InvalidDomainObjectException;
 import lombok.Getter;
 
+import java.util.Objects;
+
 /**
  * Value object representing a user's password.
  * <p>
@@ -63,7 +65,7 @@ public class Password {
      * @return a new Password object
      */
     public static Password reconstruct(String encrypted) {
-        return new Password("", encrypted);
+        return encrypted == null ? null :  new Password("", encrypted);
     }
 
 
@@ -109,5 +111,18 @@ public class Password {
     @Override
     public String toString() {
         return "************";
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        Password password = (Password) object;
+        return Objects.equals(encrypted, password.encrypted);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(encrypted);
     }
 }

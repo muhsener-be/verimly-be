@@ -20,6 +20,10 @@ public abstract class AbstractException extends RuntimeException {
         this(UNKNOWN_ERROR_MESSAGE, message, null, 0);
     }
 
+    public AbstractException(String message, Throwable cause) {
+        this(UNKNOWN_ERROR_MESSAGE, message, cause, 0);
+    }
+
 
     public AbstractException(ErrorMessage errorMessage) {
         this(ensureErrorMessageNotNull(errorMessage), errorMessage.defaultMessage(), null, 0);

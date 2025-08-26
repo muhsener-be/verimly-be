@@ -2,6 +2,7 @@ package app.verimly.user.data;
 
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.user.adapter.persistence.entity.UserEntity;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
 import app.verimly.user.adapter.web.dto.response.UserCreationWebResponse;
 import app.verimly.user.application.usecase.command.create.CreateUserCommand;
@@ -93,5 +94,15 @@ public class UserTestData {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    public UserEntity userEntity() {
+        return UserEntity.builder()
+                .id(userId().getValue())
+                .password(password().encrypted().getEncrypted())
+                .firstName(personName().getFirstName())
+                .lastName(personName().getLastName())
+                .email(email().getValue())
+                .build();
     }
 }
