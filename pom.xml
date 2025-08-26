@@ -25,6 +25,7 @@
         <module>app</module>
         <module>commons-core</module>
         <module>user</module>
+        <module>task</module>
     </modules>
     <scm>
         <connection/>
@@ -122,6 +123,11 @@
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
                 <version>${java-jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>app.verimly</groupId>
+                <artifactId>task</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
         </dependencies>

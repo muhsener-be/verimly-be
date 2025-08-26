@@ -30,6 +30,10 @@
             <groupId>app.verimly</groupId>
             <artifactId>user</artifactId>
         </dependency>
+        <dependency>
+            <groupId>app.verimly</groupId>
+            <artifactId>task</artifactId>
+        </dependency>
     </dependencies>
 
 
