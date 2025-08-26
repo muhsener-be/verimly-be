@@ -7,3 +7,5 @@ spring:
     import:
       - classpath:verimly.yml
       - classpath:verimly-dev.yml
+
+baseUrl: http://localhost:8080
