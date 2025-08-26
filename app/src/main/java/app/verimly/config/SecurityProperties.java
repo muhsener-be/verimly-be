@@ -10,6 +10,13 @@ import org.springframework.stereotype.Component;
 public class SecurityProperties {
     private String signUpPath;
     private String frontEndOrigin;
+    private String loginPath;
+    private String usernameParameter;
+    private String passwordParameter;
     private CorsProperties cors;
+    private JwtProperties jwt;
+    private AccessTokenCookieProperties accessTokenCookie;
+
+
 
 }

@@ -1,7 +1,9 @@
 package app.verimly.user.adapter.persistence;
 
+import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.user.adapter.persistence.entity.UserEntity;
+import app.verimly.user.adapter.persistence.jparepo.UserJpaRepository;
 import app.verimly.user.adapter.persistence.mapper.UserDbMapper;
 import app.verimly.user.data.UserTestData;
 import app.verimly.user.domain.entity.User;
@@ -32,12 +34,15 @@ class UserWriteRepositoryAdapterUnitTest {
     User user;
     UserEntity userEntity;
     UserId userId;
+    Email email;
 
     @Mock
     UserDbMapper userDbMapper;
 
     @Mock
     EntityManager entityManager;
+    @Mock
+    UserJpaRepository userJpaRepository;
 
     @InjectMocks
     UserWriteRepositoryAdapter adapter;
@@ -48,8 +53,11 @@ class UserWriteRepositoryAdapterUnitTest {
         user = DATA.user();
         userEntity = DATA.userEntity();
         userId = DATA.userId();
+        email = DATA.email();
 
         lenient().when(userDbMapper.toJpaEntity(user)).thenReturn(userEntity);
+        lenient().when(userDbMapper.toDomainEntity(userEntity)).thenReturn(user);
+        lenient().when(userJpaRepository.findByEmail(email.getValue())).thenReturn(Optional.of(userEntity));
         lenient().doNothing().when(entityManager).persist(userEntity);
         lenient().doNothing().when(entityManager).flush();
 
@@ -60,12 +68,13 @@ class UserWriteRepositoryAdapterUnitTest {
         assertNotNull(userDbMapper);
         assertNotNull(entityManager);
         assertNotNull(adapter);
+        assertNotNull(userJpaRepository);
 
 
     }
 
     @Nested
-    @DisplayName("Save()")
+    @DisplayName("Save Tests")
     class saveTests {
         @Test
         void save_whenValidUser_thenSavesAndReturnsUser() {
@@ -113,7 +122,7 @@ class UserWriteRepositoryAdapterUnitTest {
 
 
     @Nested
-    @DisplayName("findById()")
+    @DisplayName("findById Tests")
     class findByIdTests {
         @Test
         void findById_whenNullUserId_thenThrowsUserDataAccessException() {
@@ -170,5 +179,53 @@ class UserWriteRepositoryAdapterUnitTest {
             assertEquals(anException, exception.getCause());
 
         }
+    }
+
+
+    @Nested
+    @DisplayName("findByEmail Tests")
+    class findByEmailTests {
+
+        @Test
+        void findByEmail_whenValidEmail_thenReturnsUser() {
+
+            Optional<User> optional = adapter.findByEmail(email);
+
+            assertTrue(optional.isPresent());
+            User found = optional.get();
+            assertEquals(user, found);
+
+        }
+
+        @Test
+        void findByEmail_whenNullEmail_thenThrowsIllegalArgumentException() {
+            email = null;
+
+            Executable action = () -> adapter.findByEmail(email);
+
+            assertThrows(IllegalArgumentException.class, action);
+
+        }
+
+        @Test
+        void findByEmail_whenNotFound_thenReturnsEmptyOptional() {
+            when(userJpaRepository.findByEmail(email.getValue())).thenReturn(Optional.empty());
+
+            Optional<User> optional = adapter.findByEmail(email);
+            assertTrue(optional.isEmpty());
+        }
+
+        @Test
+        void findByEmail_whenProblemDuringFetching_thenThrowsUserDataAccessException() {
+            RuntimeException anException = new RuntimeException("An Exception");
+            doThrow(anException).when(userJpaRepository).findByEmail(email.getValue());
+
+            Executable action = () -> adapter.findByEmail(email);
+
+            assertThrows(UserDataAccessException.class, action);
+
+        }
+
+
     }
 }

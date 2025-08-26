@@ -8,7 +8,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -18,10 +21,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final SecurityProperties properties;
+    private final UserDetailsService userDetailsService;
+    private final AuthenticationFailureHandler failureHandler;
+    private final AuthenticationSuccessHandler successHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
 
 
         return http
@@ -34,8 +39,16 @@ public class SecurityConfig {
                         ex.authenticationEntryPoint((req, res, authException) -> {
                             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         }))
-                .formLogin(AbstractHttpConfigurer::disable)
+                .formLogin(login ->
+                        login.loginProcessingUrl(properties.getLoginPath())
+                                .usernameParameter(properties.getUsernameParameter())
+                                .passwordParameter(properties.getPasswordParameter())
+                                .failureHandler(failureHandler)
+                                .successHandler(successHandler))
+
+//                .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .userDetailsService(userDetailsService)
                 .build();
     }
 

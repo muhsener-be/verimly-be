@@ -2,13 +2,13 @@ package app.verimly.user.adapter.persistence;
 
 import app.verimly.JpaTestConfig;
 import app.verimly.commons.core.domain.mapper.CoreVoMapperImpl;
+import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.user.adapter.persistence.mapper.UserDbMapper;
 import app.verimly.user.adapter.persistence.mapper.UserDbMapperImpl;
 import app.verimly.user.application.exception.DuplicateEmailException;
 import app.verimly.user.data.UserTestData;
 import app.verimly.user.domain.entity.User;
-import com.sun.jdi.request.DuplicateRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -76,4 +76,23 @@ public class UserWriteRepositoryAdapterIT {
     }
 
 
+    @Test
+    public void findByEmail_whenFound_thenReturnsUser() {
+        adapter.save(user);
+        Email email = user.getEmail();
+
+
+        Optional<User> optional = adapter.findByEmail(email);
+        assertTrue(optional.isPresent());
+        User found = optional.get();
+        assertEquals(user, found);
+    }
+
+    @Test
+    public void findByEmail_whenNotFound_thenReturnEmptyOptional() {
+
+        Optional<User> optional = adapter.findByEmail(user.getEmail());
+        assertTrue(optional.isEmpty());
+
+    }
 }

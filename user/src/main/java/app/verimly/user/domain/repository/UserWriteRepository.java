@@ -14,4 +14,6 @@ public interface UserWriteRepository {
     Optional<User> findById(UserId id) throws UserDataAccessException;
 
     boolean existsByEmail(Email email);
+
+    Optional<User> findByEmail(Email email);
 }

@@ -54,4 +54,15 @@ public class ErrorResponse {
                 .additional(null)
                 .build();
     }
+
+    public static ErrorResponse unauthorized(String message, String path) {
+        return ErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(401)
+                .error("Unauthorized")
+                .message(message)
+                .path(path)
+                .additional(null)
+                .build();
+    }
 }

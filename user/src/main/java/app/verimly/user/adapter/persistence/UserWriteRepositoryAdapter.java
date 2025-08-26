@@ -4,6 +4,7 @@ import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.user.adapter.persistence.entity.UserEntity;
+import app.verimly.user.adapter.persistence.jparepo.UserJpaRepository;
 import app.verimly.user.adapter.persistence.mapper.UserDbMapper;
 import app.verimly.user.application.exception.DuplicateEmailException;
 import app.verimly.user.domain.entity.User;
@@ -27,6 +28,8 @@ import java.util.UUID;
 public class UserWriteRepositoryAdapter implements UserWriteRepository {
     @PersistenceContext
     private final EntityManager entityManager;
+
+    private final UserJpaRepository userJpaRepository;
 
     private final UserDbMapper mapper;
 
@@ -81,5 +84,21 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
     @Override
     public boolean existsByEmail(Email email) {
         return false;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> findByEmail(Email email) {
+        Assert.notNull(email, "Email cannot be null to findByEmail");
+
+        try {
+
+            return userJpaRepository.findByEmail(email.getValue())
+                    .map(mapper::toDomainEntity);
+        } catch (Exception e) {
+            throw new UserDataAccessException(e.getMessage(), e);
+        }
+
+
     }
 }
