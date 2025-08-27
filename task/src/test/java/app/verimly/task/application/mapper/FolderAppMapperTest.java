@@ -46,7 +46,7 @@ class FolderAppMapperTest {
     }
 
     @Test
-    void toFolderCreationResponse_whenNullFolder_thenReturnsNull(){
+    void toFolderCreationResponse_whenNullFolder_thenReturnsNull() {
         folder = null;
 
         FolderCreationResponse respose = mapper.toFolderCreationResponse(folder);

@@ -1,4 +1,4 @@
-package app.verimly.task.application.evet;
+package app.verimly.task.application.event;
 
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.security.Principal;

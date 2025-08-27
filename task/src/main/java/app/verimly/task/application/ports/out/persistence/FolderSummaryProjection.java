@@ -6,13 +6,10 @@ public interface FolderSummaryProjection {
 
     UUID getId();
 
-    UUID getOwnerId();
-
     String getName();
 
     String getLabelColor();
 
-    String getDescription();
 
     // TODO: Add it after create task story
 //    int taskCount();

@@ -4,7 +4,7 @@ import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.*;
 import app.verimly.commons.core.security.SecurityException;
-import app.verimly.task.application.evet.FolderCreatedApplicationEvent;
+import app.verimly.task.application.event.FolderCreatedApplicationEvent;
 import app.verimly.task.application.mapper.FolderAppMapper;
 import app.verimly.task.application.ports.out.security.FolderActions;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
