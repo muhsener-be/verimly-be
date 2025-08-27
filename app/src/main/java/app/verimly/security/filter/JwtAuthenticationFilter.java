@@ -1,11 +1,11 @@
 package app.verimly.security.filter;
 
+import app.verimly.commons.core.security.SecurityUser;
 import app.verimly.config.AccessTokenCookieProperties;
 import app.verimly.config.SecurityProperties;
 import app.verimly.security.jwt.JwtException;
 import app.verimly.security.jwt.JwtHelper;
 import app.verimly.security.jwt.VerifiedToken;
-import app.verimly.commons.core.security.SecurityUser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -75,10 +75,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean requiresFilter(HttpServletRequest request) {
-        if(isLoginEndpoint(request)){
+        if (isLoginEndpoint(request)) {
             return false;
         }
-        return Arrays.stream(request.getCookies()).anyMatch(this::cookieNameMatches);
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null)
+            return false;
+        return Arrays.stream(cookies).anyMatch(this::cookieNameMatches);
     }
 
     private boolean isLoginEndpoint(HttpServletRequest request) {
