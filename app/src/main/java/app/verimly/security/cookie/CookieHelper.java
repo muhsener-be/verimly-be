@@ -1,8 +1,8 @@
 package app.verimly.security.cookie;
 
 import app.verimly.config.AccessTokenCookieProperties;
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,14 +11,18 @@ public class CookieHelper {
 
     private final AccessTokenCookieProperties props;
 
-    public Cookie createAccessTokenCookie(String token) {
-        Cookie cookie = new Cookie(props.getName(), token);
-        cookie.setDomain(props.getDomain());
-        cookie.setHttpOnly(props.isHttpOnly());
-        cookie.setSecure(props.isSecure());
-        cookie.setMaxAge(props.getMaxAgeSeconds());
-        cookie.setPath(props.getPath());
+    public ResponseCookie createAccessTokenCookie(String token) {
 
-        return cookie;
+        return ResponseCookie.from(props.getName())
+                .value(token)
+                .path(props.getPath())
+                .maxAge(props.getMaxAgeSeconds())
+                .httpOnly(props.isHttpOnly())
+                .sameSite(props.getSameSite())
+                .domain(props.getDomain())
+                .secure(props.isSecure())
+                .build();
+
+
     }
 }

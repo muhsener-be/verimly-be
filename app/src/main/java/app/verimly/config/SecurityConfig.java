@@ -36,12 +36,12 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource configurationSource) throws Exception {
 
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(configurationSource()))
+                .cors(cors -> cors.configurationSource(configurationSource))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(permitAllPaths.toArray(String[]::new)).permitAll()
@@ -63,14 +63,15 @@ public class SecurityConfig {
     }
 
 
-    private CorsConfigurationSource configurationSource() {
+    @Bean
+    public CorsConfigurationSource configurationSource() {
         CorsProperties props = properties.getCors();
 
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(props.getAllowedOrigins());
         config.setAllowedMethods(props.getAllowedMethods());
         config.setAllowedHeaders(props.getAllowedHeaders());
-        config.setAllowCredentials(config.getAllowCredentials());
+        config.setAllowCredentials(true);
         config.setMaxAge(props.getMaxAge());
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

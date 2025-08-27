@@ -9,9 +9,11 @@ import app.verimly.task.application.usecase.command.create.CreateFolderCommand;
 import app.verimly.task.application.usecase.command.create.FolderCreationResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/folders")
 @RequiredArgsConstructor
@@ -28,6 +30,8 @@ public class FolderController {
 
 
         FolderCreationResponse response = folderApplicationService.create(command);
+        log.info("Folder created successfully. [Owner: {}, FolderId: {}, FolderName: {}]",
+                response.ownerId(), response.id(), response.name());
 
         return mapper.toFolderCreationWebResponse(response);
 

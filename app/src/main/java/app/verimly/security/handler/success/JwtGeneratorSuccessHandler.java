@@ -1,14 +1,15 @@
 package app.verimly.security.handler.success;
 
+import app.verimly.commons.core.security.SecurityUser;
 import app.verimly.security.cookie.CookieHelper;
 import app.verimly.security.jwt.JwtHelper;
-import app.verimly.commons.core.security.SecurityUser;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -32,9 +33,9 @@ public class JwtGeneratorSuccessHandler implements AuthenticationSuccessHandler 
 
         String accessToken = jwtHelper.generateJwtToken(principal.getId().toString(), principal.getUsername());
 
-        Cookie cookie = cookieHelper.createAccessTokenCookie(accessToken);
+        ResponseCookie cookie = cookieHelper.createAccessTokenCookie(accessToken);
 
-        response.addCookie(cookie);
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         response.setStatus(HttpServletResponse.SC_OK);
         log.debug("Authentication success handled by generation a JWT token and put it in cookie.");
     }
