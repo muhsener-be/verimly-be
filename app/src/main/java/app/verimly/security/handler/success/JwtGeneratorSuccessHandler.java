@@ -2,7 +2,7 @@ package app.verimly.security.handler.success;
 
 import app.verimly.security.cookie.CookieHelper;
 import app.verimly.security.jwt.JwtHelper;
-import app.verimly.security.principal.SecurityUser;
+import app.verimly.commons.core.security.SecurityUser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

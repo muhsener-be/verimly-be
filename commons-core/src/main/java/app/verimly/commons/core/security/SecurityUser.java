@@ -1,4 +1,4 @@
-package app.verimly.security.principal;
+package app.verimly.commons.core.security;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

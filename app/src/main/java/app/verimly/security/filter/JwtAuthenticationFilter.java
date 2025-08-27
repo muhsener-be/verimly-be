@@ -5,7 +5,7 @@ import app.verimly.config.SecurityProperties;
 import app.verimly.security.jwt.JwtException;
 import app.verimly.security.jwt.JwtHelper;
 import app.verimly.security.jwt.VerifiedToken;
-import app.verimly.security.principal.SecurityUser;
+import app.verimly.commons.core.security.SecurityUser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

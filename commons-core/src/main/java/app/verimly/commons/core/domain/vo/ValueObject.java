@@ -19,7 +19,7 @@ public abstract class ValueObject<T> {
     /**
      * The underlying value of the value object.
      */
-    private final T value;
+    protected final T value;
 
     /**
      * Constructs a new {@code ValueObject} with the given value.

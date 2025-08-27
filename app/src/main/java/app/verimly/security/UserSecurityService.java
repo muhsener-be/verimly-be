@@ -1,7 +1,7 @@
 package app.verimly.security;
 
 import app.verimly.commons.core.domain.vo.Email;
-import app.verimly.security.principal.SecurityUser;
+import app.verimly.commons.core.security.SecurityUser;
 import app.verimly.user.domain.entity.User;
 import app.verimly.user.domain.repository.UserWriteRepository;
 import lombok.RequiredArgsConstructor;

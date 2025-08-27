@@ -1,4 +1,7 @@
-package app.verimly.commons.core.domain.exception;
+package app.verimly.commons.core.security;
+
+import app.verimly.commons.core.domain.exception.ApplicationException;
+import app.verimly.commons.core.domain.exception.ErrorMessage;
 
 public abstract class SecurityException extends ApplicationException {
 
