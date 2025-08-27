@@ -18,11 +18,13 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -32,7 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final AccessTokenCookieProperties properties;
     private final JwtHelper jwtHelper;
     private final AuthenticationEntryPoint authenticationEntryPoint;
-    private final SecurityProperties securityProperties;
+    private final List<String> permitAllPaths;
+    private final AntPathMatcher matcher = new AntPathMatcher();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -74,20 +77,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .getFirst();
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String requestPath = request.getServletPath();
+        return permitAllPaths.stream().anyMatch(pattern -> matcher.match(pattern, requestPath));
+
+    }
+
     private boolean requiresFilter(HttpServletRequest request) {
-        if (isLoginEndpoint(request)) {
-            return false;
-        }
+
         Cookie[] cookies = request.getCookies();
         if (cookies == null)
             return false;
         return Arrays.stream(cookies).anyMatch(this::cookieNameMatches);
     }
 
-    private boolean isLoginEndpoint(HttpServletRequest request) {
-        return request.getRequestURI().equals(securityProperties.getLoginPath());
 
-    }
 
 
     private boolean cookieNameMatches(Cookie cookie) {

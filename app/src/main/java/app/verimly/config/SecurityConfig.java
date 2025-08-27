@@ -4,7 +4,6 @@ import app.verimly.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -20,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -31,6 +32,7 @@ public class SecurityConfig {
     private final AccessDeniedHandler accessDeniedHandler;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final List<String> permitAllPaths;
 
 
     @Bean
@@ -42,8 +44,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, properties.getSignUpPath()).permitAll()
+                        .requestMatchers(permitAllPaths.toArray(String[]::new)).permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .accessDeniedHandler(accessDeniedHandler)

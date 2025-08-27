@@ -46,7 +46,7 @@ security:
     allow-credentials: true
     max-age: 3600
   jwt:
-    expires-in: 1000
+    expires-in: 300000
     secret-key: mydevsecretkeymydevsecretkeymydevsecretkey
     issuer: verimly
     email-claim: email
@@ -55,7 +55,7 @@ security:
     http-only: true
     secure: false
     same-site: Lax
-    max-age-seconds: 86400
+    max-age-seconds: 300
     path: /
     domain: localhost
 
