@@ -1,6 +1,8 @@
 package app.verimly.task.adapter.persistence.entity;
 
 import app.verimly.commons.core.adapter.persistence.BaseJpaEntity;
+import app.verimly.task.domain.vo.FolderDescription;
+import app.verimly.task.domain.vo.FolderName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -21,10 +23,10 @@ public class FolderEntity extends BaseJpaEntity<UUID> {
     @Column(name = "owner_id", nullable = false)
     private UUID ownerId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = FolderName.MAX_LENGTH)
     private String name;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description", nullable = true, length = FolderDescription.MAX_LENGTH)
     private String description;
 
     @Column(name = "label_color", nullable = true)

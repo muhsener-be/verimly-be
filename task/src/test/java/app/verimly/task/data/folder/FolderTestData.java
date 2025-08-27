@@ -2,6 +2,7 @@ package app.verimly.task.data.folder;
 
 import app.verimly.commons.core.domain.vo.Color;
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.commons.core.utils.MyStringUtils;
 import app.verimly.task.adapter.web.dto.request.CreateFolderWebRequest;
 import app.verimly.task.adapter.web.dto.response.FolderCreationWebResponse;
 import app.verimly.task.application.usecase.command.create.CreateFolderCommand;
@@ -89,5 +90,13 @@ public class FolderTestData {
 
     public Folder folderWithNullFields() {
         return Folder.reconstruct(null, null, null, null, null);
+    }
+
+    public String nameTooLong() {
+        return MyStringUtils.generateString(FolderName.MAX_LENGTH + 1);
+    }
+
+    public String descriptionTooLong() {
+        return MyStringUtils.generateString(FolderDescription.MAX_LENGTH + 1);
     }
 }
