@@ -4,7 +4,7 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.*;
 import app.verimly.task.application.ports.out.security.FolderActions;
 import app.verimly.task.application.ports.out.security.FolderResource;
-import app.verimly.task.domain.vo.FolderId;
+import app.verimly.task.domain.vo.folder.FolderId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

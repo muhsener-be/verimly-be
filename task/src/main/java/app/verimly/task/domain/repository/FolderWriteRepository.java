@@ -2,7 +2,7 @@ package app.verimly.task.domain.repository;
 
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.domain.entity.Folder;
-import app.verimly.task.domain.vo.FolderId;
+import app.verimly.task.domain.vo.folder.FolderId;
 
 import java.util.List;
 import java.util.Optional;

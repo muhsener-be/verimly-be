@@ -64,4 +64,5 @@ public abstract class ValueObject<T> {
         return Objects.hashCode(value);
     }
 
+
 }

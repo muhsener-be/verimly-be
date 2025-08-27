@@ -5,9 +5,9 @@ import app.verimly.commons.core.domain.vo.Color;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.FolderEntity;
 import app.verimly.task.domain.entity.Folder;
-import app.verimly.task.domain.vo.FolderDescription;
-import app.verimly.task.domain.vo.FolderId;
-import app.verimly.task.domain.vo.FolderName;
+import app.verimly.task.domain.vo.folder.FolderDescription;
+import app.verimly.task.domain.vo.folder.FolderId;
+import app.verimly.task.domain.vo.folder.FolderName;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = {CoreVoMapper.class})

@@ -1,9 +1,8 @@
 package app.verimly.task.application.mapper;
 
 import app.verimly.commons.core.domain.mapper.CoreVoMapper;
-import app.verimly.commons.core.domain.vo.Color;
-import app.verimly.task.domain.vo.FolderDescription;
-import app.verimly.task.domain.vo.FolderName;
+import app.verimly.task.domain.vo.folder.FolderDescription;
+import app.verimly.task.domain.vo.folder.FolderName;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring",uses = CoreVoMapper.class)

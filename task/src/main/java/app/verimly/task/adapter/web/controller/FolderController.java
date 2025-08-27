@@ -42,6 +42,7 @@ public class FolderController {
 
 
     @GetMapping
+
     public List<FolderSummaryWebResponse> listFolders() {
         List<FolderSummaryData> response = folderApplicationService.listFolders();
         return mapper.toFolderSummaryWebResponse(response);

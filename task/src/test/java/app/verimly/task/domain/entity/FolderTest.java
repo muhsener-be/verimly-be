@@ -3,8 +3,8 @@ package app.verimly.task.domain.entity;
 import app.verimly.commons.core.domain.vo.Color;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.domain.exception.FolderDomainException;
-import app.verimly.task.domain.vo.FolderDescription;
-import app.verimly.task.domain.vo.FolderName;
+import app.verimly.task.domain.vo.folder.FolderDescription;
+import app.verimly.task.domain.vo.folder.FolderName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 

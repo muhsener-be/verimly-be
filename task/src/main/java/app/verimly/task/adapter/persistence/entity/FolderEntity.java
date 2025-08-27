@@ -1,8 +1,8 @@
 package app.verimly.task.adapter.persistence.entity;
 
 import app.verimly.commons.core.adapter.persistence.BaseJpaEntity;
-import app.verimly.task.domain.vo.FolderDescription;
-import app.verimly.task.domain.vo.FolderName;
+import app.verimly.task.domain.vo.folder.FolderDescription;
+import app.verimly.task.domain.vo.folder.FolderName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

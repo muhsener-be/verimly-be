@@ -1,4 +1,4 @@
-package app.verimly.task.domain.vo;
+package app.verimly.task.domain.vo.folder;
 
 import app.verimly.commons.core.domain.vo.BaseId;
 

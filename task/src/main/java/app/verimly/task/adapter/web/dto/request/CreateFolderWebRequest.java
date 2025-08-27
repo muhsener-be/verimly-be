@@ -1,8 +1,8 @@
 package app.verimly.task.adapter.web.dto.request;
 
 import app.verimly.task.adapter.web.validation.HexFormat;
-import app.verimly.task.domain.vo.FolderDescription;
-import app.verimly.task.domain.vo.FolderName;
+import app.verimly.task.domain.vo.folder.FolderDescription;
+import app.verimly.task.domain.vo.folder.FolderName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

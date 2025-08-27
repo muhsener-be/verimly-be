@@ -7,7 +7,7 @@ import app.verimly.task.adapter.persistence.mapper.FolderDbMapper;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.repository.FolderWriteRepository;
 import app.verimly.task.domain.repository.TaskDataAccessException;
-import app.verimly.task.domain.vo.FolderId;
+import app.verimly.task.domain.vo.folder.FolderId;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
