@@ -16,9 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest(classes = CreateFolderAuthorizationRule.class)
-class CreateFolderAuthorizationRuleTest {
-
+@SpringBootTest(classes = ListFoldersAuthorizationRule.class)
+class ListFoldersAuthorizationRuleTest {
     private FolderId folderId;
     private UserId userId;
     private AuthResource authResource;
@@ -27,7 +26,7 @@ class CreateFolderAuthorizationRuleTest {
     private Principal anonPrincipal;
 
     @Autowired
-    CreateFolderAuthorizationRule rule;
+    ListFoldersAuthorizationRule rule;
 
     @BeforeEach
     void setup() {
@@ -93,6 +92,6 @@ class CreateFolderAuthorizationRuleTest {
 
         Action actual = rule.getSupportedAction();
 
-        assertEquals(FolderActions.CREATE, actual);
+        assertEquals(FolderActions.LIST, actual);
     }
 }
