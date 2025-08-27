@@ -6,7 +6,7 @@ import app.verimly.commons.core.domain.vo.ValueObject;
 
 public class FolderName extends ValueObject<String> {
 
-    public static final int MAX_LENGTH = 50;
+    public static final int MAX_LENGTH = 100;
 
     protected FolderName(String value) {
         super(value);
