@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FolderDescriptionTest {
 
+    public static final String TOO_LONG_DESCRIPTION_VALUE = MyStringUtils.generateString(FolderDescription.MAX_LENGTH + 1);
     private String descriptionValue = "A valid description";
 
     @Test
@@ -37,7 +38,7 @@ class FolderDescriptionTest {
 
     @Test
     void of_whenValueIsTooLong_thenThrowsInvalidDomainException() {
-        descriptionValue = MyStringUtils.generateString(FolderDescription.MAX_LENGTH + 1);
+        descriptionValue = TOO_LONG_DESCRIPTION_VALUE;
 
 
         Executable executable = () -> FolderDescription.of(descriptionValue);
@@ -47,7 +48,29 @@ class FolderDescriptionTest {
 
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
 
-        assertEquals(expectedErrorMessage,actualErrorMessage);;
+        assertEquals(expectedErrorMessage, actualErrorMessage);
+        ;
     }
 
+    @Test
+    void reconstruct_whenValueIsNull_thenReturnsNull() {
+        descriptionValue = null;
+
+        FolderDescription actual = FolderDescription.reconstruct(descriptionValue);
+
+        assertNull(actual);
+    }
+
+
+    @Test
+    void reconstruct_whenValueIsTooLong_doesNotCheckInvariants() {
+        descriptionValue = TOO_LONG_DESCRIPTION_VALUE;
+
+        Executable executable = () -> FolderDescription.reconstruct(descriptionValue);
+
+        assertDoesNotThrow(executable);
+
+
+
+    }
 }

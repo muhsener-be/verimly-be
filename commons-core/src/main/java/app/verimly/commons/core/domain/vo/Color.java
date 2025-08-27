@@ -12,18 +12,20 @@ public class Color extends ValueObject<String> {
 
 
     public static Color of(String hex) {
-        if (hex == null || hex.isBlank())
-            return null;
+        if (hex == null || hex.isBlank()) return null;
 
         Color color = new Color(hex);
         color.checkInvariants();
         return color;
     }
 
+    public static Color reconstruct(String hex) {
+        return hex == null ? null : new Color(hex);
+    }
+
     private void checkInvariants() {
         boolean colorValid = InputValidator.isColorValid(value);
-        if (!colorValid)
-            throw new InvalidDomainObjectException(Errors.HEX_FORMAT);
+        if (!colorValid) throw new InvalidDomainObjectException(Errors.HEX_FORMAT);
     }
 
 

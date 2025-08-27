@@ -19,4 +19,7 @@ public class FolderId extends BaseId<UUID> {
     }
 
 
+    public static FolderId reconstruct(UUID id) {
+        return id == null ? null : new FolderId(id);
+    }
 }

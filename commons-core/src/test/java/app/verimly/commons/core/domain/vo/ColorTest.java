@@ -12,7 +12,7 @@ class ColorTest {
     private String invalidHex = "FFF";
 
     @Test
-    void of_whenValueIsNullOrBlank_thenReturnsNull(){
+    void of_whenValueIsNullOrBlank_thenReturnsNull() {
         String nullValue = null;
         String blankValue = "   ";
 
@@ -26,18 +26,37 @@ class ColorTest {
 
 
     @Test
-    void of_whenValidHex_thenReturnsColorInstance(){
+    void of_whenValidHex_thenReturnsColorInstance() {
         Color actual = Color.of(validHex);
 
-        assertEquals(validHex,actual.getValue());
+        assertEquals(validHex, actual.getValue());
     }
 
     @Test
-    void of_whenInvalidHex_thenThrowsInvalidDomainObjectException(){
+    void of_whenInvalidHex_thenThrowsInvalidDomainObjectException() {
+
+
         Executable exec = () -> Color.of(invalidHex);
 
         InvalidDomainObjectException exception = assertThrows(InvalidDomainObjectException.class, exec);
-        assertEquals(Color.Errors.HEX_FORMAT,exception.getErrorMessage());
+        assertEquals(Color.Errors.HEX_FORMAT, exception.getErrorMessage());
+    }
+
+    @Test
+    void reconstruct_whenNullHex_thenReturnsNull() {
+
+        Color reconstruct = Color.reconstruct(null);
+
+        assertNull(reconstruct);
+    }
+
+
+    @Test
+    void reconstruct_whenInvalidHex_doesNotCheckInvariants() {
+
+        Color actual = Color.reconstruct(invalidHex);
+
+        assertEquals(invalidHex, actual.getValue());
     }
 
 }

@@ -13,4 +13,11 @@ class FolderIdTest {
         assertNull(actual);
     }
 
+    @Test
+    void reconstruct_whenValue_IsNull_thenReturnsNull(){
+        FolderId actual = FolderId.reconstruct(null);
+
+        assertNull(actual);
+    }
+
 }

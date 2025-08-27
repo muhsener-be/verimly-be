@@ -86,4 +86,8 @@ public class FolderTestData {
                 labelColor().getValue()
         );
     }
+
+    public Folder folderWithNullFields() {
+        return Folder.reconstruct(null, null, null, null, null);
+    }
 }

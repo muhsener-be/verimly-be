@@ -22,6 +22,11 @@ public class FolderDescription extends ValueObject<String> {
         return description;
     }
 
+    public static FolderDescription reconstruct(String description) {
+        return description == null ? null : new FolderDescription(description);
+
+    }
+
     private void checkInvariants() {
         checkLength();
     }
