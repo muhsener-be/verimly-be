@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface FolderWriteRepository {
 
-    Folder save(Folder folder);
+    Folder save(Folder folder) throws TaskDataAccessException;
 
-    Optional<Folder> findById(FolderId id);
+    Optional<Folder> findById(FolderId id) throws TaskDataAccessException;
 
-    List<Folder> findByOwner(UserId userId);
+    List<Folder> findByOwner(UserId userId) throws TaskDataAccessException;
 
 }
