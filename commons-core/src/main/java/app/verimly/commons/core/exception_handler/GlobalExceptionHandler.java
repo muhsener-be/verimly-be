@@ -2,6 +2,7 @@ package app.verimly.commons.core.exception_handler;
 
 import app.verimly.commons.core.domain.exception.DomainException;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
+import app.verimly.commons.core.domain.exception.NotFoundException;
 import app.verimly.commons.core.web.response.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,15 @@ public class GlobalExceptionHandler {
         String message = findMessageFromErrorMessage(actualErrorMessage);
         return ErrorResponse.badRequest(actualErrorMessage.code(), message, request.getDescription(false));
 
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleFolderNotFoundException(NotFoundException e, WebRequest request) {
+        ErrorMessage actualErrorMessage = e.getErrorMessage();
+        String extracted = findMessageFromErrorMessage(actualErrorMessage);
+
+        return ErrorResponse.badRequest(actualErrorMessage.code(), extracted, request.getDescription(false));
     }
 
 

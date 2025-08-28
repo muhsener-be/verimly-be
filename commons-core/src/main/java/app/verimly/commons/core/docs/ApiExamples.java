@@ -5,7 +5,7 @@ public class ApiExamples {
     public static final String FOLDER_NOT_FOUND = """
             {
                 "timestamp": "2025-08-28T18:44:25.503833Z",
-                "status": 400,
+                "status": 404,
                 "error": "folder.not-found",
                 "message": "Folder not found with provided ID: 49fb32c7-5b8b-4991-86a0-9c64d4c84679",
                 "path": "uri=/api/v1/tasks",

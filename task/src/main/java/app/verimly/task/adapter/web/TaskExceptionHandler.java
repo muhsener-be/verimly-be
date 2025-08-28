@@ -19,12 +19,5 @@ public class TaskExceptionHandler extends GlobalExceptionHandler {
         super(messageSource);
     }
 
-    @ExceptionHandler(FolderNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleFolderNotFoundException(FolderNotFoundException e, WebRequest request) {
-        ErrorMessage actualErrorMessage = e.getErrorMessage();
-        String extracted = findMessageFromErrorMessage(actualErrorMessage);
 
-        return ErrorResponse.badRequest(actualErrorMessage.code(), extracted, request.getDescription(false));
-    }
 }
