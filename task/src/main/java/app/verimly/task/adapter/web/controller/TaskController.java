@@ -1,5 +1,6 @@
 package app.verimly.task.adapter.web.controller;
 
+import app.verimly.task.adapter.web.docs.CreateTaskSpringDoc;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.response.TaskCreationWebResponse;
 import app.verimly.task.adapter.web.mapper.TaskWebMapper;
@@ -25,6 +26,7 @@ public class TaskController {
 
 
     @PostMapping
+    @CreateTaskSpringDoc
     public TaskCreationWebResponse createTask(@Valid @RequestBody CreateTaskWebRequest request) {
 
         CreateTaskCommand command = mapper.toCreateTaskCommand(request);

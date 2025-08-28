@@ -23,7 +23,14 @@ public interface TaskWebMapper {
     TaskCreationWebResponse toTaskCreationWebResponseIgnoringDueDate(TaskCreationResponse response);
 
     default TaskCreationWebResponse toTaskCreationWebResponse(TaskCreationResponse response) {
+        if (response == null)
+            return null;
+
         TaskCreationWebResponse webResponse = toTaskCreationWebResponseIgnoringDueDate(response);
+        if (response.dueDate() == null)
+            return webResponse;
+
+
         Instant instant = response.dueDate().getValue();
         TimeZone userTimeZone = LocaleContextHolder.getTimeZone();
 

@@ -7,6 +7,7 @@ import app.verimly.commons.core.web.response.ErrorResponse;
 import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.user.application.exception.DuplicateEmailException;
 import app.verimly.user.domain.exception.UserDomainException;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -64,6 +65,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateEmailException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
+    @Hidden
     public ErrorResponse handleDuplicateEmailException(DuplicateEmailException ex, WebRequest request) {
         String message = findMessageFromErrorMessage(ex.getErrorMessage());
 

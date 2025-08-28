@@ -16,6 +16,8 @@ public class SecurityPathConfig {
     public List<String> permitAllPaths() {
         return List.of(
                 "/h2-console/**",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
                 properties.getSignUpPath(),
                 properties.getLoginPath()
         );
