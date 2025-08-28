@@ -91,6 +91,7 @@ class DueDateTest {
         );
     }
 
+
     private void assertDueDateThrowsPastException(Instant instant) {
         InvalidDomainObjectException exception = assertThrows(
                 InvalidDomainObjectException.class,
@@ -98,4 +99,13 @@ class DueDateTest {
         );
         assertEquals(DueDate.Errors.PAST, exception.getErrorMessage());
     }
+
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidInstants")
+    void reconstruct_shouldDoNotCheckInvariants(Instant instant) {
+        assertDoesNotThrow(() -> DueDate.reconstruct(instant));
+    }
+
+
 }

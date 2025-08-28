@@ -31,6 +31,11 @@ public class DueDate extends ValueObject<Instant> {
         }
     }
 
+
+    public static DueDate reconstruct(Instant instant) {
+        return instant == null ? null : new DueDate(instant);
+    }
+
     public static final class Errors {
         public static final ErrorMessage PAST = ErrorMessage.of("due-date.past", "Due date cannot be in the past.");
     }

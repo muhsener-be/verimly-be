@@ -2,7 +2,7 @@ package app.verimly.task.application.mapper;
 
 import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.ports.out.persistence.FolderSummaryProjection;
-import app.verimly.task.application.usecase.command.create.FolderCreationResponse;
+import app.verimly.task.application.usecase.command.folder.create.FolderCreationResponse;
 import app.verimly.task.domain.entity.Folder;
 import org.mapstruct.Mapper;
 

@@ -6,8 +6,8 @@ import app.verimly.task.adapter.web.dto.response.FolderCreationWebResponse;
 import app.verimly.task.adapter.web.dto.response.FolderSummaryWebResponse;
 import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.mapper.TaskVoMapper;
-import app.verimly.task.application.usecase.command.create.CreateFolderCommand;
-import app.verimly.task.application.usecase.command.create.FolderCreationResponse;
+import app.verimly.task.application.usecase.command.folder.create.CreateFolderCommand;
+import app.verimly.task.application.usecase.command.folder.create.FolderCreationResponse;
 import org.mapstruct.Mapper;
 
 import java.util.List;

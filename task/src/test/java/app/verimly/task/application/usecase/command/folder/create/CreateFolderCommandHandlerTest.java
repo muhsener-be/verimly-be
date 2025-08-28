@@ -1,4 +1,4 @@
-package app.verimly.task.application.usecase.command.create;
+package app.verimly.task.application.usecase.command.folder.create;
 
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;

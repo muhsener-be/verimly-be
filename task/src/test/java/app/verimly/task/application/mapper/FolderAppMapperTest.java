@@ -1,6 +1,6 @@
 package app.verimly.task.application.mapper;
 
-import app.verimly.task.application.usecase.command.create.FolderCreationResponse;
+import app.verimly.task.application.usecase.command.folder.create.FolderCreationResponse;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.domain.entity.Folder;
 import org.junit.jupiter.api.BeforeEach;
