@@ -1,11 +1,12 @@
 package app.verimly.user.application.exception;
 
 import app.verimly.commons.core.domain.exception.Assert;
+import app.verimly.commons.core.domain.exception.ConflictException;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.vo.Email;
 import lombok.Getter;
 
-public class DuplicateEmailException extends UserBusinessException {
+public class DuplicateEmailException extends ConflictException {
 
     private static final ErrorMessage ERROR_MESSAGE = ErrorMessage.of("email.duplicated", "Email is already taken.");
     public static final String MESSAGE_TEMPLATE = "Provided email '%s' is already taken.";

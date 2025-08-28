@@ -38,11 +38,11 @@ public class ErrorResponse {
     }
 
 
-    public static ErrorResponse conflict(String message, String path) {
+    public static ErrorResponse conflict(String errorCode, String message, String path) {
         return ErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(409)
-                .error("Conflict.")
+                .error(errorCode)
                 .message(message)
                 .path(path)
                 .additional(null)
@@ -53,7 +53,7 @@ public class ErrorResponse {
         return ErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(500)
-                .error("Internal server error.")
+                .error("internal")
                 .message(message)
                 .path(path)
                 .additional(null)
@@ -82,11 +82,11 @@ public class ErrorResponse {
                 .build();
     }
 
-    public static ErrorResponse notFound(String message, String path) {
+    public static ErrorResponse notFound(String errorCode, String message, String path) {
         return ErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(404)
-                .error("Not found")
+                .error(errorCode)
                 .message(message)
                 .path(path)
                 .additional(null)

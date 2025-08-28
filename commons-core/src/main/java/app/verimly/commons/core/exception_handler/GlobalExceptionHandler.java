@@ -1,9 +1,11 @@
 package app.verimly.commons.core.exception_handler;
 
+import app.verimly.commons.core.domain.exception.ConflictException;
 import app.verimly.commons.core.domain.exception.DomainException;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.NotFoundException;
 import app.verimly.commons.core.web.response.ErrorResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -65,7 +67,17 @@ public class GlobalExceptionHandler {
         ErrorMessage actualErrorMessage = e.getErrorMessage();
         String extracted = findMessageFromErrorMessage(actualErrorMessage);
 
-        return ErrorResponse.badRequest(actualErrorMessage.code(), extracted, request.getDescription(false));
+        return ErrorResponse.notFound(actualErrorMessage.code(), extracted, request.getDescription(false));
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @Hidden
+    public ErrorResponse handleConflictException(ConflictException ex, WebRequest request) {
+        ErrorMessage actualErrorMessage = ex.getErrorMessage();
+        String message = findMessageFromErrorMessage(actualErrorMessage);
+
+        return ErrorResponse.conflict(actualErrorMessage.code(), message, request.getDescription(false));
     }
 
 
