@@ -23,7 +23,7 @@ class FolderAppMapperTest {
 
     @BeforeEach
     void setup() {
-        folder = DATA.folder();
+        folder = DATA.folderWithFullFields();
     }
 
 

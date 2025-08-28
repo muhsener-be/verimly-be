@@ -1,5 +1,7 @@
 package app.verimly.commons.core.domain.exception;
 
+import java.util.Objects;
+
 /**
  * Utility class for assertion checks in the domain layer.
  * <p>
@@ -44,5 +46,10 @@ public class Assert {
 
         return value;
 
+    }
+
+    public static void equals(Object o1, Object o2, String message) {
+        if(!Objects.equals(o1,o2))
+            throw new IllegalArgumentException(message);
     }
 }

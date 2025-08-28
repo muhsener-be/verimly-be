@@ -4,6 +4,7 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.utils.MyStringUtils;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.domain.entity.Task;
+import app.verimly.task.domain.input.TaskCreationDetails;
 import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.task.*;
 import com.github.javafaker.Faker;
@@ -74,9 +75,11 @@ public class TaskTestData {
     }
 
 
-
     public CreateTaskCommand createTaskCommand() {
         return new CreateTaskCommand(folderId(), name(), description(), priority(), dueDate());
     }
 
+    public TaskCreationDetails creationDetailsWithOwnerIdAndFolderId(UserId ownerId, FolderId folderId) {
+        return TaskCreationDetails.of(ownerId, folderId, name(), description(), priority(), dueDate());
+    }
 }

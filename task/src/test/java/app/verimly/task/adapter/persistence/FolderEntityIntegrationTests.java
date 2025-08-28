@@ -47,7 +47,7 @@ public class FolderEntityIntegrationTests {
     void setup() {
         userEntity = new UserEntity(UUID.randomUUID(), "TEset", "Test", "email.com", "aslkdjaksd");
         entityManager.persist(userEntity);
-        folder = DATA.folder();
+        folder = DATA.folderWithFullFields();
         jpa = dbMapper.toJpaEntity(folder);
 
 

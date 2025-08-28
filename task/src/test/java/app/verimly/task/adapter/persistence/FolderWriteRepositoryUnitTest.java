@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 class FolderWriteRepositoryUnitTest {
 
     FolderTestData DATA = FolderTestData.getInstance();
-    Folder folder = DATA.folder();
+    Folder folder = DATA.folderWithFullFields();
     FolderEntity folderEntity;
 
     @Mock

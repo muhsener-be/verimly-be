@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class FolderCreatedApplicationEventTest {
 
     Principal principal = new AnonymousPrincipal();
-    Folder folder = FolderTestData.getInstance().folder();
+    Folder folder = FolderTestData.getInstance().folderWithFullFields();
 
 
     @Test

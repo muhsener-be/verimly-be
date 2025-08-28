@@ -50,9 +50,6 @@ public class FolderTestData {
         return Color.of(FAKER.color().hex());
     }
 
-    public Folder folder() {
-        return Folder.createWithDescriptionAndLabelColor(ownerId(), name(), description(), labelColor());
-    }
 
     public CreateFolderCommand createFolderCommand() {
         return new CreateFolderCommand(
@@ -94,9 +91,25 @@ public class FolderTestData {
         );
     }
 
+
+    private Folder folderInternal(UserId ownerId, FolderName name, FolderDescription description, Color labelColor) {
+        return Folder.createWithDescriptionAndLabelColor(ownerId, name, description, labelColor);
+    }
+
+
+
     public Folder folderWithNullFields() {
         return Folder.reconstruct(null, null, null, null, null);
     }
+
+    public Folder folderWithOwner(UserId ownerId) {
+        return folderInternal(ownerId, name(), description(), labelColor());
+    }
+
+    public Folder folderWithFullFields() {
+        return folderInternal(ownerId(), name(), description(), labelColor());
+    }
+
 
     public String nameTooLong() {
         return MyStringUtils.generateString(FolderName.MAX_LENGTH + 1);
@@ -133,5 +146,6 @@ public class FolderTestData {
     public AuthenticationRequiredException authenticationRequiredException() {
         return new AuthenticationRequiredException("Test exception");
     }
+
 
 }

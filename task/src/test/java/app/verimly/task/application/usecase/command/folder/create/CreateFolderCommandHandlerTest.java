@@ -71,7 +71,7 @@ class CreateFolderCommandHandlerTest {
         email = Email.of("email@email.com");
         ownerId = UserId.random();
         principal = AuthenticatedPrincipal.of(ownerId, email);
-        folder = DATA.folder();
+        folder = DATA.folderWithFullFields();
         event = Mockito.mock(FolderCreatedApplicationEvent.class);
         response = Mockito.mock(FolderCreationResponse.class);
 
