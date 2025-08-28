@@ -1,7 +1,7 @@
 package app.verimly.user.adapter.web.controller;
 
+import app.verimly.user.adapter.web.UserExceptionHandler;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
-import app.verimly.user.adapter.web.exception.UserExceptionHandler;
 import app.verimly.user.adapter.web.mapper.UserWebMapper;
 import app.verimly.user.application.ports.in.UserApplicationService;
 import app.verimly.user.data.UserTestData;

@@ -1,13 +1,8 @@
-package app.verimly.exception;
+package app.verimly.commons.core.exception_handler;
 
 import app.verimly.commons.core.domain.exception.DomainException;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
-import app.verimly.commons.core.domain.exception.InvalidDomainObjectException;
 import app.verimly.commons.core.web.response.ErrorResponse;
-import app.verimly.task.application.exception.FolderNotFoundException;
-import app.verimly.user.application.exception.DuplicateEmailException;
-import app.verimly.user.domain.exception.UserDomainException;
-import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -31,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
+
     private final MessageSource messageSource;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -52,10 +48,9 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler({InvalidDomainObjectException.class, UserDomainException.class})
+    @ExceptionHandler({DomainException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidAndUserDomainExceptions(DomainException ex, WebRequest request) {
-        assert ex instanceof InvalidDomainObjectException || ex instanceof UserDomainException;
 
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
         String message = findMessageFromErrorMessage(actualErrorMessage);
@@ -63,24 +58,6 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler(DuplicateEmailException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @Hidden
-    public ErrorResponse handleDuplicateEmailException(DuplicateEmailException ex, WebRequest request) {
-        String message = findMessageFromErrorMessage(ex.getErrorMessage());
-
-        return ErrorResponse.conflict(message, request.getDescription(false));
-    }
-
-
-    @ExceptionHandler(FolderNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleFolderNotFoundException(FolderNotFoundException e, WebRequest request) {
-        ErrorMessage actualErrorMessage = e.getErrorMessage();
-        String extracted = findMessageFromErrorMessage(actualErrorMessage);
-
-        return ErrorResponse.badRequest(actualErrorMessage.code(), extracted, request.getDescription(false));
-    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -93,7 +70,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    private String findMessageFromErrorMessage(ErrorMessage errorMessage) {
+    protected String findMessageFromErrorMessage(ErrorMessage errorMessage) {
         String errorCode = errorMessage.code();
         String defaultMessage = errorMessage.defaultMessage();
         return messageSource.getMessage(errorCode, null, defaultMessage, getLocale());
