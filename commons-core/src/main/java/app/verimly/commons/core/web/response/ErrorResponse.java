@@ -16,16 +16,21 @@ public class ErrorResponse {
     private Instant timestamp;
     private int status;
     private String error;
+
     private String message;
     private String path;
     private Map<String, Map<String, Object>> additional;
 
 
-    public static ErrorResponse badRequest(String message, String path, Map<String, Map<String, Object>> additional) {
+    public static ErrorResponse badRequest(String errorCode, String message, String path) {
+        return badRequest(errorCode, message, path, null);
+    }
+
+    public static ErrorResponse badRequest(String errorCode, String message, String path, Map<String, Map<String, Object>> additional) {
         return ErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(400)
-                .error("Bad request")
+                .error(errorCode)
                 .message(message)
                 .path(path)
                 .additional(additional)
@@ -71,6 +76,17 @@ public class ErrorResponse {
                 .timestamp(Instant.now())
                 .status(403)
                 .error("Forbidden")
+                .message(message)
+                .path(path)
+                .additional(null)
+                .build();
+    }
+
+    public static ErrorResponse notFound(String message, String path) {
+        return ErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(404)
+                .error("Not found")
                 .message(message)
                 .path(path)
                 .additional(null)

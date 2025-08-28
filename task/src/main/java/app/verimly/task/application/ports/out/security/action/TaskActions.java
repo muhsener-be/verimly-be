@@ -1,4 +1,4 @@
-package app.verimly.task.application.ports.out.security;
+package app.verimly.task.application.ports.out.security.action;
 
 import app.verimly.commons.core.security.Action;
 

@@ -2,7 +2,11 @@ package app.verimly.task.data.task;
 
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.utils.MyStringUtils;
+import app.verimly.task.adapter.persistence.entity.TaskEntity;
+import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
+import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
+import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.input.TaskCreationDetails;
 import app.verimly.task.domain.vo.folder.FolderId;
@@ -14,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class TaskTestData {
 
     private static final Faker FAKER = new Faker();
+    private static final SecurityTestData SECURITY_TEST_DATA = SecurityTestData.getInstance();
 
     private static final TaskTestData INSTANCE = new TaskTestData();
 
@@ -52,6 +57,10 @@ public class TaskTestData {
                 .build();
     }
 
+    public Task taskWithNullFields() {
+        return Task.reconstruct(TaskId.random(), null, null, null, null, null, null, null);
+    }
+
     public FolderId folderId() {
         return FolderId.random();
     }
@@ -82,4 +91,26 @@ public class TaskTestData {
     public TaskCreationDetails creationDetailsWithOwnerIdAndFolderId(UserId ownerId, FolderId folderId) {
         return TaskCreationDetails.of(ownerId, folderId, name(), description(), priority(), dueDate());
     }
+
+    public TaskCreatedApplicationEvent taskCreatedApplicationEvent() {
+        return new TaskCreatedApplicationEvent(SECURITY_TEST_DATA.authenticatedPrincipal(), task());
+    }
+
+    public TaskCreationDetails taskCreationDetails() {
+        return TaskCreationDetails.of(ownerId(), folderId(), name(), description(), priority(), dueDate());
+    }
+
+    public TaskCreationResponse taskCreationResponse() {
+        return new TaskCreationResponse(id(), folderId(), ownerId(), name(), description(), dueDate(), status(), priority());
+    }
+
+    public TaskStatus status() {
+        return TaskStatus.NOT_STARTED;
+    }
+
+    public TaskEntity taskEntityWithNullFields() {
+        return new TaskEntity(null, null, null, null, null, null, null, null);
+    }
+
+
 }

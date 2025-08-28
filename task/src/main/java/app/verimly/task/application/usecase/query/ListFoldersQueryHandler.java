@@ -7,7 +7,7 @@ import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.mapper.FolderAppMapper;
 import app.verimly.task.application.ports.out.persistence.FolderReadRepository;
 import app.verimly.task.application.ports.out.persistence.FolderSummaryProjection;
-import app.verimly.task.application.ports.out.security.FolderActions;
+import app.verimly.task.application.ports.out.security.action.FolderActions;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.domain.repository.TaskDataAccessException;

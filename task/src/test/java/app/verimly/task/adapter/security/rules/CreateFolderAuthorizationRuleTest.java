@@ -1,10 +1,12 @@
 package app.verimly.task.adapter.security.rules;
 
-import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.*;
-import app.verimly.task.application.ports.out.security.FolderActions;
-import app.verimly.task.application.ports.out.security.FolderResource;
+import app.verimly.commons.core.security.Action;
+import app.verimly.commons.core.security.AuthResource;
+import app.verimly.commons.core.security.AuthenticationRequiredException;
+import app.verimly.commons.core.security.Principal;
+import app.verimly.task.application.ports.out.security.action.FolderActions;
+import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.domain.vo.folder.FolderId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,11 +21,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = CreateFolderAuthorizationRule.class)
 class CreateFolderAuthorizationRuleTest {
 
-    private FolderId folderId;
-    private UserId userId;
+    private static final SecurityTestData TEST_DATA = SecurityTestData.getInstance();
+
     private AuthResource authResource;
     private AuthResource mockResource;
-    private AuthenticatedPrincipal authenticatedPrincipal;
+    private Principal authenticatedPrincipal;
     private Principal anonPrincipal;
 
     @Autowired
@@ -31,12 +33,10 @@ class CreateFolderAuthorizationRuleTest {
 
     @BeforeEach
     void setup() {
-        folderId = FolderId.random();
-        userId = UserId.random();
-        authResource = new FolderResource(folderId, userId);
+        authResource = TEST_DATA.folderResource();
         mockResource = Mockito.mock(AuthResource.class);
-        anonPrincipal = new AnonymousPrincipal();
-        authenticatedPrincipal = AuthenticatedPrincipal.of(userId, Email.of("mock@email.com"));
+        anonPrincipal = TEST_DATA.anonymousPrincipal();
+        authenticatedPrincipal = TEST_DATA.authenticatedPrincipal();
 
     }
 

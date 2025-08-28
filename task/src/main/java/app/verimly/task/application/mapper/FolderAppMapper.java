@@ -16,4 +16,6 @@ public interface FolderAppMapper {
     FolderSummaryData toFolderSummaryData(FolderSummaryProjection source);
 
     List<FolderSummaryData> toFolderSummaryData(List<FolderSummaryProjection> source);
+
+
 }

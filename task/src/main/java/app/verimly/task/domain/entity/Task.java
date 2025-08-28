@@ -23,8 +23,8 @@ public class Task extends BaseEntity<TaskId> {
 
     @Builder(toBuilder = true)
     private Task(TaskId id, UserId ownerId, FolderId folderId, TaskName name,
-                TaskDescription description, DueDate dueDate, TaskStatus status,
-                Priority priority) {
+                 TaskDescription description, DueDate dueDate, TaskStatus status,
+                 Priority priority) {
         this.id = id;
         this.ownerId = ownerId;
         this.folderId = folderId;
@@ -62,8 +62,13 @@ public class Task extends BaseEntity<TaskId> {
 
         if (name == null)
             throw new TaskDomainException(Errors.NAME_NOT_EXIST);
+    }
 
+    public static Task reconstruct(TaskId id, UserId ownerId, FolderId folderId, TaskName name,
+                                   TaskDescription description, DueDate dueDate, TaskStatus status,
+                                   Priority priority){
 
+        return new Task(id,ownerId,folderId,name,description,dueDate,status,priority);
     }
 
 
@@ -71,6 +76,7 @@ public class Task extends BaseEntity<TaskId> {
         public static final ErrorMessage OWNER_NOT_EXIST = ErrorMessage.of("task.owner-not-exist", "Task must have an owner");
         public static final ErrorMessage FOLDER_NOT_EXIST = ErrorMessage.of("task.folder-not-exist", "Task must be in a folder.");
         public static final ErrorMessage NAME_NOT_EXIST = ErrorMessage.of("task.name-not-exist", "Task must have a name.");
+        public static final ErrorMessage FOLDER_OWNER_NOT_MATCH = ErrorMessage.of("task.folder-owner-not-match", "Task owner and folder owner must match.");
     }
 
 

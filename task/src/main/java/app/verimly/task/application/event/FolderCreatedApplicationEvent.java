@@ -12,4 +12,6 @@ public record FolderCreatedApplicationEvent(@NotNull Principal actor, @NotNull F
         Assert.notNull(folder, "folder cannot be null.");
     }
 
+
+
 }

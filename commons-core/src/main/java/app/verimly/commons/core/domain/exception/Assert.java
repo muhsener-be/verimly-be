@@ -49,7 +49,27 @@ public class Assert {
     }
 
     public static void equals(Object o1, Object o2, String message) {
-        if(!Objects.equals(o1,o2))
+        if (!Objects.equals(o1, o2))
             throw new IllegalArgumentException(message);
+    }
+
+    /**
+     * Asserts that the provided object is an instance of the specified class.
+     *
+     * @param <T>     the expected type
+     * @param object  the object to check
+     * @param clazz   the class to check against
+     * @param message the exception message to use if the check fails
+     * @return the object cast to the specified type
+     * @throws IllegalArgumentException if {@code object} is not an instance of {@code clazz}
+     * @throws IllegalArgumentException if {@code clazz} is {@code null}
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T instanceOf(Object object, Class<T> clazz, String message) {
+        notNull(clazz, "Target class must not be null");
+        if (!clazz.isInstance(object)) {
+            throw new IllegalArgumentException(message);
+        }
+        return (T) object;
     }
 }

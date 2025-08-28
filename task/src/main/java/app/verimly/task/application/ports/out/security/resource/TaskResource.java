@@ -1,4 +1,6 @@
 package app.verimly.task.application.ports.out.security.resource;
 
-public class TaskResource {
+import app.verimly.commons.core.security.AuthResource;
+
+public record TaskResource() implements AuthResource {
 }

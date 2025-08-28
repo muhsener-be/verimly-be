@@ -2,8 +2,8 @@ package app.verimly.task.adapter.security;
 
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.*;
-import app.verimly.task.application.ports.out.security.FolderActions;
-import app.verimly.task.application.ports.out.security.FolderResource;
+import app.verimly.task.application.ports.out.security.action.FolderActions;
+import app.verimly.task.application.ports.out.security.resource.FolderResource;
 import app.verimly.task.domain.vo.folder.FolderId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

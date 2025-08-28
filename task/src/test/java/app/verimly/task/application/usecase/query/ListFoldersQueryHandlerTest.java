@@ -8,9 +8,10 @@ import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.mapper.FolderAppMapper;
 import app.verimly.task.application.ports.out.persistence.FolderReadRepository;
 import app.verimly.task.application.ports.out.persistence.FolderSummaryProjection;
-import app.verimly.task.application.ports.out.security.FolderActions;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
+import app.verimly.task.application.ports.out.security.action.FolderActions;
+import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.domain.repository.TaskDataAccessException;
 import org.jetbrains.annotations.NotNull;
@@ -44,21 +45,20 @@ class ListFoldersQueryHandlerTest {
     @InjectMocks
     ListFoldersQueryHandler queryHandler;
 
-    FolderTestData DATA = FolderTestData.getInstance();
+    FolderTestData FOLDER_TEST_DATA = FolderTestData.getInstance();
+    SecurityTestData SECURITY_TEST_DATA = SecurityTestData.getInstance();
     Principal principal;
     List<FolderSummaryProjection> projections;
     List<FolderSummaryData> summaryData;
     AuthenticationRequiredException authenticationRequiredException;
 
 
-
-
     @BeforeEach
     void setup() {
-        principal = DATA.authenticatedPrincipal();
+        principal = SECURITY_TEST_DATA.authenticatedPrincipal();
         projections = new ArrayList<>();
         summaryData = new ArrayList<>();
-        authenticationRequiredException = DATA.authenticationRequiredException();
+        authenticationRequiredException = FOLDER_TEST_DATA.authenticationRequiredException();
 
         lenient().when(authN.getCurrentPrincipal()).thenReturn(principal);
         lenient().doNothing().when(authZ).authorize(principal, ACTION, null);
@@ -67,7 +67,7 @@ class ListFoldersQueryHandlerTest {
     }
 
     @Test
-    void handle_happy_path(){
+    void handle_happy_path() {
 
         List<FolderSummaryData> response = queryHandler.handle();
 
@@ -75,7 +75,7 @@ class ListFoldersQueryHandlerTest {
         verify(authZ).authorize(principal, ACTION, null);
         verify(repository).findSummariesByOwnerId(principal.getId());
         verify(mapper).toFolderSummaryData(projections);
-        assertEquals(summaryData,response);
+        assertEquals(summaryData, response);
 
     }
 
@@ -100,10 +100,6 @@ class ListFoldersQueryHandlerTest {
         verify(repository).findSummariesByOwnerId(principal.getId());
         verifyNoInteractions(mapper);
     }
-
-
-
-
 
 
     private void assertThrowsException(Class<? extends Throwable> exceptionClass) {

@@ -1,9 +1,10 @@
-package app.verimly.user.adapter.web.exception;
+package app.verimly.exception;
 
 import app.verimly.commons.core.domain.exception.DomainException;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.InvalidDomainObjectException;
 import app.verimly.commons.core.web.response.ErrorResponse;
+import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.user.application.exception.DuplicateEmailException;
 import app.verimly.user.domain.exception.UserDomainException;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ import java.util.Map;
 @RestControllerAdvice
 @Component
 @RequiredArgsConstructor
-public class UserExceptionHandler {
+public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
 
@@ -46,7 +47,7 @@ public class UserExceptionHandler {
                     .put(fieldName, message);
         }
 
-        return ErrorResponse.badRequest("Invalid request.", request.getDescription(false), additional);
+        return ErrorResponse.badRequest("invalid-request", "Invalid request.", request.getDescription(false), additional);
     }
 
 
@@ -55,8 +56,9 @@ public class UserExceptionHandler {
     public ErrorResponse handleInvalidAndUserDomainExceptions(DomainException ex, WebRequest request) {
         assert ex instanceof InvalidDomainObjectException || ex instanceof UserDomainException;
 
-        String message = findMessageFromErrorMessage(ex.getErrorMessage());
-        return ErrorResponse.badRequest(message, request.getDescription(false), null);
+        ErrorMessage actualErrorMessage = ex.getErrorMessage();
+        String message = findMessageFromErrorMessage(actualErrorMessage);
+        return ErrorResponse.badRequest(actualErrorMessage.code(), message, request.getDescription(false));
 
     }
 
@@ -68,6 +70,15 @@ public class UserExceptionHandler {
         return ErrorResponse.conflict(message, request.getDescription(false));
     }
 
+
+    @ExceptionHandler(FolderNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleFolderNotFoundException(FolderNotFoundException e, WebRequest request) {
+        ErrorMessage actualErrorMessage = e.getErrorMessage();
+        String extracted = findMessageFromErrorMessage(actualErrorMessage);
+
+        return ErrorResponse.badRequest(actualErrorMessage.code(), extracted, request.getDescription(false));
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

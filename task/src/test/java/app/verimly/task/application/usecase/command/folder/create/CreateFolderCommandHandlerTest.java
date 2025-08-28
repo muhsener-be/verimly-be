@@ -6,7 +6,7 @@ import app.verimly.commons.core.security.*;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.FolderCreatedApplicationEvent;
 import app.verimly.task.application.mapper.FolderAppMapper;
-import app.verimly.task.application.ports.out.security.FolderActions;
+import app.verimly.task.application.ports.out.security.action.FolderActions;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.data.folder.FolderTestData;

@@ -1,11 +1,8 @@
 package app.verimly.task.data.folder;
 
 import app.verimly.commons.core.domain.vo.Color;
-import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.AuthenticatedPrincipal;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
-import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.utils.MyStringUtils;
 import app.verimly.task.adapter.persistence.entity.FolderEntity;
 import app.verimly.task.adapter.web.dto.request.CreateFolderWebRequest;
@@ -97,7 +94,6 @@ public class FolderTestData {
     }
 
 
-
     public Folder folderWithNullFields() {
         return Folder.reconstruct(null, null, null, null, null);
     }
@@ -119,13 +115,22 @@ public class FolderTestData {
         return MyStringUtils.generateString(FolderDescription.MAX_LENGTH + 1);
     }
 
-    public FolderEntity folderEntityWithUserId(UserId userId) {
+    public FolderEntity folderEntityWithUserId(UserId ownerId) {
+        return folderEntityInternal(null, ownerId, null, null, null);
+
+    }
+
+    public FolderEntity folderWithIdAndOwnerId(FolderId folderId, UserId ownerId) {
+        return folderEntityInternal(folderId, ownerId, null, null, null);
+    }
+
+    public FolderEntity folderEntityInternal(FolderId folderId, UserId ownerId, FolderName name, FolderDescription description, Color labelColor) {
         return FolderEntity.builder()
-                .id(folderId().getValue())
-                .description(description().getValue())
-                .labelColor(labelColor().getValue())
-                .name(name().getValue())
-                .ownerId(userId.getValue())
+                .id(folderId == null ? folderId().getValue() : folderId.getValue())
+                .description(description == null ? description().getValue() : description.getValue())
+                .labelColor(labelColor == null ? labelColor().getValue() : labelColor.getValue())
+                .name(name == null ? name().getValue() : name.getValue())
+                .ownerId(ownerId == null ? ownerId().getValue() : ownerId.getValue())
                 .build();
     }
 
@@ -139,9 +144,6 @@ public class FolderTestData {
                 .build();
     }
 
-    public Principal authenticatedPrincipal() {
-        return AuthenticatedPrincipal.of(UserId.random(), Email.of("random@email.com"));
-    }
 
     public AuthenticationRequiredException authenticationRequiredException() {
         return new AuthenticationRequiredException("Test exception");

@@ -1,7 +1,7 @@
 package app.verimly.task.domain.vo.task;
 
 import app.verimly.commons.core.domain.exception.InvalidDomainObjectException;
-import app.verimly.commons.core.domain.vo.ValueObject;
+import app.verimly.commons.core.utils.MyStringUtils;
 import app.verimly.task.data.task.TaskTestData;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +15,7 @@ class TaskNameTest {
     private static final String VALID_VALUE = "Valid task name";
     private static final String ANORMAL_NAME_VALUE = "  A    no r   ma l    ";
     private static final String NORMAL_NAME_VALUE = "A no r ma l";
+    private static final String TOO_LONG = MyStringUtils.generateString(TaskName.MAX_LENGTH + 1);
 
 
     private TaskTestData DATA = TaskTestData.getInstance();
@@ -31,9 +32,8 @@ class TaskNameTest {
 
     @Test
     void of_whenValuesIsTooLong_thenThrowsInvalidDomainObjectException() {
-        String tooLong = DATA.tooLongNameValue();
 
-        InvalidDomainObjectException exception = assertThrows(InvalidDomainObjectException.class, () -> TaskName.of(tooLong));
+        InvalidDomainObjectException exception = assertThrows(InvalidDomainObjectException.class, () -> TaskName.of(TOO_LONG));
 
         assertEquals(TaskName.Errors.LENGTH, exception.getErrorMessage());
     }
@@ -51,5 +51,13 @@ class TaskNameTest {
         TaskName taskName = TaskName.of(VALID_VALUE);
 
         assertEquals(VALID_VALUE, taskName.getValue());
+    }
+
+    @Test
+    void reconstruct_whenInvalid_doesNotCheckInvariants() {
+
+        TaskName taskName = TaskName.reconstruct(TOO_LONG);
+
+        assertEquals(TOO_LONG, taskName.getValue());
     }
 }

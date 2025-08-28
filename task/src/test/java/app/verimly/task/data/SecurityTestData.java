@@ -5,12 +5,15 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AnonymousPrincipal;
 import app.verimly.commons.core.security.AuthenticatedPrincipal;
 import app.verimly.commons.core.security.Principal;
+import app.verimly.task.application.ports.out.security.resource.FolderResource;
+import app.verimly.task.application.ports.out.security.resource.TaskResource;
+import app.verimly.task.domain.vo.folder.FolderId;
 
-public class PrincipalTestData {
+public class SecurityTestData {
 
-    private static final PrincipalTestData INSTANCE = new PrincipalTestData();
+    private static final SecurityTestData INSTANCE = new SecurityTestData();
 
-    public static PrincipalTestData getInstance() {
+    public static SecurityTestData getInstance() {
         return INSTANCE;
     }
 
@@ -20,5 +23,13 @@ public class PrincipalTestData {
 
     public Principal anonymousPrincipal() {
         return new AnonymousPrincipal();
+    }
+
+    public FolderResource folderResource() {
+        return new FolderResource(FolderId.random(), UserId.random());
+    }
+
+    public TaskResource taskResource() {
+        return new TaskResource();
     }
 }

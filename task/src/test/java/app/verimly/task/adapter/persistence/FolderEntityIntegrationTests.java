@@ -2,6 +2,8 @@ package app.verimly.task.adapter.persistence;
 
 import app.verimly.commons.core.domain.mapper.CoreVoMapperImpl;
 import app.verimly.task.adapter.persistence.entity.FolderEntity;
+import app.verimly.task.adapter.persistence.jparepo.FolderJpaRepository;
+import app.verimly.task.adapter.persistence.jparepo.FolderJpaRepositoryTest;
 import app.verimly.task.adapter.persistence.mapper.FolderDbMapper;
 import app.verimly.task.adapter.persistence.mapper.FolderDbMapperImpl;
 import app.verimly.task.data.folder.FolderTestData;
@@ -43,6 +45,9 @@ public class FolderEntityIntegrationTests {
     FolderEntity jpaWithUser;
     UserEntity userEntity;
 
+    @Autowired
+    public FolderJpaRepository folderJpaRepository;
+
     @BeforeEach
     void setup() {
         userEntity = new UserEntity(UUID.randomUUID(), "TEset", "Test", "email.com", "aslkdjaksd");
@@ -53,6 +58,8 @@ public class FolderEntityIntegrationTests {
 
         jpaWithUser = dbMapper.toJpaEntity(folder);
         jpaWithUser.setOwnerId(userEntity.getId());
+
+        assertNotNull(folderJpaRepository);
     }
 
     @Test

@@ -23,6 +23,10 @@ public class TaskName extends ValueObject<String> {
         return name;
     }
 
+    public static TaskName reconstruct(String name) {
+        return name == null ? null : new TaskName(name);
+    }
+
     private void checkInvariants() {
         if (value.length() > MAX_LENGTH)
             throw new InvalidDomainObjectException(Errors.LENGTH);

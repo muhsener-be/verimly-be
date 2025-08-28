@@ -23,6 +23,10 @@ public class TaskDescription extends ValueObject<String> {
         return taskDescription;
     }
 
+    public static TaskDescription reconstruct(String description) {
+        return description == null ? null : new TaskDescription(description);
+    }
+
     private void checkInvariants() {
         if (value.length() > MAX_LENGTH)
             throw new InvalidDomainObjectException(Errors.LENGTH);

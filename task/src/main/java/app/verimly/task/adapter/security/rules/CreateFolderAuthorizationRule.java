@@ -2,8 +2,8 @@ package app.verimly.task.adapter.security.rules;
 
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.security.*;
-import app.verimly.task.application.ports.out.security.FolderActions;
-import app.verimly.task.application.ports.out.security.FolderResource;
+import app.verimly.task.application.ports.out.security.action.FolderActions;
+import app.verimly.task.application.ports.out.security.resource.FolderResource;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;

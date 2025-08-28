@@ -37,7 +37,7 @@ public class TaskDomainService {
         UserId taskOwner = taskDetails.ownerId();
 
         if (!Objects.equals(folderOwner, taskOwner))
-            throw new TaskDomainException("Task owner and folder owner do not match.");
+            throw new TaskDomainException(Task.Errors.FOLDER_OWNER_NOT_MATCH);
     }
 
     private Task createTask(TaskCreationDetails taskDetails) {

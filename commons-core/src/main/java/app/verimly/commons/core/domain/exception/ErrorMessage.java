@@ -1,5 +1,7 @@
 package app.verimly.commons.core.domain.exception;
 
+import org.springframework.web.ErrorResponse;
+
 /**
  * Represents an error message with a code and a default message.
  * <p>
@@ -21,7 +23,7 @@ public record ErrorMessage(String code, String defaultMessage) {
      */
     public ErrorMessage {
         Assert.notNull(code, "ErrorMessage code cannot be null!");
-        if(defaultMessage == null)
+        if (defaultMessage == null)
             defaultMessage = "";
     }
 
@@ -43,5 +45,12 @@ public record ErrorMessage(String code, String defaultMessage) {
      */
     public static ErrorMessage unknown() {
         return new ErrorMessage("unknown", "unknown error.");
+    }
+
+
+
+    public ErrorMessage withDefaultMessage(String defaultMessage) {
+        return of(this.code, defaultMessage);
+
     }
 }

@@ -17,4 +17,8 @@ public class TaskId extends BaseId<UUID> {
     public static TaskId random() {
         return new TaskId(UUID.randomUUID());
     }
+
+    public static TaskId reconstruct(UUID value) {
+        return value == null ? null : new TaskId(value);
+    }
 }

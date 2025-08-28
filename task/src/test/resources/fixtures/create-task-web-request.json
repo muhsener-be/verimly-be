@@ -1,0 +1,7 @@
+{
+  "folder_id": "123e4567-e89b-12d3-a456-426614174000",
+  "name": "Complete project documentation",
+  "description": "Update all API documentation with the latest endpoint changes",
+  "due_date": "2025-12-31T23:59:59+03:00",
+  "priority": "HIGH"
+}
