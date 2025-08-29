@@ -10,6 +10,8 @@ import app.verimly.task.domain.vo.task.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Getter
 public class Task extends BaseEntity<TaskId> {
 
@@ -41,6 +43,45 @@ public class Task extends BaseEntity<TaskId> {
     }
 
 
+    public void rename(TaskName newName) {
+        if (Objects.equals(this.name, newName))
+            return;
+
+        this.name = newName;
+        checkNameInvariant();
+    }
+
+    public void changeStatus(TaskStatus status) {
+        if (Objects.equals(this.status, status))
+            return;
+
+        if (status == null)
+            throw new TaskDomainException(Errors.STATUS_NOT_NULL);
+
+        this.status = status;
+    }
+
+    public void changeDescription(TaskDescription description) {
+        if (Objects.equals(this.description, description))
+            return;
+        this.description = description;
+    }
+
+    public void changeDueDate(DueDate dueDate) {
+        if (Objects.equals(this.dueDate, dueDate))
+            return;
+
+        this.dueDate = dueDate;
+    }
+
+    public void changePriority(Priority priority) {
+        if (Objects.equals(this.priority, priority))
+            return;
+
+        this.priority = priority;
+    }
+
+
     public boolean isNotStarted() {
         return status == TaskStatus.NOT_STARTED;
     }
@@ -61,6 +102,10 @@ public class Task extends BaseEntity<TaskId> {
         if (folderId == null)
             throw new TaskDomainException(Errors.FOLDER_NOT_EXIST);
 
+        checkNameInvariant();
+    }
+
+    private void checkNameInvariant() {
         if (name == null)
             throw new TaskDomainException(Errors.NAME_NOT_EXIST);
     }
@@ -83,6 +128,7 @@ public class Task extends BaseEntity<TaskId> {
         public static final ErrorMessage FOLDER_NOT_EXIST = ErrorMessage.of("task.folder-not-exist", "Task must be in a folder.");
         public static final ErrorMessage NAME_NOT_EXIST = ErrorMessage.of("task.name-not-exist", "Task must have a name.");
         public static final ErrorMessage FOLDER_OWNER_NOT_MATCH = ErrorMessage.of("task.folder-owner-not-match", "Task owner and folder owner must match.");
+        public static final ErrorMessage STATUS_NOT_NULL = ErrorMessage.of("task.status-not-null", "Task status cannot be null");
     }
 
 

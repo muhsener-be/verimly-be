@@ -59,4 +59,8 @@ public class SecurityTestData {
     public MoveToFolderContext moveTaskToFolderContext(TaskId taskId, FolderId folderId) {
         return MoveToFolderContext.createWithTaskIdAndNewFolderId(taskId, folderId);
     }
+
+    public ReplaceTaskContext replaceTaskContextWithTaskId(TaskId taskId) {
+        return ReplaceTaskContext.createWithTaskId(taskId);
+    }
 }

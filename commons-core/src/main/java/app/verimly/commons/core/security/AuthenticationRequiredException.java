@@ -9,4 +9,5 @@ public class AuthenticationRequiredException extends SecurityException {
     public AuthenticationRequiredException(String message) {
         super(ERROR_MESSAGE, message);
     }
+
 }

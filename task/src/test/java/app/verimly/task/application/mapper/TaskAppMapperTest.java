@@ -3,6 +3,7 @@ package app.verimly.task.application.mapper;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
+import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
 import app.verimly.task.data.task.TaskTestData;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.input.TaskCreationDetails;
@@ -10,14 +11,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TaskAppMapperTest {
 
-    TaskTestData DATA = TaskTestData.getInstance();
+    static TaskTestData DATA = TaskTestData.getInstance();
 
 
     TaskAppMapper mapper;
@@ -96,4 +102,36 @@ public class TaskAppMapperTest {
         }
     }
 
+    @Nested
+    @DisplayName("Merge Task From Command")
+    class MergeTaskFrom {
+        static ReplaceTaskCommand command = DATA.replaceTaskCommand();
+        static Task taskStatic = DATA.task();
+
+        @Test
+        void happy_path() {
+            mapper.mergeTaskFrom(command, task);
+
+            assertEquals(command.description(), task.getDescription());
+            assertEquals(command.name(), task.getName());
+            assertEquals(command.status(), task.getStatus());
+            assertEquals(command.dueDate(), task.getDueDate());
+            assertEquals(command.priority(), task.getPriority());
+        }
+
+        @ParameterizedTest
+        @MethodSource("supplyInvalidArgumentsToMergeFromTask")
+        void whenArgumentsNull_shouldThrowsIllegalArgumentException(ReplaceTaskCommand argumentCommand, Task argumentTask) {
+
+            assertThrows(IllegalArgumentException.class,() ->  mapper.mergeTaskFrom(argumentCommand, argumentTask));
+        }
+
+        static List<Arguments> supplyInvalidArgumentsToMergeFromTask() {
+            return List.of(
+                    Arguments.arguments(null, taskStatic),
+                    Arguments.arguments(command, null),
+                    Arguments.arguments(null, null)
+            );
+        }
+    }
 }

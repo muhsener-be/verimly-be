@@ -8,6 +8,7 @@ import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
+import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
 import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.input.TaskCreationDetails;
@@ -119,7 +120,8 @@ public class TaskTestData {
     }
 
     public TaskStatus status() {
-        return TaskStatus.NOT_STARTED;
+        int random = ((int) (Math.random() * TaskStatus.values().length));
+        return TaskStatus.values()[random];
     }
 
     public TaskEntity taskEntityWithNullFields() {
@@ -149,5 +151,13 @@ public class TaskTestData {
 
     public MoveTaskToFolderCommand moveToFolderCommand() {
         return new MoveTaskToFolderCommand(id(), folderId());
+    }
+
+    public Task taskWithPriority(Priority priority) {
+        return task().toBuilder().priority(priority).build();
+    }
+
+    public ReplaceTaskCommand replaceTaskCommand() {
+        return new ReplaceTaskCommand(name(), description(), dueDate(), status(), priority());
     }
 }
