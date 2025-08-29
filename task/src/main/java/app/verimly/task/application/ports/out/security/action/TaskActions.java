@@ -6,4 +6,5 @@ public class TaskActions {
 
     public static final Action CREATE = new Action("TASK", "CREATE");
     public static final Action LIST_BY_FOLDER = new Action("TASK", "LIST_BY_FOLDER");
+    public static final Action MOVE_TO_FOLDER = new Action("TASK", "MOVE_TO_FOLDER");
 }
