@@ -7,6 +7,8 @@ import app.verimly.task.application.usecase.command.task.create.CreateTaskComman
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommandHandler;
+import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
+import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommandHandler;
 import app.verimly.task.application.usecase.query.task.list_by_folder.ListTasksByFolderQueryHandler;
 import app.verimly.task.domain.vo.folder.FolderId;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class TaskApplicationServiceImpl implements TaskApplicationService {
     private final CreateTaskCommandHandler createTaskCommandHandler;
     private final ListTasksByFolderQueryHandler listTasksByFolderQueryHandler;
     private final MoveTaskToFolderCommandHandler moveTaskToFolderCommandHandler;
+    private final ReplaceTaskCommandHandler replaceTaskCommandHandler;
 
     @Override
     public TaskCreationResponse create(CreateTaskCommand command) {
@@ -35,5 +38,11 @@ public class TaskApplicationServiceImpl implements TaskApplicationService {
     @Override
     public void moveToFolder(MoveTaskToFolderCommand command) {
         moveTaskToFolderCommandHandler.handle(command);
+    }
+
+    @Override
+    public TaskSummaryData replaceTask(ReplaceTaskCommand command) {
+        return replaceTaskCommandHandler.handle(command);
+
     }
 }

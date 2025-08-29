@@ -158,6 +158,6 @@ public class TaskTestData {
     }
 
     public ReplaceTaskCommand replaceTaskCommand() {
-        return new ReplaceTaskCommand(name(), description(), dueDate(), status(), priority());
+        return new ReplaceTaskCommand(id(), name(), description(), dueDate(), status(), priority());
     }
 }

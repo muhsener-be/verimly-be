@@ -1,7 +1,6 @@
 package app.verimly.task.adapter.web.mapper;
 
 import app.verimly.commons.core.domain.mapper.CoreVoMapper;
-import app.verimly.commons.core.domain.mapper.CoreVoMapperImpl;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.request.MoveTaskToFolderWebRequest;
 import app.verimly.task.adapter.web.dto.request.ReplaceTaskWebRequest;
@@ -13,6 +12,7 @@ import app.verimly.task.application.usecase.command.task.create.CreateTaskComman
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
 import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
+import app.verimly.task.domain.vo.task.TaskId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -59,7 +59,6 @@ public interface TaskWebMapper {
     MoveTaskToFolderCommand toMoveTaskToFolderCommand(UUID taskId, MoveTaskToFolderWebRequest source);
 
 
-
-    ReplaceTaskCommand toReplaceTaskCommand(ReplaceTaskWebRequest source);
+    ReplaceTaskCommand toReplaceTaskCommand(ReplaceTaskWebRequest source, TaskId taskId);
 }
 

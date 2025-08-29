@@ -3,6 +3,7 @@ package app.verimly.task.adapter.web.controller;
 import app.verimly.task.adapter.web.docs.CreateTaskSpringDoc;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.request.MoveTaskToFolderWebRequest;
+import app.verimly.task.adapter.web.dto.request.ReplaceTaskWebRequest;
 import app.verimly.task.adapter.web.dto.response.TaskCreationWebResponse;
 import app.verimly.task.adapter.web.dto.response.TaskSummaryWebResponse;
 import app.verimly.task.adapter.web.mapper.TaskWebMapper;
@@ -11,7 +12,9 @@ import app.verimly.task.application.ports.in.TaskApplicationService;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
+import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
 import app.verimly.task.domain.vo.folder.FolderId;
+import app.verimly.task.domain.vo.task.TaskId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,11 +52,23 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}/folder")
-    public void moveToFolder( @PathVariable("taskId") UUID taskId,
+    public void moveToFolder(@PathVariable("taskId") UUID taskId,
                              @RequestBody MoveTaskToFolderWebRequest request) {
 
         MoveTaskToFolderCommand command = mapper.toMoveTaskToFolderCommand(taskId, request);
         applicationService.moveToFolder(command);
+
+    }
+
+
+    @PutMapping("/{taskId}")
+    public TaskSummaryWebResponse replaceTask(@PathVariable("taskId") UUID taskId,
+                                              @RequestBody ReplaceTaskWebRequest request) {
+
+        ReplaceTaskCommand command = mapper.toReplaceTaskCommand(request, TaskId.of(taskId));
+        TaskSummaryData summaryData = applicationService.replaceTask(command);
+
+        return mapper.toTaskSummaryWebResponse(summaryData);
 
     }
 

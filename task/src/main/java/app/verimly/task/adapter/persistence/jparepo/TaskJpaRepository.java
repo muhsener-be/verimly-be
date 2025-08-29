@@ -10,8 +10,13 @@ import java.util.UUID;
 public interface TaskJpaRepository extends JpaRepository<TaskEntity, UUID> {
 
     List<TaskEntity> findByFolderId(UUID folderId);
+
     List<TaskEntity> findByOwnerId(UUID ownerId);
 
 
     List<TaskSummaryProjection> findDetailsProjectionsByOwnerIdAndFolderId(UUID ownerId, UUID folderId);
+
+    TaskSummaryProjection findSummaryById(UUID id);
+
+
 }

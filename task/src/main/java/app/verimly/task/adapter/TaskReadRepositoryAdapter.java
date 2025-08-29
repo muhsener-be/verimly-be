@@ -3,10 +3,11 @@ package app.verimly.task.adapter;
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.jparepo.TaskJpaRepository;
-import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
 import app.verimly.task.application.ports.out.persistence.TaskReadRepository;
+import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
 import app.verimly.task.domain.repository.TaskDataAccessException;
 import app.verimly.task.domain.vo.folder.FolderId;
+import app.verimly.task.domain.vo.task.TaskId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,5 +30,15 @@ public class TaskReadRepositoryAdapter implements TaskReadRepository {
             throw new TaskDataAccessException(e.getMessage(), e);
         }
 
+    }
+
+    @Override
+    public TaskSummaryProjection fetchTaskSummaryById(TaskId id) {
+        Assert.notNull(id, "TaskId cannot be null to fetch task summary by id");
+        try {
+            return jpaRepository.findSummaryById(id.getValue());
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
     }
 }

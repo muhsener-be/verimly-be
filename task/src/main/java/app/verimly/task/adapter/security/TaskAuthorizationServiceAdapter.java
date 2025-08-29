@@ -1,10 +1,7 @@
 package app.verimly.task.adapter.security;
 
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.adapter.security.rules.CreateTaskAuthorizationRule;
-import app.verimly.task.adapter.security.rules.ListFoldersAuthorizationRule;
-import app.verimly.task.adapter.security.rules.ListTasksByFolderAuthorizationRule;
-import app.verimly.task.adapter.security.rules.MoveTaskToFolderAuthorizationRule;
+import app.verimly.task.adapter.security.rules.*;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +15,7 @@ public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService
     private final ListFoldersAuthorizationRule listFoldersAuthorizationRule;
     private final CreateTaskAuthorizationRule createTaskAuthorizationRule;
     private final ListTasksByFolderAuthorizationRule listTasksByFolderAuthorizationRule;
+    private final ReplaceTaskAuthorizationRule replaceTaskAuthorizationRule;
 
 
     @Override
@@ -43,5 +41,10 @@ public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService
     @Override
     public void authorizeListTasksByFolder(Principal principal, ListTasksByFolderContext context) {
         listTasksByFolderAuthorizationRule.apply(principal,context);
+    }
+
+    @Override
+    public void authorizeReplaceTask(Principal principal, ReplaceTaskContext context) {
+        replaceTaskAuthorizationRule.apply(principal,context);
     }
 }

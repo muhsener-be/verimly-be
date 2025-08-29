@@ -16,4 +16,6 @@ public interface TaskAuthorizationService extends AuthorizationService {
     void authorizeCreateTask(Principal principal, CreateTaskContext context);
 
     void authorizeListTasksByFolder(Principal principal, ListTasksByFolderContext context);
+
+    void authorizeReplaceTask(Principal principal, ReplaceTaskContext context);
 }
