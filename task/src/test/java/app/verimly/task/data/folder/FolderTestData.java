@@ -120,8 +120,12 @@ public class FolderTestData {
 
     }
 
-    public FolderEntity folderWithIdAndOwnerId(FolderId folderId, UserId ownerId) {
+    public FolderEntity folderEntityWithIdAndOwnerId(FolderId folderId, UserId ownerId) {
         return folderEntityInternal(folderId, ownerId, null, null, null);
+    }
+
+    public Folder folderWithIdAndOwnerId(FolderId folderId, UserId ownerId) {
+        return folderWithFullFields().toBuilder().id(folderId).ownerId(ownerId).build();
     }
 
     public FolderEntity folderEntityInternal(FolderId folderId, UserId ownerId, FolderName name, FolderDescription description, Color labelColor) {

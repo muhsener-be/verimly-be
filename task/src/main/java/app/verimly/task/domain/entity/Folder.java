@@ -10,6 +10,7 @@ import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.folder.FolderName;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -21,6 +22,7 @@ public class Folder extends BaseEntity<FolderId> {
     private Color labelColor;
 
 
+    @Builder(toBuilder = true)
     protected Folder(FolderId id, UserId ownerId, FolderName name, @Nullable FolderDescription description, @Nullable Color labelColor) {
         this.id = id;
         this.name = name;

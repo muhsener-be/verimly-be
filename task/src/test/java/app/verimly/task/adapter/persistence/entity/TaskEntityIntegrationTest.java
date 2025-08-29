@@ -61,7 +61,7 @@ class TaskEntityIntegrationTest {
         userId = UserId.random();
         folderId = FolderId.random();
 
-        folder = FOLDER_DATA.folderWithIdAndOwnerId(folderId, userId);
+        folder = FOLDER_DATA.folderEntityWithIdAndOwnerId(folderId, userId);
         user = FOLDER_DATA.userEntityWithId(userId);
 
         taskEntity = builder.withRandomId().withOwnerId(userId.getValue()).withFolderId(folderId.getValue()).build();

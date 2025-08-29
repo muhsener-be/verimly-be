@@ -5,11 +5,9 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AnonymousPrincipal;
 import app.verimly.commons.core.security.AuthenticatedPrincipal;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
-import app.verimly.task.application.ports.out.security.context.CreateTaskContext;
-import app.verimly.task.application.ports.out.security.context.ListFoldersContext;
-import app.verimly.task.application.ports.out.security.context.ListTasksByFolderContext;
+import app.verimly.task.application.ports.out.security.context.*;
 import app.verimly.task.domain.vo.folder.FolderId;
+import app.verimly.task.domain.vo.task.TaskId;
 import org.jetbrains.annotations.NotNull;
 
 public class SecurityTestData {
@@ -56,5 +54,9 @@ public class SecurityTestData {
 
     public CreateTaskContext createTaskContext() {
         return new CreateTaskContext();
+    }
+
+    public MoveToFolderContext moveTaskToFolderContext(TaskId taskId, FolderId folderId) {
+        return MoveToFolderContext.createWithTaskIdAndNewFolderId(taskId, folderId);
     }
 }

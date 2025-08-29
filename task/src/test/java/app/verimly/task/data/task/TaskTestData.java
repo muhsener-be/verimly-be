@@ -52,6 +52,10 @@ public class TaskTestData {
         return task().toBuilder().ownerId(ownerId).build();
     }
 
+    public Task taskWithId(TaskId taskId) {
+        return task().toBuilder().id(taskId).build();
+    }
+
     public Task task() {
         return Task.builder()
                 .id(id())
@@ -64,6 +68,7 @@ public class TaskTestData {
                 .status(TaskStatus.NOT_STARTED)
                 .build();
     }
+
 
     public Task taskWithNullFields() {
         return Task.reconstruct(TaskId.random(), null, null, null, null, null, null, null);
@@ -136,4 +141,8 @@ public class TaskTestData {
     }
 
 
+    public Task taskWithIdAndOwnerId(TaskId taskId, UserId ownerId) {
+        return task().toBuilder().id(taskId).ownerId(ownerId).build();
+
+    }
 }

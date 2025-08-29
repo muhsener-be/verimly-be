@@ -65,4 +65,6 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
             throw new TaskDataAccessException(e.getMessage(), e);
         }
     }
+
+
 }
