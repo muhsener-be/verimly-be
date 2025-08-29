@@ -5,7 +5,7 @@ import app.verimly.task.application.ports.in.FolderApplicationService;
 import app.verimly.task.application.usecase.command.folder.create.CreateFolderCommand;
 import app.verimly.task.application.usecase.command.folder.create.CreateFolderCommandHandler;
 import app.verimly.task.application.usecase.command.folder.create.FolderCreationResponse;
-import app.verimly.task.application.usecase.query.ListFoldersQueryHandler;
+import app.verimly.task.application.usecase.query.folder.list.ListFoldersQueryHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -3,11 +3,12 @@ package app.verimly.task.adapter.web.mapper;
 import app.verimly.commons.core.domain.mapper.CoreVoMapperImpl;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.response.TaskCreationWebResponse;
+import app.verimly.task.adapter.web.dto.response.TaskSummaryWebResponse;
+import app.verimly.task.application.dto.TaskSummaryData;
 import app.verimly.task.application.mapper.TaskVoMapperImpl;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
 import app.verimly.task.data.task.TaskTestData;
-import app.verimly.task.domain.vo.task.DueDate;
 import app.verimly.task.utils.FixtureUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +20,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,6 +36,11 @@ class TaskWebMapperTest {
 
     TaskCreationResponse response;
 
+
+    private static final int SUMMARY_DATA_COUNT = 10;
+    List<TaskSummaryData> summaryData;
+
+
     @Autowired
     TaskWebMapper mapper;
 
@@ -42,6 +48,7 @@ class TaskWebMapperTest {
     public void setup() {
         webRequest = FixtureUtils.createTaskWebRequest();
         response = DATA.taskCreationResponse();
+        summaryData = DATA.summaryDatas(SUMMARY_DATA_COUNT);
 
     }
 
@@ -76,13 +83,9 @@ class TaskWebMapperTest {
     }
 
 
-    @ParameterizedTest
-    @MethodSource("supplyArguments")
-    void toTaskCreationWebResponse_validResponse_thenMapsSuccessfullyByAdjustingTimeZone(String expected, String actual, String userTimeZone) {
-        Instant actualInstant = Instant.parse(actual);
-        DueDate actualDueDate = DueDate.of(actualInstant);
-        LocaleContextHolder.setTimeZone(TimeZone.getTimeZone(userTimeZone));
-        response = response.withDueDate(actualDueDate);
+    @Test
+    void toTaskCreationWebResponse_validResponse_thenMapsSuccessfullyByAdjustingTimeZone() {
+
 
         TaskCreationWebResponse webResponse = mapper.toTaskCreationWebResponse(response);
 
@@ -93,22 +96,89 @@ class TaskWebMapperTest {
         assertEquals(response.description().getValue(), webResponse.getDescription());
         assertEquals(response.folderId().getValue(), webResponse.getFolderId());
         assertEquals(response.ownerId().getValue(), webResponse.getOwnerId());
+        assertNotNull(webResponse.getDueDate());
+    }
 
-        assertEquals(expected, webResponse.getDueDate().toString());
+
+    @ParameterizedTest
+    @MethodSource("supplyArguments")
+    void toZonedDateTime_shouldBeAwareOfTimeZoneAndDST(String expected, String utcTime, String userTimeZone) {
+        Instant utcInstant = Instant.parse(utcTime);
+        LocaleContextHolder.setTimeZone(TimeZone.getTimeZone(userTimeZone));
+
+        ZonedDateTime zonedTime = mapper.toZonedDateTimeTimeZoneAware(utcInstant);
+
+
+        assertEquals(expected, zonedTime.toString());
+
+
+    }
+
+
+    @Test
+    void toZonedDateTime_whenInstantIsNull_thenReturnsNull() {
+        assertNull(mapper.toZonedDateTimeTimeZoneAware(null));
     }
 
     @Test
-    void tests() {
-        Instant beforeDST = Instant.parse("2025-03-09T06:00:00Z");
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(beforeDST, ZoneId.of("America/New_York"));
-        System.out.println(zonedDateTime);
+    void toTaskSummaryWebResponse_shouldMapSuccessfully() {
 
-        Instant afterDST = Instant.parse("2025-03-09T07:00:00Z");
-        ZonedDateTime zonedAfterDST = ZonedDateTime.ofInstant(afterDST, ZoneId.of("America/New_York"));
-        System.out.println(zonedAfterDST);
+        List<TaskSummaryWebResponse> webResponses = mapper.toTaskSummaryWebResponse(summaryData);
 
-        OffsetDateTime offsetDateTime = OffsetDateTime.ofInstant(afterDST, ZoneId.of("America/New_York"));
-        System.out.println(offsetDateTime);
+        assertEquals(summaryData.size(), webResponses.size());
+        assertSummaryDataListAndSummaryWebResponseListsAreEqual(webResponses, summaryData);
+    }
+
+    private void assertSummaryDataListAndSummaryWebResponseListsAreEqual(List<TaskSummaryWebResponse> webResponses, List<TaskSummaryData> summaryData) {
+        for (int i = 0; i < SUMMARY_DATA_COUNT; i++) {
+            TaskSummaryData expected = summaryData.get(i);
+            TaskSummaryWebResponse actual = webResponses.get(i);
+            assertEquals(expected.id(), actual.getId());
+            assertEquals(expected.name(), actual.getName());
+            assertEquals(expected.folderId(), actual.getFolderId());
+            assertEquals(expected.ownerId(), actual.getOwnerId());
+            assertEquals(expected.status(), actual.getStatus().name());
+            assertEquals(expected.priority(), actual.getPriority());
+            assertEquals(expected.description(), actual.getDescription());
+            assertTrue(areInstantAndZonedDateTimeEqual(actual.getDueDate(), expected.dueDate()));
+            assertTrue(areInstantAndZonedDateTimeEqual(actual.getCreatedAt(), expected.createdAt()));
+            assertTrue(areInstantAndZonedDateTimeEqual(actual.getUpdatedAt(), expected.updatedAt()));
+
+
+        }
+    }
+
+    @Test
+    void toTaskSummaryWebResponse_whenInputNull_thenReturnsNull() {
+        List<TaskSummaryData> nullList = null;
+        assertNull(mapper.toTaskSummaryWebResponse(nullList));
+    }
+
+    @Test
+    void toTaskSummaryWebResponse_whenListIsEmpty_thenReturnsEmpty() {
+        List<TaskSummaryData> emptyList = List.of();
+        assertTrue(mapper.toTaskSummaryWebResponse(emptyList).isEmpty());
+    }
+
+    @Test
+    void toTaskSummaryWebResponse_thenListContainsNullElement_thenSkipsIt() {
+        ArrayList<TaskSummaryData> mutableList = new ArrayList<>(summaryData);
+        mutableList.add(null);
+        assertEquals(summaryData.size() + 1, mutableList.size());
+
+        List<TaskSummaryWebResponse> webResponses = mapper.toTaskSummaryWebResponse(mutableList);
+
+        assertEquals(summaryData.size(), webResponses.size());
+        assertSummaryDataListAndSummaryWebResponseListsAreEqual(webResponses, summaryData);
+
+    }
+
+    boolean areInstantAndZonedDateTimeEqual(ZonedDateTime zonedDateTime, Instant instant) {
+        return Objects.equals(
+                zonedDateTime != null ? zonedDateTime.toInstant() : null,
+                instant
+        );
+
     }
 
     static List<Arguments> supplyArguments() {

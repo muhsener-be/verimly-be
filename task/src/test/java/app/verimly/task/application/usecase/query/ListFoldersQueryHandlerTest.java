@@ -11,6 +11,7 @@ import app.verimly.task.application.ports.out.persistence.FolderSummaryProjectio
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.action.FolderActions;
+import app.verimly.task.application.usecase.query.folder.list.ListFoldersQueryHandler;
 import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.domain.repository.TaskDataAccessException;

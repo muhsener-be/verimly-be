@@ -8,6 +8,7 @@ import app.verimly.commons.core.security.Principal;
 import app.verimly.task.application.ports.out.security.resource.FolderResource;
 import app.verimly.task.application.ports.out.security.resource.TaskResource;
 import app.verimly.task.domain.vo.folder.FolderId;
+import org.jetbrains.annotations.NotNull;
 
 public class SecurityTestData {
 
@@ -18,7 +19,15 @@ public class SecurityTestData {
     }
 
     public Principal authenticatedPrincipal() {
-        return AuthenticatedPrincipal.of(UserId.random(), Email.of("random@email.com"));
+        return AuthenticatedPrincipal.of(getUserId(), getEmail());
+    }
+
+    private static Email getEmail() {
+        return Email.of("random@email.com");
+    }
+
+    private static UserId getUserId() {
+        return UserId.random();
     }
 
     public Principal anonymousPrincipal() {
@@ -26,10 +35,14 @@ public class SecurityTestData {
     }
 
     public FolderResource folderResource() {
-        return new FolderResource(FolderId.random(), UserId.random());
+        return new FolderResource(getFolderId(), getUserId());
     }
 
     public TaskResource taskResource() {
-        return new TaskResource();
+        return new TaskResource(getUserId(), getFolderId());
+    }
+
+    private static @NotNull FolderId getFolderId() {
+        return FolderId.random();
     }
 }

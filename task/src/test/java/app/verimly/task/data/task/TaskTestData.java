@@ -3,6 +3,7 @@ package app.verimly.task.data.task;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.utils.MyStringUtils;
 import app.verimly.task.adapter.persistence.entity.TaskEntity;
+import app.verimly.task.application.dto.TaskSummaryData;
 import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
@@ -13,7 +14,10 @@ import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.task.*;
 import com.github.javafaker.Faker;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 public class TaskTestData {
 
@@ -113,4 +117,17 @@ public class TaskTestData {
     }
 
 
+    public List<TaskSummaryData> summaryDatas(int count) {
+        return IntStream.range(0, count)
+                .mapToObj(i -> summaryData())
+                .toList();
+    }
+
+    public TaskSummaryData summaryData() {
+        return new TaskSummaryData(
+                id().getValue(), ownerId().getValue(), folderId().getValue(), name().getValue(),
+                description().getValue(), dueDate().getValue(), status().name(), priority().name(),
+                Instant.now(), Instant.now()
+        );
+    }
 }

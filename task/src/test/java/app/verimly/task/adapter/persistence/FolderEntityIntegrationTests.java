@@ -1,13 +1,15 @@
 package app.verimly.task.adapter.persistence;
 
 import app.verimly.commons.core.domain.mapper.CoreVoMapperImpl;
+import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.FolderEntity;
 import app.verimly.task.adapter.persistence.jparepo.FolderJpaRepository;
-import app.verimly.task.adapter.persistence.jparepo.FolderJpaRepositoryTest;
 import app.verimly.task.adapter.persistence.mapper.FolderDbMapper;
 import app.verimly.task.adapter.persistence.mapper.FolderDbMapperImpl;
+import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.domain.entity.Folder;
+import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.user.adapter.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,11 +26,10 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({FolderDbMapperImpl.class, CoreVoMapperImpl.class})
+@Import({FolderDbMapperImpl.class, CoreVoMapperImpl.class, FolderWriteRepositoryAdapter.class})
 @TestPropertySource(properties = {
         "spring.jpa.defer-datasource-initialization=true"
 })
@@ -47,6 +48,10 @@ public class FolderEntityIntegrationTests {
 
     @Autowired
     public FolderJpaRepository folderJpaRepository;
+
+
+    @Autowired
+    public FolderWriteRepositoryAdapter adapter;
 
     @BeforeEach
     void setup() {
@@ -125,8 +130,25 @@ public class FolderEntityIntegrationTests {
     }
 
 
+    @Test
+    void findOwnerByOf_whenFound_thenReturnsOwnerId() {
+        UserId ownerId = UserId.of(jpaWithUser.getOwnerId());
+        FolderId folderId = FolderId.of(jpaWithUser.getId());
+        persistAndFlush(jpaWithUser);
+
+        UserId foundOwnerId = adapter.findOwnerOf(folderId);
+
+        assertEquals(ownerId, foundOwnerId);
+
+    }
 
 
+    @Test
+    void findByOwnerOf_thenFolderNotFound_thenThrowsFolderNotFound() {
+        FolderId random = FolderId.random();
+
+        assertThrows(FolderNotFoundException.class, () -> adapter.findOwnerOf(random));
+    }
 
     private @NotNull Executable getPersistAndFlushExecutable(FolderEntity jpa) {
         return () -> persistAndFlush(jpa);

@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Data
-public class TaskDetailsWebResponse {
+public class TaskSummaryWebResponse {
 
     private UUID id;
 

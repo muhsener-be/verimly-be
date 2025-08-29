@@ -1,6 +1,7 @@
 package app.verimly.task.domain.repository;
 
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.vo.folder.FolderId;
 
@@ -15,4 +16,5 @@ public interface FolderWriteRepository {
 
     List<Folder> findByOwner(UserId userId) throws TaskDataAccessException;
 
+    UserId findOwnerOf(FolderId folderId) throws FolderNotFoundException, TaskDataAccessException;
 }

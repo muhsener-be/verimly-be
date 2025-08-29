@@ -3,6 +3,7 @@ package app.verimly.task.adapter.persistence.entity;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.utils.MyStringUtils;
 import app.verimly.task.adapter.persistence.jparepo.TaskJpaRepository;
+import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.task.TaskDescription;
@@ -77,7 +78,7 @@ class TaskEntityIntegrationTest {
         for (int i = 0; i < TASK_DATA_COUNT; i++) {
             TaskEntity taskEntityToSave = builder.withRandomId().withOwnerId(userId.getValue()).withFolderId(folderId.getValue()).build();
             taskEntities.add(taskEntityToSave);
-            System.out.println("Task" + i +":  " +  taskEntityToSave.getId());
+            System.out.println("Task" + i + ":  " + taskEntityToSave.getId());
         }
 
         taskEntities.forEach(entity -> {
@@ -161,41 +162,42 @@ class TaskEntityIntegrationTest {
         assertNotNull(foundEntity.getCreatedAt());
         assertNotNull(foundEntity.getUpdatedAt());
     }
-//
-   @Test
-   void findById_whenExist_thenReturnTaskEntity(){
-       TaskEntity task = taskEntities.getFirst();
-       UUID taskId = task.getId();
 
-       Optional<TaskEntity> byId = taskJpaRepository.findById(taskId);
-       assertTrue(byId.isPresent());
-       TaskEntity actualTask = byId.get();
-       assertTaskEntitiesEqual(task,actualTask);
-   }
+    //
+    @Test
+    void findById_whenExist_thenReturnTaskEntity() {
+        TaskEntity task = taskEntities.getFirst();
+        UUID taskId = task.getId();
 
-   @Test
-   void findById_whenNotExist_thenReturnsEmptyOptional(){
-       UUID randomTaskId = TaskId.random().getValue();
-
-       Optional<TaskEntity> byId = taskJpaRepository.findById(randomTaskId);
-
-
-       assertTrue(byId.isEmpty());
-
-   }
-
-
-   @Test
-   void findByFolderId_whenNotExist_thenReturnsEmptyList(){
-       UUID randomFolderId = FolderId.random().getValue();
-
-       List<TaskEntity> tasksFound = taskJpaRepository.findByFolderId(randomFolderId);
-
-       assertTrue(tasksFound.isEmpty());
-   }
+        Optional<TaskEntity> byId = taskJpaRepository.findById(taskId);
+        assertTrue(byId.isPresent());
+        TaskEntity actualTask = byId.get();
+        assertTaskEntitiesEqual(task, actualTask);
+    }
 
     @Test
-    void findByOwnerId_whenNotExist_thenReturnsEmptyList(){
+    void findById_whenNotExist_thenReturnsEmptyOptional() {
+        UUID randomTaskId = TaskId.random().getValue();
+
+        Optional<TaskEntity> byId = taskJpaRepository.findById(randomTaskId);
+
+
+        assertTrue(byId.isEmpty());
+
+    }
+
+
+    @Test
+    void findByFolderId_whenNotExist_thenReturnsEmptyList() {
+        UUID randomFolderId = FolderId.random().getValue();
+
+        List<TaskEntity> tasksFound = taskJpaRepository.findByFolderId(randomFolderId);
+
+        assertTrue(tasksFound.isEmpty());
+    }
+
+    @Test
+    void findByOwnerId_whenNotExist_thenReturnsEmptyList() {
         UUID randomOwnerId = UserId.random().getValue();
 
         List<TaskEntity> tasksFound = taskJpaRepository.findByOwnerId(randomOwnerId);
@@ -203,14 +205,14 @@ class TaskEntityIntegrationTest {
         assertTrue(tasksFound.isEmpty());
     }
 
-//
+    //
     @Test
     void findByFolderId_whenFound_thenReturnsAllTasks() {
         UUID existingFolderId = this.folderId.getValue();
 
         List<TaskEntity> foundTasks = taskJpaRepository.findByFolderId(existingFolderId);
 
-        assertTaskEntitiesEqual(taskEntities , foundTasks);
+        assertTaskEntitiesEqual(taskEntities, foundTasks);
     }
 
     @Test
@@ -219,7 +221,49 @@ class TaskEntityIntegrationTest {
 
         List<TaskEntity> foundTasks = taskJpaRepository.findByOwnerId(existingUserId);
 
-        assertTaskEntitiesEqual(taskEntities , foundTasks);
+        assertTaskEntitiesEqual(taskEntities, foundTasks);
+
+    }
+
+
+    @Test
+    void findDetailsProjections_whenFound_thenReturnsAllProjections() {
+
+        List<TaskSummaryProjection> projections = taskJpaRepository.findDetailsProjectionsByOwnerIdAndFolderId(this.userId.getValue(), this.folderId.getValue());
+
+        assertTaskProjectionAndEntityEquals(taskEntities, projections);
+
+    }
+
+
+    @Test
+    void findDetailsProjections_whenFound_thenEmptyList() {
+        UUID differentUserId = UserId.random().getValue();
+
+        List<TaskSummaryProjection> projections = taskJpaRepository.findDetailsProjectionsByOwnerIdAndFolderId(differentUserId, this.folderId.getValue());
+
+        assertTrue(projections.isEmpty());
+    }
+
+    private void assertTaskProjectionAndEntityEquals(List<TaskEntity> expected, List<TaskSummaryProjection> actual) {
+        int size = expected.size();
+        for (int i = 0; i < size; i++) {
+            assertTaskProjectionAndEntityEquals(expected.get(i), actual.get(i));
+        }
+    }
+
+    private void assertTaskProjectionAndEntityEquals(TaskEntity expected, TaskSummaryProjection actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getOwnerId(), actual.getOwnerId());
+        assertEquals(expected.getFolderId(), actual.getFolderId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getDueDate(), actual.getDueDate());
+        assertEquals(expected.getPriority(), actual.getPriority());
+        assertEquals(expected.getStatus(), actual.getStatus());
+        assertEquals(expected.getCreatedAt(), actual.getCreatedAt());
+        assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
+
 
     }
 
@@ -229,7 +273,7 @@ class TaskEntityIntegrationTest {
         for (int i = 0; i < size; i++) {
             TaskEntity expectedTask = expected.get(i);
             TaskEntity actualTask = actual.get(i);
-            assertTaskEntitiesEqual(expectedTask,actualTask);
+            assertTaskEntitiesEqual(expectedTask, actualTask);
 
         }
     }
@@ -255,7 +299,7 @@ class TaskEntityIntegrationTest {
         assertThrowsException(DataException.class);
     }
 
-    private void assertThrowsDataIntegrityViolationException(){
+    private void assertThrowsDataIntegrityViolationException() {
         assertThrowsException(DataIntegrityViolationException.class);
     }
 

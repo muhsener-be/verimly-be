@@ -6,7 +6,7 @@ import app.verimly.task.domain.vo.task.TaskStatus;
 import java.time.Instant;
 import java.util.UUID;
 
-public interface TaskDetailsProjection {
+public interface TaskSummaryProjection {
 
     UUID getId();
 

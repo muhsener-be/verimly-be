@@ -3,19 +3,24 @@ package app.verimly.task.adapter.persistence;
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.FolderEntity;
+import app.verimly.task.adapter.persistence.jparepo.FolderJpaRepository;
 import app.verimly.task.adapter.persistence.mapper.FolderDbMapper;
+import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.repository.FolderWriteRepository;
 import app.verimly.task.domain.repository.TaskDataAccessException;
 import app.verimly.task.domain.vo.folder.FolderId;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class FolderWriteRepositoryAdapter implements FolderWriteRepository {
     private final EntityManager entityManager;
 
     private final FolderDbMapper mapper;
+    private final FolderJpaRepository folderJpaRepository;
 
     @Override
     @Transactional
@@ -57,5 +63,25 @@ public class FolderWriteRepositoryAdapter implements FolderWriteRepository {
     @Override
     public List<Folder> findByOwner(UserId userId) throws TaskDataAccessException {
         return List.of();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserId findOwnerOf(FolderId folderId) throws FolderNotFoundException, TaskDataAccessException {
+        Assert.notNull(folderId, "folderId canot be null to find owner of the folder");
+
+        try {
+            TypedQuery<UUID> typedQuery = entityManager.createQuery("SELECT f.ownerId FROM FolderEntity f WHERE f.id = :id ", UUID.class)
+                    .setParameter("id", folderId.getValue());
+
+            UUID result = typedQuery.getSingleResult();
+            return UserId.of(result);
+        } catch (NoResultException nre) {
+            throw new FolderNotFoundException(folderId);
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
+
+
     }
 }

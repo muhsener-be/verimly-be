@@ -1,4 +1,4 @@
-package app.verimly.task.application.usecase.query;
+package app.verimly.task.application.usecase.query.folder.list;
 
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.Principal;

@@ -12,5 +12,6 @@ public interface FolderJpaRepository extends JpaRepository<FolderEntity, UUID> {
 
     List<FolderSummaryProjection> findSummariesByOwnerId(UUID ownerId);
 
+
 }
 

@@ -3,17 +3,20 @@ package app.verimly.task.adapter.web.controller;
 import app.verimly.task.adapter.web.docs.CreateTaskSpringDoc;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.response.TaskCreationWebResponse;
+import app.verimly.task.adapter.web.dto.response.TaskSummaryWebResponse;
 import app.verimly.task.adapter.web.mapper.TaskWebMapper;
+import app.verimly.task.application.dto.TaskSummaryData;
 import app.verimly.task.application.ports.in.TaskApplicationService;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
+import app.verimly.task.domain.vo.folder.FolderId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -35,4 +38,13 @@ public class TaskController {
                 response.id(), response.name(), response.description(), response.priority(), response.ownerId(), response.folderId());
         return mapper.toTaskCreationWebResponse(response);
     }
+
+    @GetMapping
+    public List<TaskSummaryWebResponse> listTasksByFolder(@RequestParam("folderId") UUID folderId) {
+        List<TaskSummaryData> summaryData = applicationService.findTasksByFolderId(FolderId.of(folderId));
+
+        return mapper.toTaskSummaryWebResponse(summaryData);
+    }
+
+
 }
