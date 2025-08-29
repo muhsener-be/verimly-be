@@ -15,5 +15,6 @@ public interface TaskWriteRepository {
 
     List<Task> findByOwnerId(UserId ownerId) throws TaskDataAccessException;
 
+    Task update(Task task);
 
 }

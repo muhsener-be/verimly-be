@@ -2,6 +2,7 @@ package app.verimly.task.adapter.web.controller;
 
 import app.verimly.task.adapter.web.docs.CreateTaskSpringDoc;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
+import app.verimly.task.adapter.web.dto.request.MoveTaskToFolderWebRequest;
 import app.verimly.task.adapter.web.dto.response.TaskCreationWebResponse;
 import app.verimly.task.adapter.web.dto.response.TaskSummaryWebResponse;
 import app.verimly.task.adapter.web.mapper.TaskWebMapper;
@@ -9,6 +10,7 @@ import app.verimly.task.application.dto.TaskSummaryData;
 import app.verimly.task.application.ports.in.TaskApplicationService;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
+import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
 import app.verimly.task.domain.vo.folder.FolderId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +46,15 @@ public class TaskController {
         List<TaskSummaryData> summaryData = applicationService.findTasksByFolderId(FolderId.of(folderId));
 
         return mapper.toTaskSummaryWebResponse(summaryData);
+    }
+
+    @PutMapping("/{taskId}/folder")
+    public void moveToFolder( @PathVariable("taskId") UUID taskId,
+                             @RequestBody MoveTaskToFolderWebRequest request) {
+
+        MoveTaskToFolderCommand command = mapper.toMoveTaskToFolderCommand(taskId, request);
+        applicationService.moveToFolder(command);
+
     }
 
 

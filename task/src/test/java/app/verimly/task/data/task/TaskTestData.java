@@ -7,6 +7,7 @@ import app.verimly.task.application.dto.TaskSummaryData;
 import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
+import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
 import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.input.TaskCreationDetails;
@@ -144,5 +145,9 @@ public class TaskTestData {
     public Task taskWithIdAndOwnerId(TaskId taskId, UserId ownerId) {
         return task().toBuilder().id(taskId).ownerId(ownerId).build();
 
+    }
+
+    public MoveTaskToFolderCommand moveToFolderCommand() {
+        return new MoveTaskToFolderCommand(id(), folderId());
     }
 }

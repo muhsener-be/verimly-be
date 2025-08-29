@@ -47,4 +47,9 @@ public interface TaskVoMapper {
     default TaskStatus toTaskStatus(String value) {
         return TaskStatus.of(value);
     }
+
+    default TaskId toTaskId(UUID value) {
+        return TaskId.of(value);
+    }
+
 }

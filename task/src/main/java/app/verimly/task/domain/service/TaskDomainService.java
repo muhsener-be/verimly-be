@@ -29,12 +29,13 @@ public class TaskDomainService {
 
     }
 
-    public void moveToFolder(@NotNull Task taskToMove, @NotNull Folder newFolder) throws TaskDomainException {
+    public Task moveToFolder(@NotNull Task taskToMove, @NotNull Folder newFolder) throws TaskDomainException {
         Assert.notNull(taskToMove, "taskToMove cannot be null");
         Assert.notNull(newFolder, "newFolder cannot be null");
 
         ensureFolderAndTaskHaveTheSameOwner(newFolder, taskToMove.getOwnerId());
         taskToMove.moveToFolder(newFolder.getId());
+        return taskToMove;
 
     }
 
@@ -47,14 +48,7 @@ public class TaskDomainService {
     }
 
     private Task createTask(TaskCreationDetails taskDetails) {
-        return factory.create(
-                taskDetails.ownerId(),
-                taskDetails.folderId(),
-                taskDetails.name(),
-                taskDetails.description(),
-                taskDetails.dueDate(),
-                taskDetails.priority()
-        );
+        return factory.create(taskDetails.ownerId(), taskDetails.folderId(), taskDetails.name(), taskDetails.description(), taskDetails.dueDate(), taskDetails.priority());
     }
 
 

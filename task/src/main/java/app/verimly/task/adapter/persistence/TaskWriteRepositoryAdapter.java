@@ -22,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
 
+    private final TaskJpaRepository taskJpaRepository;
     @PersistenceContext
     private EntityManager entityManager;
     private final TaskDbMapper taskDbMapper;
@@ -61,6 +62,23 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
             return jpaRepository.findByOwnerId(ownerId.getValue())
                     .stream().map(taskDbMapper::toDomainEntity)
                     .toList();
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public Task update(Task task) {
+        Assert.notNull(task, "Task cannot be null to update.");
+        try {
+            TaskEntity taskEntity = taskJpaRepository.findById(task.getId().getValue()).orElseThrow();
+
+            taskDbMapper.mergeFromDomain(task, taskEntity);
+
+            entityManager.flush();
+            return task;
+
         } catch (Exception e) {
             throw new TaskDataAccessException(e.getMessage(), e);
         }
