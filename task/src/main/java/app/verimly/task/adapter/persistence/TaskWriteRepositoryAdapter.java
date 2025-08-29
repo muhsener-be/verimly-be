@@ -10,13 +10,16 @@ import app.verimly.task.domain.repository.TaskDataAccessException;
 import app.verimly.task.domain.repository.TaskWriteRepository;
 import app.verimly.task.domain.vo.task.TaskId;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -79,6 +82,42 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
             entityManager.flush();
             return task;
 
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public Task deleteTask(TaskId taskId) {
+        Assert.notNull(taskId, "taskId cannot be null to delete task.");
+        try {
+            TaskEntity taskEntityToDelete = taskJpaRepository.findTaskById(taskId.getValue()).orElseThrow();
+
+            taskJpaRepository.delete(taskEntityToDelete);
+            return taskDbMapper.toDomainEntity(taskEntityToDelete);
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public Optional<UserId> findOwnerOf(TaskId taskId) {
+        Assert.notNull(taskId, "TaskId cannot be null to find owner");
+        try {
+
+            TypedQuery<UUID> typedQuery = entityManager.createQuery("SELECT t.ownerId FROM TaskEntity t WHERE t.id = :id", UUID.class)
+                    .setParameter("id", taskId.getValue());
+
+            UUID result = typedQuery.getSingleResult();
+
+            return Optional.ofNullable(UserId.of(result));
+
+
+        } catch (NoResultException noResultException) {
+            return Optional.empty();
         } catch (Exception e) {
             throw new TaskDataAccessException(e.getMessage(), e);
         }

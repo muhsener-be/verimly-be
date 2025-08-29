@@ -6,6 +6,7 @@ import app.verimly.task.application.usecase.command.task.create.TaskCreationResp
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
 import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
 import app.verimly.task.domain.vo.folder.FolderId;
+import app.verimly.task.domain.vo.task.TaskId;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface TaskApplicationService {
     void moveToFolder(MoveTaskToFolderCommand command);
 
     TaskSummaryData replaceTask(ReplaceTaskCommand command);
+
+    void deleteTask(TaskId taskId);
 }

@@ -71,11 +71,11 @@ public class ErrorResponse {
                 .build();
     }
 
-    public static ErrorResponse forbidden(String message, String path) {
+    public static ErrorResponse forbidden(String errorCode, String message, String path) {
         return ErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(403)
-                .error("Forbidden")
+                .error(errorCode)
                 .message(message)
                 .path(path)
                 .additional(null)

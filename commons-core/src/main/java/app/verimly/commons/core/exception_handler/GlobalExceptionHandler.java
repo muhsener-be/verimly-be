@@ -4,6 +4,7 @@ import app.verimly.commons.core.domain.exception.ConflictException;
 import app.verimly.commons.core.domain.exception.DomainException;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.NotFoundException;
+import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.web.response.ErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,16 @@ public class GlobalExceptionHandler {
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
         String message = findMessageFromErrorMessage(actualErrorMessage);
         return ErrorResponse.badRequest(actualErrorMessage.code(), message, request.getDescription(false));
+
+    }
+
+    @ExceptionHandler({NoPermissionException.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleNoPermissionException(NoPermissionException ex, WebRequest request) {
+
+        ErrorMessage actualErrorMessage = ex.getErrorMessage();
+        String message = findMessageFromErrorMessage(actualErrorMessage);
+        return ErrorResponse.forbidden(actualErrorMessage.code(), message, request.getDescription(false));
 
     }
 

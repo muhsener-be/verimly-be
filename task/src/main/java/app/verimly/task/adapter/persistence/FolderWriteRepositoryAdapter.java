@@ -67,7 +67,7 @@ public class FolderWriteRepositoryAdapter implements FolderWriteRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public UserId findOwnerOf(FolderId folderId) throws FolderNotFoundException, TaskDataAccessException {
+    public Optional<UserId> findOwnerOf(FolderId folderId) throws FolderNotFoundException, TaskDataAccessException {
         Assert.notNull(folderId, "folderId canot be null to find owner of the folder");
 
         try {
@@ -75,9 +75,9 @@ public class FolderWriteRepositoryAdapter implements FolderWriteRepository {
                     .setParameter("id", folderId.getValue());
 
             UUID result = typedQuery.getSingleResult();
-            return UserId.of(result);
+            return Optional.of(UserId.of(result));
         } catch (NoResultException nre) {
-            throw new FolderNotFoundException(folderId);
+            return Optional.empty();
         } catch (Exception e) {
             throw new TaskDataAccessException(e.getMessage(), e);
         }

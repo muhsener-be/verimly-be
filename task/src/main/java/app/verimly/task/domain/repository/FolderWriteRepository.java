@@ -16,5 +16,5 @@ public interface FolderWriteRepository {
 
     List<Folder> findByOwner(UserId userId) throws TaskDataAccessException;
 
-    UserId findOwnerOf(FolderId folderId) throws FolderNotFoundException, TaskDataAccessException;
+    Optional<UserId> findOwnerOf(FolderId folderId) throws FolderNotFoundException, TaskDataAccessException;
 }

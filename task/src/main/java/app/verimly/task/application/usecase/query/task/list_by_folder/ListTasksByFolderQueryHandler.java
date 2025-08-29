@@ -34,6 +34,8 @@ public class ListTasksByFolderQueryHandler {
     public List<TaskSummaryData> handle(FolderId folderId) {
         ensureFolderIdIsValid(folderId);
 
+
+
         Principal principal = authN.getCurrentPrincipal();
         authorizeRequest(principal, folderId);
 

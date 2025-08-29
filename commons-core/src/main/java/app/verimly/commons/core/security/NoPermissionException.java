@@ -5,7 +5,7 @@ import app.verimly.commons.core.domain.vo.UserId;
 
 public class NoPermissionException extends SecurityException {
 
-    private static final ErrorMessage errorMessage = ErrorMessage.of("forbidden", "Forbidden");
+    public static final ErrorMessage errorMessage = ErrorMessage.of("forbidden", "Forbidden");
 
 
     public NoPermissionException(Principal principal, Action action) {

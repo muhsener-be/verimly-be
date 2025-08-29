@@ -5,12 +5,14 @@ import app.verimly.task.application.ports.in.TaskApplicationService;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommandHandler;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
+import app.verimly.task.application.usecase.command.task.delete.DeleteTaskCommandHandler;
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommandHandler;
 import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
 import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommandHandler;
 import app.verimly.task.application.usecase.query.task.list_by_folder.ListTasksByFolderQueryHandler;
 import app.verimly.task.domain.vo.folder.FolderId;
+import app.verimly.task.domain.vo.task.TaskId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ public class TaskApplicationServiceImpl implements TaskApplicationService {
     private final ListTasksByFolderQueryHandler listTasksByFolderQueryHandler;
     private final MoveTaskToFolderCommandHandler moveTaskToFolderCommandHandler;
     private final ReplaceTaskCommandHandler replaceTaskCommandHandler;
+    private final DeleteTaskCommandHandler deleteTaskCommandHandler;
 
     @Override
     public TaskCreationResponse create(CreateTaskCommand command) {
@@ -44,5 +47,10 @@ public class TaskApplicationServiceImpl implements TaskApplicationService {
     public TaskSummaryData replaceTask(ReplaceTaskCommand command) {
         return replaceTaskCommandHandler.handle(command);
 
+    }
+
+    @Override
+    public void deleteTask(TaskId taskId) {
+        deleteTaskCommandHandler.handle(taskId);
     }
 }

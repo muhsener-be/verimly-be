@@ -17,4 +17,7 @@ public interface TaskWriteRepository {
 
     Task update(Task task);
 
+    Task deleteTask(TaskId taskId);
+
+    Optional<UserId> findOwnerOf(TaskId taskId);
 }

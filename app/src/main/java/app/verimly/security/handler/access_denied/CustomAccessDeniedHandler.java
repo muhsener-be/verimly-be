@@ -1,5 +1,6 @@
 package app.verimly.security.handler.access_denied;
 
+import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.web.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -26,7 +27,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.debug("Handling access denied exception. [Reason: {}]", accessDeniedException.getMessage());
 
-        ErrorResponse error = ErrorResponse.forbidden(accessDeniedException.getMessage(), request.getRequestURI());
+        ErrorResponse error = ErrorResponse.forbidden(NoPermissionException.errorMessage.code(), accessDeniedException.getMessage(), request.getRequestURI());
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         objectMapper.writeValue(response.getWriter(), error);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

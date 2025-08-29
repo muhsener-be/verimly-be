@@ -16,6 +16,7 @@ public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService
     private final CreateTaskAuthorizationRule createTaskAuthorizationRule;
     private final ListTasksByFolderAuthorizationRule listTasksByFolderAuthorizationRule;
     private final ReplaceTaskAuthorizationRule replaceTaskAuthorizationRule;
+    private final DeleteTaskAuthorizationRule deleteTaskAuthorizationRule;
 
 
     @Override
@@ -35,16 +36,22 @@ public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService
 
     @Override
     public void authorizeCreateTask(Principal principal, CreateTaskContext context) {
-        createTaskAuthorizationRule.apply(principal,context);;
+        createTaskAuthorizationRule.apply(principal, context);
+        ;
     }
 
     @Override
     public void authorizeListTasksByFolder(Principal principal, ListTasksByFolderContext context) {
-        listTasksByFolderAuthorizationRule.apply(principal,context);
+        listTasksByFolderAuthorizationRule.apply(principal, context);
     }
 
     @Override
     public void authorizeReplaceTask(Principal principal, ReplaceTaskContext context) {
-        replaceTaskAuthorizationRule.apply(principal,context);
+        replaceTaskAuthorizationRule.apply(principal, context);
+    }
+
+    @Override
+    public void authorizeDeleteTask(Principal principal, DeleteTaskContext context) {
+        deleteTaskAuthorizationRule.apply(principal, context);
     }
 }

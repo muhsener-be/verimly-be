@@ -37,13 +37,15 @@ public class ListTasksByFolderAuthorizationRule extends AbstractAuthorizationRul
 
 
     private void ensureOwnerOfTheFolder(Principal principal, FolderId folderId) {
-        UserId ownerIdOfTheFolder = fetchOwnerIdOfTheFolder(folderId);
+        UserId ownerIdOfTheFolder = fetchOwnerIdOfTheFolder(principal, folderId);
         if (!Objects.equals(principal.getId(), ownerIdOfTheFolder))
             throw new NoPermissionException(principal, TaskActions.LIST_BY_FOLDER);
     }
 
-    private UserId fetchOwnerIdOfTheFolder(FolderId folderId) {
-        return folderWriteRepository.findOwnerOf(folderId);
+    private UserId fetchOwnerIdOfTheFolder(Principal principal, FolderId folderId) {
+        return folderWriteRepository.findOwnerOf(folderId).orElseThrow(
+                () -> new NoPermissionException(principal, TaskActions.LIST_BY_FOLDER)
+        );
     }
 
 

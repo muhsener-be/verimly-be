@@ -6,7 +6,6 @@ import app.verimly.task.adapter.persistence.entity.FolderEntity;
 import app.verimly.task.adapter.persistence.jparepo.FolderJpaRepository;
 import app.verimly.task.adapter.persistence.mapper.FolderDbMapper;
 import app.verimly.task.adapter.persistence.mapper.FolderDbMapperImpl;
-import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.vo.folder.FolderId;
@@ -24,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -136,18 +136,22 @@ public class FolderEntityIntegrationTests {
         FolderId folderId = FolderId.of(jpaWithUser.getId());
         persistAndFlush(jpaWithUser);
 
-        UserId foundOwnerId = adapter.findOwnerOf(folderId);
+        Optional<UserId> ownerOf = adapter.findOwnerOf(folderId);
+        assertTrue(ownerOf.isPresent());
 
-        assertEquals(ownerId, foundOwnerId);
+        assertEquals(ownerId, ownerOf.get());
 
     }
 
 
     @Test
-    void findByOwnerOf_thenFolderNotFound_thenThrowsFolderNotFound() {
+    void findByOwnerOf_thenFolderNotFound_thenReturnsEmptyOptional() {
         FolderId random = FolderId.random();
 
-        assertThrows(FolderNotFoundException.class, () -> adapter.findOwnerOf(random));
+        Optional<UserId> ownerOf = adapter.findOwnerOf(random);
+
+        assertTrue(ownerOf.isEmpty());
+
     }
 
     private @NotNull Executable getPersistAndFlushExecutable(FolderEntity jpa) {

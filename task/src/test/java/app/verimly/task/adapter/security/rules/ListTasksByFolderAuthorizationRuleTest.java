@@ -18,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,7 +70,7 @@ class ListTasksByFolderAuthorizationRuleTest extends AbstractUnitTest {
     @Test
     void apply_whenPrincipalIsNotOwnerOfTheFolder_thenThrowNoPermissionException() {
         UserId randomOwnerID = UserId.random();
-        when(folderWriteRepository.findOwnerOf(folderId)).thenReturn(randomOwnerID);
+        when(folderWriteRepository.findOwnerOf(folderId)).thenReturn(Optional.of(randomOwnerID));
 
         assertThrowsExceptions(NoPermissionException.class, getApplyExecutable());
     }
@@ -76,7 +78,7 @@ class ListTasksByFolderAuthorizationRuleTest extends AbstractUnitTest {
     @Test
     void apply_whenValidArgument_thenSuccess() {
         principal = AUTHENTICATED_PRINCIPAL;
-        when(folderWriteRepository.findOwnerOf(folderId)).thenReturn(principal.getId());
+        when(folderWriteRepository.findOwnerOf(folderId)).thenReturn(Optional.of(principal.getId()));
 
 
         super.assertDoesNotThrowsException(getApplyExecutable());
