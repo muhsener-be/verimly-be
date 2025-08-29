@@ -1,30 +1,26 @@
 package app.verimly.task.adapter.security.rules;
 
-import app.verimly.commons.core.domain.exception.Assert;
-import app.verimly.commons.core.security.*;
+import app.verimly.commons.core.security.AbstractAuthorizationRule;
+import app.verimly.commons.core.security.AuthorizationContext;
+import app.verimly.commons.core.security.Principal;
 import app.verimly.task.application.ports.out.security.context.ListFoldersContext;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListFoldersAuthorizationRule implements AuthorizationRule<ListFoldersContext> {
+public class ListFoldersAuthorizationRule extends AbstractAuthorizationRule<ListFoldersContext> {
 
     @Override
     public void apply(Principal principal, ListFoldersContext context) {
-        Assert.notNull(principal, "Principal cannot be null in %s".formatted(this.getClass().getSimpleName()));
+        super.ensurePrincipalIsNotNull(principal);
 
 
         applyRule(principal, context);
     }
 
     private void applyRule(@NotNull Principal principal, AuthorizationContext resource) {
-        ensurePrincipalIsAuthenticated(principal);
+        super.ensurePrincipalIsAuthenticated(principal, "Principal must be authenticated to list folders");
 
-    }
-
-    private static void ensurePrincipalIsAuthenticated(Principal principal) {
-        if (principal instanceof AnonymousPrincipal)
-            throw new AuthenticationRequiredException("Authentication is required to list folders.");
     }
 
 

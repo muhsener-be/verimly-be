@@ -1,8 +1,9 @@
 package app.verimly.task.adapter.security.rules;
 
-import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.*;
+import app.verimly.commons.core.security.AbstractAuthorizationRule;
+import app.verimly.commons.core.security.NoPermissionException;
+import app.verimly.commons.core.security.Principal;
 import app.verimly.task.application.ports.out.security.action.TaskActions;
 import app.verimly.task.application.ports.out.security.context.ListTasksByFolderContext;
 import app.verimly.task.domain.repository.FolderWriteRepository;
@@ -14,37 +15,28 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class ListTasksByFolderAuthorizationRule implements AuthorizationRule<ListTasksByFolderContext> {
+public class ListTasksByFolderAuthorizationRule extends AbstractAuthorizationRule<ListTasksByFolderContext> {
 
     private final FolderWriteRepository folderWriteRepository;
 
     @Override
     public void apply(Principal principal, ListTasksByFolderContext context) {
-        ensureInputsAreValid(principal, context);
+        super.ensurePrincipalIsNotNull(principal);
+        super.ensureContextIsNotNull(context);
         applyRule(principal, context);
     }
 
-    private void ensureInputsAreValid(Principal principal, ListTasksByFolderContext context) {
-        Assert.notNull(principal, "principal cannot be null");
-        Assert.notNull(context, "context cannot be null in ListTasksByFolderAuthorizationRule");
-
-
-    }
 
     private void applyRule(Principal principal, ListTasksByFolderContext context) {
         FolderId folderId = context.getFolderId();
 
-        ensurePrincipalIsAuthenticated(principal);
-        ensurePrincipalIsOwnerOfTheFolder(principal, folderId);
+        super.ensurePrincipalIsAuthenticated(principal, "Principal must be authenticated to list tasks by folder.");
+        ensureOwnerOfTheFolder(principal, folderId);
 
     }
 
-    private void ensurePrincipalIsAuthenticated(Principal principal) {
-        if (!(principal instanceof AuthenticatedPrincipal auh))
-            throw new AuthenticationRequiredException("Authentication is required to list tasks");
-    }
 
-    private void ensurePrincipalIsOwnerOfTheFolder(Principal principal, FolderId folderId) {
+    private void ensureOwnerOfTheFolder(Principal principal, FolderId folderId) {
         UserId ownerIdOfTheFolder = fetchOwnerIdOfTheFolder(folderId);
         if (!Objects.equals(principal.getId(), ownerIdOfTheFolder))
             throw new NoPermissionException(principal, TaskActions.LIST_BY_FOLDER);

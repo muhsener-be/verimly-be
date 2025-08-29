@@ -21,8 +21,8 @@ public class ReplaceTaskAuthorizationRule extends AbstractAuthorizationRule<Repl
 
     @Override
     public void apply(Principal principal, ReplaceTaskContext context) {
-        super.ensurePrincipalIsNotNull(principal, "Principal cannot be null to authorize replace task.");
-        super.ensureContextIsNotNull(context, "Context cannot be null to authorize replace task.");
+        super.ensurePrincipalIsNotNull(principal);
+        super.ensureContextIsNotNull(context);
 
         applyRule(principal, context);
     }

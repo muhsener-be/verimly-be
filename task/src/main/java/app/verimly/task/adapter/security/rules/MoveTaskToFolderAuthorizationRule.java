@@ -1,8 +1,9 @@
 package app.verimly.task.adapter.security.rules;
 
-import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.*;
+import app.verimly.commons.core.security.AbstractAuthorizationRule;
+import app.verimly.commons.core.security.NoPermissionException;
+import app.verimly.commons.core.security.Principal;
 import app.verimly.task.application.ports.out.security.action.TaskActions;
 import app.verimly.task.application.ports.out.security.context.MoveToFolderContext;
 import app.verimly.task.domain.entity.Folder;
@@ -19,7 +20,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class MoveTaskToFolderAuthorizationRule implements AuthorizationRule<MoveToFolderContext> {
+public class MoveTaskToFolderAuthorizationRule extends AbstractAuthorizationRule<MoveToFolderContext> {
 
     private final TaskWriteRepository taskWriteRepository;
     private final FolderWriteRepository folderWriteRepository;
@@ -33,20 +34,16 @@ public class MoveTaskToFolderAuthorizationRule implements AuthorizationRule<Move
     }
 
     private void checkInputs(Principal principal, MoveToFolderContext context) {
-        Assert.notNull(principal, "principal cannot be null to authorize move to folder context");
-        Assert.notNull(context, "context cannot be null to authorize move to folder context");
+        super.ensurePrincipalIsNotNull(principal);
+        super.ensureContextIsNotNull(context);
     }
 
     private void applyRule(Principal principal, MoveToFolderContext context) {
-        ensurePrincipalIsAuthenticated(principal);
+        super.ensurePrincipalIsAuthenticated(principal, "Principal must be authenticated to move task to folder.");
         ensurePrincipalIsOwnerOfTheTask(principal.getId(), context.getTaskId());
         ensurePrincipalIsOwnerOfTheFolder(principal.getId(), context.getNewFolderId());
     }
 
-    private void ensurePrincipalIsAuthenticated(Principal principal) {
-        if (!(principal instanceof AuthenticatedPrincipal))
-            throw new AuthenticationRequiredException("Authentication is required to move task to folder.");
-    }
 
     private void ensurePrincipalIsOwnerOfTheTask(UserId principalId, TaskId taskId) throws NoPermissionException {
         Task task = taskWriteRepository.findById(taskId).orElseThrow(() -> new NoPermissionException(principalId, TaskActions.MOVE_TO_FOLDER));
