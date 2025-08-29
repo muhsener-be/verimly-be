@@ -3,9 +3,11 @@ package app.verimly.task.application;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.task.data.SecurityTestData;
+import app.verimly.task.data.TimeSessionTestData;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.data.task.TaskTestData;
 import app.verimly.task.domain.repository.TaskDataAccessException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -16,6 +18,7 @@ public abstract class AbstractUnitTest {
     protected static final SecurityTestData SECURITY_TEST_DATA = SecurityTestData.getInstance();
     protected static final TaskTestData TASK_TEST_DATA = TaskTestData.getInstance();
     protected static final FolderTestData FOLDER_TEST_DATA = FolderTestData.getInstance();
+    protected static final TimeSessionTestData SESSION_TEST_DATA = TimeSessionTestData.getInstance();
 
 
     protected AuthenticationRequiredException AUTHENTICATION_REQUIRED_EXCEPTION = new AuthenticationRequiredException("Test exception.");
@@ -32,5 +35,9 @@ public abstract class AbstractUnitTest {
 
     protected void assertDoesNotThrowsException(Executable executable) {
         assertDoesNotThrow(executable);
+    }
+
+    protected void assertThrowsIllegalArgumentException(@NotNull Executable executable) {
+        assertThrowsExceptions(IllegalArgumentException.class,executable);
     }
 }

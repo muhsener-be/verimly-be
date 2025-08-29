@@ -160,4 +160,8 @@ public class TaskTestData {
     public ReplaceTaskCommand replaceTaskCommand() {
         return new ReplaceTaskCommand(id(), name(), description(), dueDate(), status(), priority());
     }
+
+    public Task taskWithOwnerId(UserId ownerId) {
+        return task().toBuilder().ownerId(ownerId).build();
+    }
 }
