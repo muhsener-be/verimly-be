@@ -1,42 +1,37 @@
 package app.verimly.task.adapter.security.rules;
 
 import app.verimly.commons.core.domain.exception.Assert;
-import app.verimly.commons.core.security.*;
-import app.verimly.task.application.ports.out.security.action.FolderActions;
-import app.verimly.task.application.ports.out.security.resource.FolderResource;
+import app.verimly.commons.core.security.AnonymousPrincipal;
+import app.verimly.commons.core.security.AuthenticationRequiredException;
+import app.verimly.commons.core.security.AuthorizationRule;
+import app.verimly.commons.core.security.Principal;
+import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CreateFolderAuthorizationRule implements AuthorizationRule {
+public class CreateFolderAuthorizationRule implements AuthorizationRule<CreateFolderContext> {
 
 
     @Override
-    public void apply(@NotNull Principal principal, @Nullable AuthResource resource) {
+    public void apply(@NotNull Principal principal, @Nullable CreateFolderContext context) {
         Assert.notNull(principal, "Principal cannot be null in %s".formatted(this.getClass().getSimpleName()));
 
-        ensureResourceIsValid(resource);
 
-        applyRule(principal, resource);
+        applyRule(principal, context);
 
     }
 
-    private void applyRule(@NotNull Principal principal, AuthResource resource) {
+    private void applyRule(@NotNull Principal principal, CreateFolderContext resource) {
+        ensurePrincipalIsAuthenticated(principal);
 
+    }
+
+    private static void ensurePrincipalIsAuthenticated(Principal principal) {
         if (principal instanceof AnonymousPrincipal)
             throw new AuthenticationRequiredException("Authentication is required to create folder.");
-
-
     }
 
-    private void ensureResourceIsValid(AuthResource resource) {
-        if (resource != null && !(resource instanceof FolderResource))
-            throw new IllegalStateException("AuthResource type must be '%s' in %s".formatted(FolderResource.class, this.getClass().getSimpleName()));
-    }
 
-    @Override
-    public Action getSupportedAction() {
-        return FolderActions.CREATE;
-    }
 }

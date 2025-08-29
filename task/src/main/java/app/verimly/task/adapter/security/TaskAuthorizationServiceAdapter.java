@@ -1,34 +1,47 @@
 package app.verimly.task.adapter.security;
 
-import app.verimly.commons.core.domain.exception.Assert;
-import app.verimly.commons.core.security.*;
-import app.verimly.commons.core.security.SecurityException;
+import app.verimly.commons.core.security.Principal;
+import app.verimly.task.adapter.security.rules.CreateTaskAuthorizationRule;
+import app.verimly.task.adapter.security.rules.ListFoldersAuthorizationRule;
+import app.verimly.task.adapter.security.rules.ListTasksByFolderAuthorizationRule;
+import app.verimly.task.adapter.security.rules.MoveTaskToFolderAuthorizationRule;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
+import app.verimly.task.application.ports.out.security.context.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService {
 
-    private final AuthorizationRuleRegistry registry;
+    private final MoveTaskToFolderAuthorizationRule moveTaskToFolderAuthorizationRule;
+    private final ListFoldersAuthorizationRule listFoldersAuthorizationRule;
+    private final CreateTaskAuthorizationRule createTaskAuthorizationRule;
+    private final ListTasksByFolderAuthorizationRule listTasksByFolderAuthorizationRule;
+
 
     @Override
-    public void authorize(@NotNull Principal principal, @NotNull Action action, @Nullable AuthResource resource) throws SecurityException {
-        Assert.notNull(principal, "Principal canot be null");
-        Assert.notNull(action, "Action cannot be null!");
-
-        AuthorizationRule rule = getRuleOrThrow(action);
-
-        rule.apply(principal, resource);
+    public void authorizeCreateFolder(Principal principal, CreateFolderContext context) {
 
     }
 
-    private AuthorizationRule getRuleOrThrow(Action action) {
-        return Optional.ofNullable(registry.get(action)).orElseThrow(() -> new IllegalStateException("Authorization rule could not for action: " + action));
+    @Override
+    public void authorizeMoveToFolder(Principal principal, MoveToFolderContext context) {
+        moveTaskToFolderAuthorizationRule.apply(principal, context);
+    }
+
+    @Override
+    public void authorizeListFolders(Principal principal, ListFoldersContext context) {
+        listFoldersAuthorizationRule.apply(principal, context);
+    }
+
+    @Override
+    public void authorizeCreateTask(Principal principal, CreateTaskContext context) {
+        createTaskAuthorizationRule.apply(principal,context);;
+    }
+
+    @Override
+    public void authorizeListTasksByFolder(Principal principal, ListTasksByFolderContext context) {
+        listTasksByFolderAuthorizationRule.apply(principal,context);
     }
 }

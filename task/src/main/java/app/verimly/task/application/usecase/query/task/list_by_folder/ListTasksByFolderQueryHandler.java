@@ -6,12 +6,13 @@ import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.dto.TaskSummaryData;
 import app.verimly.task.application.mapper.TaskAppMapper;
-import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
 import app.verimly.task.application.ports.out.persistence.TaskReadRepository;
+import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.action.TaskActions;
-import app.verimly.task.application.ports.out.security.resource.TaskResource;
+import app.verimly.task.application.ports.out.security.context.ListTasksByFolderContext;
+import app.verimly.task.application.ports.out.security.context.TaskAuthorizationContext;
 import app.verimly.task.domain.vo.folder.FolderId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,11 @@ public class ListTasksByFolderQueryHandler {
 
     }
 
+    private void authorizeRequest(Principal principal, FolderId folderId) throws SecurityException {
+        ListTasksByFolderContext taskAuthorizationContext = ListTasksByFolderContext.createWithFolderId(folderId);
+        authZ.authorizeListTasksByFolder(principal, taskAuthorizationContext);
+    }
+
     private List<TaskSummaryData> fetchTaskAndMapToResponse(UserId id, FolderId folderId) {
         List<TaskSummaryProjection> projections = taskReadRepository.fetchTaskInFolderForUser(id, folderId);
         return prepareResponse(projections);
@@ -54,10 +60,7 @@ public class ListTasksByFolderQueryHandler {
         Assert.notNull(folderId, "folderId cannot be null in ListTasksByFolderQueryHandler");
     }
 
-    private void authorizeRequest(Principal principal, FolderId folderId) throws SecurityException {
-        TaskResource taskResource = TaskResource.of(principal.getId(), folderId);
-        authZ.authorize(principal, TaskActions.LIST_BY_FOLDER, taskResource);
-    }
+
 
 
 }

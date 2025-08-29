@@ -7,9 +7,9 @@ import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.mapper.FolderAppMapper;
 import app.verimly.task.application.ports.out.persistence.FolderReadRepository;
 import app.verimly.task.application.ports.out.persistence.FolderSummaryProjection;
-import app.verimly.task.application.ports.out.security.action.FolderActions;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
+import app.verimly.task.application.ports.out.security.context.ListFoldersContext;
 import app.verimly.task.domain.repository.TaskDataAccessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class ListFoldersQueryHandler {
     }
 
     protected void authorizeRequest(Principal principal) throws SecurityException {
-        authZ.authorize(principal, FolderActions.LIST, null);
+        authZ.authorizeListFolders(principal, new ListFoldersContext());
     }
 
 }

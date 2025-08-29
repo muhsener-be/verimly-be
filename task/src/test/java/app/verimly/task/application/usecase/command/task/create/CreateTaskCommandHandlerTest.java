@@ -1,7 +1,9 @@
 package app.verimly.task.application.usecase.command.task.create;
 
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.*;
+import app.verimly.commons.core.security.Action;
+import app.verimly.commons.core.security.AuthenticationRequiredException;
+import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.exception.FolderNotFoundException;
@@ -9,6 +11,7 @@ import app.verimly.task.application.mapper.TaskAppMapper;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.action.TaskActions;
+import app.verimly.task.application.ports.out.security.context.CreateTaskContext;
 import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.data.task.TaskTestData;
@@ -26,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -69,7 +73,7 @@ public class CreateTaskCommandHandlerTest {
     TaskCreationDetails details;
     UserId ownerId;
     TaskCreationResponse response;
-    AuthResource resource;
+    CreateTaskContext resource;
 
 
     @InjectMocks
@@ -90,11 +94,10 @@ public class CreateTaskCommandHandlerTest {
         details = TASK_DATA.taskCreationDetails();
         ownerId = principal.getId();
         response = TASK_DATA.taskCreationResponse();
-        resource = null;
-
+        resource = SECURITY_DATA.createTaskContext();
 
         lenient().when(authN.getCurrentPrincipal()).thenReturn(principal);
-        lenient().doNothing().when(authZ).authorize(principal, action, resource);
+        lenient().doNothing().when(authZ).authorizeCreateTask(any(Principal.class), any(CreateTaskContext.class));
         lenient().when(folderWriteRepository.findById(folderId)).thenReturn(Optional.ofNullable(folder));
         lenient().when(mapper.toTaskCreationDetails(command, ownerId)).thenReturn(details);
         lenient().when(taskDomainService.createTask(folder, details)).thenReturn(task);
@@ -125,7 +128,7 @@ public class CreateTaskCommandHandlerTest {
 
         assertEquals(response, actual);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, action, resource);
+        verifyAuthZIsCalled();
         verify(folderWriteRepository).findById(folderId);
         verify(mapper).toTaskCreationDetails(command, ownerId);
         verify(taskDomainService).createTask(folder, details);
@@ -133,6 +136,12 @@ public class CreateTaskCommandHandlerTest {
         verify(spyHandler).prepareEvent(principal, task);
         verify(eventPublisher).publishEvent(event);
         verify(mapper).toTaskCreationResponse(task);
+    }
+
+    private void verifyAuthZIsCalled() {
+        ArgumentCaptor<Principal> argumentCaptor = ArgumentCaptor.forClass(Principal.class);
+        verify(authZ).authorizeCreateTask(argumentCaptor.capture(), any(CreateTaskContext.class));
+        assertEquals(principal,argumentCaptor.getValue());
     }
 
 
@@ -146,11 +155,11 @@ public class CreateTaskCommandHandlerTest {
 
     @Test
     void handle_whenProblemDuringAuthorizing_thenThrowsSecurityException() {
-        doThrow(AUTHENTICATION_REQUIRED_EXCEPTION).when(authZ).authorize(principal, action, resource);
+        doThrow(AUTHENTICATION_REQUIRED_EXCEPTION).when(authZ).authorizeCreateTask(any(Principal.class), any(CreateTaskContext.class));
 
         assertThrowsException(SecurityException.class);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, action, resource);
+        verifyAuthZIsCalled();
         verifyNoInteractions(taskDomainService, folderWriteRepository, repository, eventPublisher, mapper);
     }
 
@@ -160,7 +169,7 @@ public class CreateTaskCommandHandlerTest {
 
         assertThrowsException(FolderNotFoundException.class);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, action, resource);
+        verifyAuthZIsCalled();
         verify(folderWriteRepository).findById(folderId);
         verifyNoInteractions(taskDomainService, repository, eventPublisher, mapper);
     }
@@ -171,7 +180,7 @@ public class CreateTaskCommandHandlerTest {
 
         assertThrowsException(TaskDataAccessException.class);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, action, resource);
+        verifyAuthZIsCalled();
         verify(folderWriteRepository).findById(folderId);
         verifyNoInteractions(taskDomainService, repository, eventPublisher, mapper);
 
@@ -184,11 +193,11 @@ public class CreateTaskCommandHandlerTest {
 
         assertThrowsException(TaskDomainException.class);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, action, resource);
+        verifyAuthZIsCalled();
         verify(folderWriteRepository).findById(folderId);
         verify(mapper).toTaskCreationDetails(command, ownerId);
         verify(taskDomainService).createTask(folder, details);
-        verifyNoInteractions(eventPublisher,repository);
+        verifyNoInteractions(eventPublisher, repository);
         verify(mapper, times(0)).toTaskCreationResponse(task);
     }
 
@@ -199,7 +208,7 @@ public class CreateTaskCommandHandlerTest {
 
         assertThrowsException(TaskDataAccessException.class);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, action, resource);
+        verifyAuthZIsCalled();
         verify(folderWriteRepository).findById(folderId);
         verify(mapper).toTaskCreationDetails(command, ownerId);
         verify(taskDomainService).createTask(folder, details);
@@ -207,10 +216,6 @@ public class CreateTaskCommandHandlerTest {
         verifyNoInteractions(eventPublisher);
         verify(mapper, times(0)).toTaskCreationResponse(task);
     }
-
-
-
-
 
 
     private void assertThrowsIllegalArgumentException() {

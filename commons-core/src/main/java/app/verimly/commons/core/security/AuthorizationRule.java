@@ -1,8 +1,8 @@
 package app.verimly.commons.core.security;
 
-public interface AuthorizationRule {
+public interface AuthorizationRule<T extends AuthorizationContext> {
 
-    void apply(Principal principal, AuthResource resource);
+    void apply(Principal principal, T context);
 
-    Action getSupportedAction();
+
 }

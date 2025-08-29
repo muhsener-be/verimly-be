@@ -4,9 +4,9 @@ import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.FolderCreatedApplicationEvent;
 import app.verimly.task.application.mapper.FolderAppMapper;
-import app.verimly.task.application.ports.out.security.action.FolderActions;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
+import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.exception.FolderDomainException;
 import app.verimly.task.domain.repository.FolderWriteRepository;
@@ -41,7 +41,7 @@ public class CreateFolderCommandHandler {
     }
 
     private void authorizeRequest(Principal principal, CreateFolderCommand command) throws SecurityException {
-        authZ.authorize(principal, FolderActions.CREATE, null);
+        authZ.authorizeCreateFolder(principal, new CreateFolderContext());
     }
 
     protected Folder createFolder(Principal principal, CreateFolderCommand command) throws FolderDomainException {

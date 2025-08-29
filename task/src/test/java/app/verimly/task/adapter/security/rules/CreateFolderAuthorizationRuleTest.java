@@ -1,13 +1,9 @@
 package app.verimly.task.adapter.security.rules;
 
-import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.Action;
-import app.verimly.commons.core.security.AuthResource;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.ports.out.security.action.FolderActions;
+import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
 import app.verimly.task.data.SecurityTestData;
-import app.verimly.task.domain.vo.folder.FolderId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -21,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = CreateFolderAuthorizationRule.class)
 class CreateFolderAuthorizationRuleTest {
 
-    private static final SecurityTestData TEST_DATA = SecurityTestData.getInstance();
+    private static final SecurityTestData SECURITY_TEST_DATA = SecurityTestData.getInstance();
 
-    private AuthResource authResource;
-    private AuthResource mockResource;
+    private CreateFolderContext authorizationContext;
+    private CreateFolderContext mockResource;
     private Principal authenticatedPrincipal;
     private Principal anonPrincipal;
 
@@ -33,10 +29,10 @@ class CreateFolderAuthorizationRuleTest {
 
     @BeforeEach
     void setup() {
-        authResource = TEST_DATA.folderResource();
-        mockResource = Mockito.mock(AuthResource.class);
-        anonPrincipal = TEST_DATA.anonymousPrincipal();
-        authenticatedPrincipal = TEST_DATA.authenticatedPrincipal();
+        authorizationContext = SECURITY_TEST_DATA.createFolderContext();
+        mockResource = Mockito.mock(CreateFolderContext.class);
+        anonPrincipal = SECURITY_TEST_DATA.anonymousPrincipal();
+        authenticatedPrincipal = SECURITY_TEST_DATA.authenticatedPrincipal();
 
     }
 
@@ -46,17 +42,7 @@ class CreateFolderAuthorizationRuleTest {
     }
 
 
-    @Test
-    void apply_whenResourceNotInstanceOfFolderResource_thenThrowsIllegalStateException() {
 
-
-        Executable executable = () -> rule.apply(anonPrincipal, mockResource);
-
-        IllegalStateException exception = assertThrows(IllegalStateException.class, executable);
-
-        System.out.println(exception.getMessage());
-
-    }
 
 
     @Test
@@ -72,7 +58,7 @@ class CreateFolderAuthorizationRuleTest {
     @Test
     void apply_whenAnonymousPrincipal_thenThrowsAuthenticationRequiredException() {
 
-        Executable executable = () -> rule.apply(anonPrincipal, authResource);
+        Executable executable = () -> rule.apply(anonPrincipal, authorizationContext);
 
 
         AuthenticationRequiredException exception = assertThrows(AuthenticationRequiredException.class, executable);
@@ -81,18 +67,12 @@ class CreateFolderAuthorizationRuleTest {
 
     @Test
     void apply_whenResourceIsNull_doesNotThrowException() {
-        authResource = null;
+        authorizationContext = null;
 
         Executable apply = () -> rule.apply(authenticatedPrincipal, null);
 
         assertDoesNotThrow(apply);
     }
 
-    @Test
-    void getSupportedAction_returnsFolderActionsCREATE() {
 
-        Action actual = rule.getSupportedAction();
-
-        assertEquals(FolderActions.CREATE, actual);
-    }
 }

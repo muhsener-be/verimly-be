@@ -1,16 +1,15 @@
 package app.verimly.task.adapter.security.rules;
 
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.AuthResource;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.ports.out.security.resource.TaskResource;
+import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.ports.out.security.context.ListTasksByFolderContext;
 import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.data.folder.FolderTestData;
-import app.verimly.task.data.task.TaskTestData;
 import app.verimly.task.domain.repository.FolderWriteRepository;
-import org.jetbrains.annotations.NotNull;
+import app.verimly.task.domain.vo.folder.FolderId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,21 +18,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ListTasksByFolderAuthorizationRuleTest {
+class ListTasksByFolderAuthorizationRuleTest extends AbstractUnitTest {
     private static final SecurityTestData SECURITY_DATA = SecurityTestData.getInstance();
-    private static final TaskTestData TASK_DATA = TaskTestData.getInstance();
     private static final FolderTestData FOLDER_DATA = FolderTestData.getInstance();
 
 
-    Principal AUTHENTICATED;
-    Principal ANONYMOUS;
+    FolderId folderId = FOLDER_DATA.folderId();
     Principal principal;
-    AuthResource authResource;
+    ListTasksByFolderContext context;
     @Mock
     FolderWriteRepository folderWriteRepository;
 
@@ -43,9 +38,8 @@ class ListTasksByFolderAuthorizationRuleTest {
 
     @BeforeEach
     void setup() {
-        AUTHENTICATED = SECURITY_DATA.authenticatedPrincipal();
-        ANONYMOUS = SECURITY_DATA.anonymousPrincipal();
-        authResource = SECURITY_DATA.taskResource();
+        principal = AUTHENTICATED_PRINCIPAL;
+        context = SECURITY_DATA.listTasksByFolderContext(folderId);
     }
 
 
@@ -58,68 +52,45 @@ class ListTasksByFolderAuthorizationRuleTest {
 
     @Test
     void apply_whenResourceIsNull_thenThrowsIllegalArgumentException() {
-        authResource = null;
+        context = null;
 
         assertThrowsIllegalArgumentException();
     }
 
-
-    @Test
-    void apply_whenResourceIsNotInstanceTaskResource_thenThrowsIllegalArgumentException() {
-        authResource = SECURITY_DATA.folderResource();
-
-        assertThrowsIllegalArgumentException();
-    }
-
-
-    @Test
-    void apply_whenFolderIdInResourceIsNull_thenThrowsIllegalArgumentException() {
-        authResource = ((TaskResource) authResource).withFolderId(null);
-
-        assertThrowsIllegalArgumentException();
-    }
 
     @Test
     void apply_whenAnonymousUser_thenThrowsAuthenticationRequiredException() {
-        principal = ANONYMOUS;
+        principal = ANONYMOUS_PRINCIPAL;
 
-        assertThrowsException(AuthenticationRequiredException.class);
+        super.assertThrowsExceptions(AuthenticationRequiredException.class, getApplyExecutable());
     }
 
     @Test
     void apply_whenPrincipalIsNotOwnerOfTheFolder_thenThrowNoPermissionException() {
-        principal = AUTHENTICATED;
-        UserId differentUserId = UserId.random();
-        authResource = ((TaskResource) authResource).withOwnerId(differentUserId);
+        UserId randomOwnerID = UserId.random();
+        when(folderWriteRepository.findOwnerOf(folderId)).thenReturn(randomOwnerID);
 
-        assertThrowsException(NoPermissionException.class);
+        assertThrowsExceptions(NoPermissionException.class, getApplyExecutable());
     }
 
     @Test
     void apply_whenValidArgument_thenSuccess() {
-        principal = AUTHENTICATED;
-        when(folderWriteRepository.findOwnerOf(((TaskResource) authResource).folderId())).thenReturn(principal.getId());
+        principal = AUTHENTICATED_PRINCIPAL;
+        when(folderWriteRepository.findOwnerOf(folderId)).thenReturn(principal.getId());
 
 
-        assertDoesNotThrowsException();
+        super.assertDoesNotThrowsException(getApplyExecutable());
 
     }
 
-    private void assertDoesNotThrowsException() {
-        assertDoesNotThrow(getApplyExecutable());
-    }
 
     private void assertThrowsIllegalArgumentException() {
-        assertThrowsException(IllegalArgumentException.class);
+        super.assertThrowsExceptions(IllegalArgumentException.class, getApplyExecutable());
     }
 
 
-    void assertThrowsException(Class<? extends Throwable> eClass) {
-        assertThrows(eClass, getApplyExecutable());
-    }
-
-    private @NotNull Executable getApplyExecutable() {
-        return () -> rule.apply(principal, authResource);
+    private Executable getApplyExecutable() {
+        return () -> rule.apply(principal, context);
     }
 
 

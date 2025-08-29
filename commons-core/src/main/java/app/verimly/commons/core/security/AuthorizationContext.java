@@ -1,4 +1,4 @@
 package app.verimly.commons.core.security;
 
-public interface AuthResource {
+public interface AuthorizationContext {
 }

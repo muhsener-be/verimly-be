@@ -11,6 +11,7 @@ import app.verimly.task.application.ports.out.persistence.FolderSummaryProjectio
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.action.FolderActions;
+import app.verimly.task.application.ports.out.security.context.ListFoldersContext;
 import app.verimly.task.application.usecase.query.folder.list.ListFoldersQueryHandler;
 import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.data.folder.FolderTestData;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -48,6 +50,7 @@ class ListFoldersQueryHandlerTest {
 
     FolderTestData FOLDER_TEST_DATA = FolderTestData.getInstance();
     SecurityTestData SECURITY_TEST_DATA = SecurityTestData.getInstance();
+    ListFoldersContext context;
     Principal principal;
     List<FolderSummaryProjection> projections;
     List<FolderSummaryData> summaryData;
@@ -60,9 +63,10 @@ class ListFoldersQueryHandlerTest {
         projections = new ArrayList<>();
         summaryData = new ArrayList<>();
         authenticationRequiredException = FOLDER_TEST_DATA.authenticationRequiredException();
+        context = null;
 
         lenient().when(authN.getCurrentPrincipal()).thenReturn(principal);
-        lenient().doNothing().when(authZ).authorize(principal, ACTION, null);
+        lenient().doNothing().when(authZ).authorizeListFolders(any(Principal.class), any(ListFoldersContext.class));
         lenient().when(repository.findSummariesByOwnerId(principal.getId())).thenReturn(projections);
         lenient().when(mapper.toFolderSummaryData(projections)).thenReturn(summaryData);
     }
@@ -73,20 +77,26 @@ class ListFoldersQueryHandlerTest {
         List<FolderSummaryData> response = queryHandler.handle();
 
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, ACTION, null);
+        verifyAuthZServiceIsCalled();
         verify(repository).findSummariesByOwnerId(principal.getId());
         verify(mapper).toFolderSummaryData(projections);
         assertEquals(summaryData, response);
 
     }
 
+    private void verifyAuthZServiceIsCalled() {
+        ArgumentCaptor<Principal> argumentCaptor = ArgumentCaptor.forClass(Principal.class);
+        verify(authZ).authorizeListFolders(argumentCaptor.capture(), any(ListFoldersContext.class));
+        assertEquals(principal, argumentCaptor.getValue());
+    }
+
     @Test
     void handle_whenProblemDuringAuthorizing_thenThrowsSecurityException() {
-        doThrow(authenticationRequiredException).when(authZ).authorize(principal, ACTION, null);
+        doThrow(authenticationRequiredException).when(authZ).authorizeListFolders(any(Principal.class), any(ListFoldersContext.class));
 
         assertThrowsException(SecurityException.class);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, ACTION, null);
+        verifyAuthZServiceIsCalled();
         verifyNoInteractions(repository, mapper);
     }
 
@@ -97,7 +107,7 @@ class ListFoldersQueryHandlerTest {
 
         assertThrowsException(TaskDataAccessException.class);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, ACTION, null);
+        verifyAuthZServiceIsCalled();
         verify(repository).findSummariesByOwnerId(principal.getId());
         verifyNoInteractions(mapper);
     }

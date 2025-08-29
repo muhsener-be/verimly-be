@@ -2,13 +2,16 @@ package app.verimly.task.application.usecase.command.folder.create;
 
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.*;
+import app.verimly.commons.core.security.AuthenticatedPrincipal;
+import app.verimly.commons.core.security.AuthenticationRequiredException;
+import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.FolderCreatedApplicationEvent;
 import app.verimly.task.application.mapper.FolderAppMapper;
-import app.verimly.task.application.ports.out.security.action.FolderActions;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
+import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
+import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.data.folder.FolderTestData;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.exception.FolderDomainException;
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -31,6 +35,7 @@ import static org.mockito.Mockito.*;
 class CreateFolderCommandHandlerTest {
 
 
+    private static final SecurityTestData SECURITY_TEST_DATA = SecurityTestData.getInstance();
     public static final FolderDomainException FOLDER_DOMAIN_EXCEPTION = new FolderDomainException();
     public static final TaskDataAccessException TASK_DATA_ACCESS_EXCEPTION = new TaskDataAccessException();
     @Mock
@@ -52,8 +57,7 @@ class CreateFolderCommandHandlerTest {
     CreateFolderCommandHandler handler;
     CreateFolderCommandHandler spyHandler;
 
-    public static final Action CREATE_ACTION = FolderActions.CREATE;
-    public static final AuthResource FOLDER_RESOURCE = null;
+
     public static final AuthenticationRequiredException AUTHENTICATION_REQUIRED_EXCEPTION = new AuthenticationRequiredException("Test exception.");
     FolderTestData DATA = FolderTestData.getInstance();
     CreateFolderCommand command;
@@ -63,6 +67,7 @@ class CreateFolderCommandHandlerTest {
     FolderCreationResponse response;
     Email email;
     UserId ownerId;
+    CreateFolderContext context = SECURITY_TEST_DATA.createFolderContext();
 
 
     @BeforeEach
@@ -78,7 +83,7 @@ class CreateFolderCommandHandlerTest {
         spyHandler = Mockito.spy(handler);
 
         lenient().when(authN.getCurrentPrincipal()).thenReturn(principal);
-        lenient().doNothing().when(authZ).authorize(principal, CREATE_ACTION, FOLDER_RESOURCE);
+        lenient().doNothing().when(authZ).authorizeCreateFolder(any(Principal.class), any(CreateFolderContext.class));
         lenient().doReturn(folder).when(spyHandler).createFolder(principal, command);
         lenient().when(repository.save(folder)).thenReturn(folder);
         lenient().doReturn(event).when(spyHandler).prepareEvent(principal, folder);
@@ -103,15 +108,16 @@ class CreateFolderCommandHandlerTest {
 
         assertEquals(response, actualResponse);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, CREATE_ACTION, FOLDER_RESOURCE);
+        verifyAuthzServiceIsCalled();
         verify(repository).save(folder);
         verify(eventPublisher).publishEvent(event);
         verify(mapper).toFolderCreationResponse(folder);
     }
 
+
     @Test
     void handle_whenProblemDuringAuthorizing_thenThrowsSecurityException() {
-        doThrow(AUTHENTICATION_REQUIRED_EXCEPTION).when(authZ).authorize(principal, CREATE_ACTION, FOLDER_RESOURCE);
+        doThrow(AUTHENTICATION_REQUIRED_EXCEPTION).when(authZ).authorizeCreateFolder(any(Principal.class), any(CreateFolderContext.class));
 
         Executable handle = () -> spyHandler.handle(command);
 
@@ -119,7 +125,7 @@ class CreateFolderCommandHandlerTest {
         assertThrows(SecurityException.class, handle);
 
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, CREATE_ACTION, FOLDER_RESOURCE);
+        verifyAuthzServiceIsCalled();
         verifyNoInteractions(repository, event, mapper);
     }
 
@@ -131,7 +137,7 @@ class CreateFolderCommandHandlerTest {
 
         assertThrows(FolderDomainException.class, handle);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, CREATE_ACTION, FOLDER_RESOURCE);
+        verifyAuthzServiceIsCalled();
         verifyNoInteractions(repository, event, mapper);
 //        verify(repository).save(folder);
 //        verify(eventPublisher).publishEvent(event);
@@ -146,8 +152,14 @@ class CreateFolderCommandHandlerTest {
 
         assertThrows(TaskDataAccessException.class, handle);
         verify(authN).getCurrentPrincipal();
-        verify(authZ).authorize(principal, CREATE_ACTION, FOLDER_RESOURCE);
+        verifyAuthzServiceIsCalled();
         verify(repository).save(folder);
         verifyNoInteractions(event, mapper);
+    }
+
+    private void verifyAuthzServiceIsCalled() {
+        ArgumentCaptor<Principal> argumentCaptor = ArgumentCaptor.forClass(Principal.class);
+        verify(authZ).authorizeCreateFolder(argumentCaptor.capture(), any(CreateFolderContext.class));
+        assertEquals(principal, argumentCaptor.getValue());
     }
 }

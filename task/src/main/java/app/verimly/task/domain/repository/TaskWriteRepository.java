@@ -1,6 +1,7 @@
 package app.verimly.task.domain.repository;
 
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.task.application.exception.TaskNotFoundException;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.vo.task.TaskId;
 
@@ -16,4 +17,5 @@ public interface TaskWriteRepository {
     List<Task> findByOwnerId(UserId ownerId) throws TaskDataAccessException;
 
 
+    UserId findOwnerOf(TaskId taskId) throws TaskDataAccessException, TaskNotFoundException;
 }

@@ -1,10 +1,19 @@
 package app.verimly.task.application.ports.out.security;
 
-import app.verimly.commons.core.security.*;
-import app.verimly.commons.core.security.SecurityException;
+import app.verimly.commons.core.security.AuthorizationService;
+import app.verimly.commons.core.security.Principal;
+import app.verimly.task.application.ports.out.security.context.*;
 
-public interface  TaskAuthorizationService extends AuthorizationService {
+public interface TaskAuthorizationService extends AuthorizationService {
 
-    @Override
-    void authorize(Principal principal, Action action, AuthResource resource) throws SecurityException;
+
+    void authorizeCreateFolder(Principal principal, CreateFolderContext context);
+
+    void authorizeMoveToFolder(Principal principal, MoveToFolderContext context);
+
+    void authorizeListFolders(Principal principal, ListFoldersContext context);
+
+    void authorizeCreateTask(Principal principal, CreateTaskContext context);
+
+    void authorizeListTasksByFolder(Principal principal, ListTasksByFolderContext context);
 }

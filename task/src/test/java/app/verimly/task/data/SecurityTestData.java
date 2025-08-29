@@ -5,8 +5,10 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AnonymousPrincipal;
 import app.verimly.commons.core.security.AuthenticatedPrincipal;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.ports.out.security.resource.FolderResource;
-import app.verimly.task.application.ports.out.security.resource.TaskResource;
+import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
+import app.verimly.task.application.ports.out.security.context.CreateTaskContext;
+import app.verimly.task.application.ports.out.security.context.ListFoldersContext;
+import app.verimly.task.application.ports.out.security.context.ListTasksByFolderContext;
 import app.verimly.task.domain.vo.folder.FolderId;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,15 +36,25 @@ public class SecurityTestData {
         return new AnonymousPrincipal();
     }
 
-    public FolderResource folderResource() {
-        return new FolderResource(getFolderId(), getUserId());
-    }
-
-    public TaskResource taskResource() {
-        return new TaskResource(getUserId(), getFolderId());
-    }
 
     private static @NotNull FolderId getFolderId() {
         return FolderId.random();
+    }
+
+    public CreateFolderContext createFolderContext() {
+        return new CreateFolderContext();
+    }
+
+    public ListFoldersContext listFoldersContext() {
+        return new ListFoldersContext();
+    }
+
+
+    public ListTasksByFolderContext listTasksByFolderContext(FolderId folderId) {
+        return ListTasksByFolderContext.createWithFolderId(folderId);
+    }
+
+    public CreateTaskContext createTaskContext() {
+        return new CreateTaskContext();
     }
 }

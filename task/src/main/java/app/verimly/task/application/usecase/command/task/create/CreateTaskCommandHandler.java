@@ -8,7 +8,7 @@ import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.task.application.mapper.TaskAppMapper;
 import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
-import app.verimly.task.application.ports.out.security.action.TaskActions;
+import app.verimly.task.application.ports.out.security.context.CreateTaskContext;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.exception.TaskDomainException;
@@ -55,7 +55,7 @@ public class CreateTaskCommandHandler {
     }
 
     protected void authorizeRequest(Principal principal, CreateTaskCommand command) throws SecurityException {
-        authZ.authorize(principal, TaskActions.CREATE, null);
+        authZ.authorizeCreateTask(principal, new CreateTaskContext());
     }
 
     private Folder fetchFolderAndCheckExistence(FolderId folderId) throws TaskDataAccessException, FolderNotFoundException {
