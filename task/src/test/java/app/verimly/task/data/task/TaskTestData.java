@@ -48,6 +48,10 @@ public class TaskTestData {
         return TaskName.of(FAKER.job().keySkills());
     }
 
+    public Task withOwnerId(UserId ownerId) {
+        return task().toBuilder().ownerId(ownerId).build();
+    }
+
     public Task task() {
         return Task.builder()
                 .id(id())
@@ -130,4 +134,6 @@ public class TaskTestData {
                 Instant.now(), Instant.now()
         );
     }
+
+
 }

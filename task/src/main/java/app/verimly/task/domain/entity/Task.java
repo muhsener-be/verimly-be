@@ -1,6 +1,7 @@
 package app.verimly.task.domain.entity;
 
 import app.verimly.commons.core.domain.entity.BaseEntity;
+import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.domain.exception.TaskDomainException;
@@ -66,9 +67,14 @@ public class Task extends BaseEntity<TaskId> {
 
     public static Task reconstruct(TaskId id, UserId ownerId, FolderId folderId, TaskName name,
                                    TaskDescription description, DueDate dueDate, TaskStatus status,
-                                   Priority priority){
+                                   Priority priority) {
 
-        return new Task(id,ownerId,folderId,name,description,dueDate,status,priority);
+        return new Task(id, ownerId, folderId, name, description, dueDate, status, priority);
+    }
+
+    public void moveToFolder(FolderId folderId) {
+        Assert.notNull(folderId, "To move task to folder, folderId cannot be null.");
+        this.folderId = folderId;
     }
 
 

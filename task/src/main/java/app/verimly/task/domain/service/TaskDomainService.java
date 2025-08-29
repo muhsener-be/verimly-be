@@ -18,25 +18,31 @@ public class TaskDomainService {
     private final TaskFactory factory;
 
     public Task createTask(@NotNull Folder folderToAssign, @NotNull TaskCreationDetails taskDetails) throws TaskDomainException {
-        assertInputsAreValid(folderToAssign, taskDetails);
+        Assert.notNull(folderToAssign, "folderToAssign cannot be null");
+        Assert.notNull(taskDetails, "taskDetails cannot be null");
+        Assert.equals(folderToAssign.getId(), taskDetails.folderId(), "FolderIds do not match.");
 
-        checkFolderAndTaskHaveTheSameOwner(folderToAssign, taskDetails);
+
+        ensureFolderAndTaskHaveTheSameOwner(folderToAssign, taskDetails.ownerId());
 
         return createTask(taskDetails);
 
     }
 
-    private void assertInputsAreValid(Folder folderToAssign, TaskCreationDetails taskDetails) {
-        Assert.notNull(folderToAssign, "folderToAssign cannot be null");
-        Assert.notNull(taskDetails, "taskDetails cannot be null");
-        Assert.equals(folderToAssign.getId(), taskDetails.folderId(), "FolderIds do not match.");
+    public void moveToFolder(@NotNull Task taskToMove, @NotNull Folder newFolder) throws TaskDomainException {
+        Assert.notNull(taskToMove, "taskToMove cannot be null");
+        Assert.notNull(newFolder, "newFolder cannot be null");
+
+        ensureFolderAndTaskHaveTheSameOwner(newFolder, taskToMove.getOwnerId());
+        taskToMove.moveToFolder(newFolder.getId());
+
     }
 
-    private void checkFolderAndTaskHaveTheSameOwner(Folder folderToAssign, TaskCreationDetails taskDetails) {
-        UserId folderOwner = folderToAssign.getOwnerId();
-        UserId taskOwner = taskDetails.ownerId();
 
-        if (!Objects.equals(folderOwner, taskOwner))
+    private void ensureFolderAndTaskHaveTheSameOwner(Folder folder, UserId taskOwnerId) {
+        UserId folderOwner = folder.getOwnerId();
+
+        if (!Objects.equals(folderOwner, taskOwnerId))
             throw new TaskDomainException(Task.Errors.FOLDER_OWNER_NOT_MATCH);
     }
 
