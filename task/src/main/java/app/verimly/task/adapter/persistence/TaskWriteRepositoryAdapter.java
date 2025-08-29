@@ -47,7 +47,7 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
     public Optional<Task> findById(TaskId taskId) throws TaskDataAccessException {
         Assert.notNull(taskId, "TaskId cannot be null to find by id");
         try {
-            return jpaRepository.findById(taskId.getValue())
+            return jpaRepository.findTaskById(taskId.getValue())
                     .map(taskDbMapper::toDomainEntity);
         } catch (Exception e) {
             throw new TaskDataAccessException(e.getMessage(), e);

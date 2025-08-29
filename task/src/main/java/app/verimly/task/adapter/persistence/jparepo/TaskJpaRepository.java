@@ -5,6 +5,7 @@ import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TaskJpaRepository extends JpaRepository<TaskEntity, UUID> {
@@ -19,4 +20,5 @@ public interface TaskJpaRepository extends JpaRepository<TaskEntity, UUID> {
     TaskSummaryProjection findSummaryById(UUID id);
 
 
+    Optional<TaskEntity> findTaskById(UUID value);
 }

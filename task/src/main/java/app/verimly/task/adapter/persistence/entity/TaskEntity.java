@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -19,6 +22,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE TaskEntity t SET t.is_deleted = true WHERE id = ?")
+@FilterDef(name = "soft-delete-filter", defaultCondition = "(is_deleted = false)")
+@Filter(name = "soft-delete-filter")
 public class TaskEntity extends BaseJpaEntity<UUID> {
 
     @Column(name = "owner_id", nullable = false)
@@ -42,6 +48,9 @@ public class TaskEntity extends BaseJpaEntity<UUID> {
 
     @Column(name = "priority", nullable = true)
     private Priority priority;
+
+    @Column(name = "is_deleted")
+    private boolean deleted;
 
     @Builder(toBuilder = true)
     public TaskEntity(UUID id, UUID ownerId, UUID folderId, String name,

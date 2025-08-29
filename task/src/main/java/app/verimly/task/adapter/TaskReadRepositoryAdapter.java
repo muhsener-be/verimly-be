@@ -8,6 +8,8 @@ import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
 import app.verimly.task.domain.repository.TaskDataAccessException;
 import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.task.TaskId;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class TaskReadRepositoryAdapter implements TaskReadRepository {
+
+
     private final TaskJpaRepository jpaRepository;
 
     @Override
