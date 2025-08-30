@@ -119,6 +119,10 @@ public class PersonName {
         return Objects.hash(firstName, lastName);
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     /**
      * Error messages for the PersonName value object.
      */

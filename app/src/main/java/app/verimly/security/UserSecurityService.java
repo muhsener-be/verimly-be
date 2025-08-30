@@ -32,7 +32,7 @@ public class UserSecurityService implements UserDetailsService {
 
 
         User foundUser = optional.get();
-        return new SecurityUser(foundUser.getId().getValue(), foundUser.getEmail().getValue(), foundUser.getPassword().getEncrypted());
+        return new SecurityUser(foundUser.getId().getValue(), foundUser.getEmail().getValue(), foundUser.getPassword().getEncrypted() , foundUser.getName().getFullName());
 
     }
 }

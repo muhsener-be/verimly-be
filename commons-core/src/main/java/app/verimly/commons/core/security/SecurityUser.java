@@ -13,12 +13,20 @@ public class SecurityUser implements UserDetails {
     private final UUID id;
     private final String password;
     private final String email;
+    @Getter
+    private final String name;
 
     public SecurityUser(UUID id, String email, String password) {
+        this(id, email, password, null);
+    }
+
+    public SecurityUser(UUID id, String email, String password, String name) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.name = name;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -34,4 +42,9 @@ public class SecurityUser implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+    public String getEmail(){
+        return this.getUsername();
+    }
+
 }

@@ -1,8 +1,10 @@
 package app.verimly.user.adapter.web.mapper;
 
 import app.verimly.commons.core.domain.mapper.CoreVoMapper;
+import app.verimly.commons.core.security.SecurityUser;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
 import app.verimly.user.adapter.web.dto.response.UserCreationWebResponse;
+import app.verimly.user.adapter.web.dto.response.UserDetailsWebResponse;
 import app.verimly.user.application.mapper.UserAppMapper;
 import app.verimly.user.application.usecase.command.create.CreateUserCommand;
 import app.verimly.user.application.usecase.command.create.UserCreationResponse;
@@ -21,4 +23,5 @@ public interface UserWebMapper {
     CreateUserCommand toCreateUserCommand(CreateUserWebRequest source);
 
 
+    UserDetailsWebResponse toUserDetailsWebResponse(SecurityUser user);
 }
