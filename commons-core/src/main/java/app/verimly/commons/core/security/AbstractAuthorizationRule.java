@@ -17,4 +17,8 @@ public abstract class AbstractAuthorizationRule<T extends AuthorizationContext> 
         if (!(principal instanceof AuthenticatedPrincipal))
             throw new AuthenticationRequiredException(errorMessage);
     }
+
+    protected void ensurePrincipalIsAuthenticated(Principal principal) {
+        ensurePrincipalIsAuthenticated(principal, "Principal [ID: %s] must be authenticated to apply %s".formatted(principal.getId(), getClass().getSimpleName()));
+    }
 }

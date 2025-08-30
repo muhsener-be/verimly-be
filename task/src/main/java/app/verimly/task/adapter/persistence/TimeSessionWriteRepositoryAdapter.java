@@ -2,6 +2,7 @@ package app.verimly.task.adapter.persistence;
 
 import app.verimly.commons.core.adapter.persistence.aspect.EnableSoftDeleteFilter;
 import app.verimly.commons.core.domain.exception.Assert;
+import app.verimly.commons.core.domain.vo.SessionId;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.SessionEntity;
 import app.verimly.task.adapter.persistence.jparepo.TimeSessionJpaRepository;
@@ -12,12 +13,16 @@ import app.verimly.task.domain.repository.TimeSessionWriteRepository;
 import app.verimly.task.domain.vo.session.SessionStatus;
 import app.verimly.task.domain.vo.task.TaskId;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -76,6 +81,55 @@ public class TimeSessionWriteRepositoryAdapter implements TimeSessionWriteReposi
 
             return sessionDbMapper.toDomainEntities(sessionsToDelete);
 
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
+
+    }
+
+    @Override
+    @EnableSoftDeleteFilter
+    @Transactional
+    public Optional<UserId> findOwnerOf(SessionId sessionId) {
+        Assert.notNull(sessionId, "SessionId cannot be null to find its owner.");
+        try {
+            TypedQuery<UUID> typedQuery = entityManager.createQuery("SELECT s.ownerId FROM SessionEntity s WHERE s.id = : id", UUID.class)
+                    .setParameter("id", sessionId.getValue());
+
+
+            UUID result = typedQuery.getSingleResult();
+            return Optional.ofNullable(UserId.of(result));
+
+        } catch (NoResultException exception) {
+            return Optional.empty();
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @Transactional
+    @EnableSoftDeleteFilter
+    public Optional<TimeSession> findById(SessionId sessionId) {
+        Assert.notNull(sessionId, "SessionId cannot be null to find session by id.");
+        try {
+            return timeSessionJpaRepository.findSessionById(sessionId.getValue())
+                    .map(sessionDbMapper::toDomainEntity);
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @EnableSoftDeleteFilter
+    @Transactional
+    public TimeSession update(TimeSession session) {
+        Assert.notNull(session, "Session cannot be null to update.");
+        try {
+            SessionEntity jpa = timeSessionJpaRepository.findSessionById(session.getId().getValue()).orElseThrow();
+            sessionDbMapper.mergeFromDomain(session, jpa);
+            entityManager.flush();
+            return session;
         } catch (Exception e) {
             throw new TaskDataAccessException(e.getMessage(), e);
         }

@@ -75,13 +75,18 @@ public class TimeSession extends BaseEntity<SessionId> {
             throw new TimeSessionDomainException(Errors.TO_RESUME_WRONG_STATUS);
 
         Instant now = Instant.now();
+        Instant lastPause = null;
+
         if (isPaused()) {
-            addLastBreakTimeToTotalPause(now);
+            lastPause = this.pausedAt;
         }
 
-        if (isFinished())
+        if (isFinished()) {
+            lastPause = this.finishedAt;
             this.finishedAt = null;
+        }
 
+        addLastBreakTimeToTotalPause(lastPause, now);
         this.status = SessionStatus.RUNNING;
     }
 
@@ -92,7 +97,7 @@ public class TimeSession extends BaseEntity<SessionId> {
         Instant now = Instant.now();
 
         if (isPaused()) {
-            addLastBreakTimeToTotalPause(now);
+            addLastBreakTimeToTotalPause(this.pausedAt, now);
         }
 
         this.finishedAt = now;
@@ -100,8 +105,8 @@ public class TimeSession extends BaseEntity<SessionId> {
 
     }
 
-    private void addLastBreakTimeToTotalPause(Instant now) {
-        Duration lastBreakTime = Duration.between(this.pausedAt, now);
+    private void addLastBreakTimeToTotalPause(Instant lastPause, Instant now) {
+        Duration lastBreakTime = Duration.between(lastPause, now);
         this.totalPause = totalPause.plus(lastBreakTime);
     }
 

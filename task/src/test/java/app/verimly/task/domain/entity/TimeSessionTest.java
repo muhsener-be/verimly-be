@@ -113,10 +113,11 @@ class TimeSessionTest {
     }
 
     @Test
-    void resume_whenPause_thenCalculatesTotalPause() {
+    void resume_whenPause_thenCalculatesTotalPause() throws InterruptedException {
         TimeSession session = getNewlyStartedSession();
         session.pause();
 
+        Thread.sleep(10);
         session.resume();
 
         assertTrue(session.isRunning());
@@ -125,15 +126,17 @@ class TimeSessionTest {
     }
 
     @Test
-    void resume_whenFinished_thenDoesNotAddLastBreakTime() {
+    void resume_whenFinished_thenCalculatesPauseTimeAndAddsToTotal() {
         TimeSession session = getNewlyStartedSession();
         session.finish();
         assertTrue(session.isFinished());
+        assertEquals(Duration.ZERO, session.getTotalPause());
+
 
         session.resume();
 
         assertTrue(session.isRunning());
-        assertEquals(Duration.ZERO, session.getTotalPause());
+        assertNotEquals(Duration.ZERO, session.getTotalPause());
         System.out.println(session.getTotalPause());
     }
 

@@ -18,6 +18,7 @@ public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService
     private final ReplaceTaskAuthorizationRule replaceTaskAuthorizationRule;
     private final DeleteTaskAuthorizationRule deleteTaskAuthorizationRule;
     private final StartSessionAuthorizationRule startSessionAuthorizationRule;
+    private final ChangeSessionStatusAuthorizationRule changeSessionStatusAuthorizationRule;
 
 
     @Override
@@ -59,5 +60,10 @@ public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService
     @Override
     public void authorizeStartSession(Principal principal, StartSessionContext context) {
         startSessionAuthorizationRule.apply(principal, context);
+    }
+
+    @Override
+    public void authorizeChangeSessionStatus(Principal principal, ChangeSessionStatusContext context) {
+        changeSessionStatusAuthorizationRule.apply(principal, context);
     }
 }

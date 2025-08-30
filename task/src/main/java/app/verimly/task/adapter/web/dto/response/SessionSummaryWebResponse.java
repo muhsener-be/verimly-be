@@ -33,6 +33,9 @@ public class SessionSummaryWebResponse {
     @JsonProperty("total_pause")
     private Duration totalPause;
 
+    @JsonProperty("total_time")
+    private Duration totalTime;
+
 
 }
 
