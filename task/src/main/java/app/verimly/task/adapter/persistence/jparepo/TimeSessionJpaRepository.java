@@ -14,4 +14,8 @@ public interface TimeSessionJpaRepository extends JpaRepository<SessionEntity, U
     Optional<SessionEntity> findSessionById(UUID id);
 
     List<SessionEntity> findByOwnerIdAndStatus(UUID ownerId, SessionStatus status);
+
+    void deleteByTaskId(UUID taskId);
+
+    List<SessionEntity> findByTaskId(UUID taskId);
 }

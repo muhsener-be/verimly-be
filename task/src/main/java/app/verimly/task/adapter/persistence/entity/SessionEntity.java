@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLDeleteAll;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @Table(name = "sessions")
 @Setter
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE sessions SET is_deleted = true WHERE id= ?")
 public class SessionEntity extends BaseJpaEntity<UUID> {
 
     @Column(name = "owner_id", nullable = false)

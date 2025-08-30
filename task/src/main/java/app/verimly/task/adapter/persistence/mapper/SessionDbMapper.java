@@ -10,11 +10,18 @@ import app.verimly.task.domain.vo.session.SessionName;
 import app.verimly.task.domain.vo.task.TaskId;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = {CoreVoMapper.class, TaskVoMapper.class})
 public interface SessionDbMapper {
 
 
     SessionEntity toJpaEntity(TimeSession session);
+
+    List<SessionEntity> toJpaEntity(List<TimeSession> session);
+
+
+    List<TimeSession> toDomainEntities(List<SessionEntity> source);
 
     default TimeSession toDomainEntity(SessionEntity source) {
         if (source == null)

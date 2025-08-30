@@ -10,6 +10,7 @@ import app.verimly.task.domain.entity.TimeSession;
 import app.verimly.task.domain.repository.TaskDataAccessException;
 import app.verimly.task.domain.repository.TimeSessionWriteRepository;
 import app.verimly.task.domain.vo.session.SessionStatus;
+import app.verimly.task.domain.vo.task.TaskId;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,25 @@ public class TimeSessionWriteRepositoryAdapter implements TimeSessionWriteReposi
         Assert.notNull(status, "Status cannot be null to find sessions of the user by status");
         try {
             return timeSessionJpaRepository.findByOwnerIdAndStatus(ownerId.getValue(), status).stream().map(sessionDbMapper::toDomainEntity).toList();
+        } catch (Exception e) {
+            throw new TaskDataAccessException(e.getMessage(), e);
+        }
+
+    }
+
+    @Override
+    @EnableSoftDeleteFilter
+    @Transactional
+    public List<TimeSession> deleteAllByTaskId(TaskId id) {
+        Assert.notNull(id, "taskId cannot be null to delete session by taskId");
+        try {
+            List<SessionEntity> sessionsToDelete = timeSessionJpaRepository.findByTaskId(id.getValue());
+
+            timeSessionJpaRepository.deleteAll(sessionsToDelete);
+
+
+            return sessionDbMapper.toDomainEntities(sessionsToDelete);
+
         } catch (Exception e) {
             throw new TaskDataAccessException(e.getMessage(), e);
         }
