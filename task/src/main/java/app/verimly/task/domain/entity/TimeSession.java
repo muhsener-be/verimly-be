@@ -46,6 +46,11 @@ public class TimeSession extends BaseEntity<SessionId> {
         return session;
     }
 
+    public static TimeSession reconstruct(SessionId id, UserId ownerId, SessionName name, TaskId taskId, Instant startedAt,
+                                          Instant pausedAt, Instant finishedAt, Duration totalPause, SessionStatus status) {
+        return new TimeSession(id, ownerId, name, taskId, startedAt, pausedAt, finishedAt, totalPause, status);
+    }
+
     private void checkInvariants() {
         if (taskId == null)
             throw new TimeSessionDomainException(Errors.TASK_NOT_EXIST);
@@ -53,7 +58,7 @@ public class TimeSession extends BaseEntity<SessionId> {
         if (name == null)
             throw new TimeSessionDomainException(Errors.NAME_NOT_EXIST);
 
-        if(ownerId == null)
+        if (ownerId == null)
             throw new TimeSessionDomainException(Errors.OWNER_NOT_EXIST);
     }
 

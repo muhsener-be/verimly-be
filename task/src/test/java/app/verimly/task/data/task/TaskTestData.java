@@ -124,10 +124,6 @@ public class TaskTestData {
         return TaskStatus.values()[random];
     }
 
-    public TaskEntity taskEntityWithNullFields() {
-        return new TaskEntity(null, null, null, null, null, null, null, null);
-    }
-
 
     public List<TaskSummaryData> summaryDatas(int count) {
         return IntStream.range(0, count)
@@ -164,4 +160,26 @@ public class TaskTestData {
     public Task taskWithOwnerId(UserId ownerId) {
         return task().toBuilder().ownerId(ownerId).build();
     }
+
+    public TaskEntity taskEntityWithOwnerIdAndFolderId(UserId userId, FolderId folderId) {
+        return taskEntity().toBuilder().ownerId(userId.getValue()).folderId(folderId.getValue()).build();
+    }
+
+    public TaskEntity taskEntity() {
+        return TaskEntity.builder()
+                .id(id().getValue())
+                .ownerId(ownerId().getValue())
+                .priority(priority())
+                .status(status())
+                .dueDate(dueDate().getValue())
+                .description(description().getValue())
+                .name(name().getValue())
+                .folderId(folderId().getValue())
+                .build();
+    }
+
+    public TaskEntity taskEntityWithNullFields() {
+        return new TaskEntity(null, null, null, null, null, null, null, null);
+    }
+
 }

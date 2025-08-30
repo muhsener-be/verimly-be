@@ -12,15 +12,11 @@ import app.verimly.task.domain.vo.task.TaskName;
 import app.verimly.user.adapter.persistence.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.hibernate.exception.ConstraintViolationException;
-import org.hibernate.exception.DataException;
 import org.hibernate.id.IdentifierGenerationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
@@ -34,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(properties = {
         "spring.jpa.defer-datasource-initialization=true"
 })
-class TaskEntityIntegrationTest {
+class TaskEntityIntegrationTest extends AbstractIntegrationTest {
 
     private static final int TASK_DATA_COUNT = 3;
     TaskEntityTestBuilder builder = new TaskEntityTestBuilder();
@@ -46,14 +42,13 @@ class TaskEntityIntegrationTest {
     FolderEntity folder;
 
 
-    @PersistenceContext
-    EntityManager entityManager;
+
 
     @Autowired
     TaskJpaRepository taskJpaRepository;
 
-    TaskEntity taskEntity;
 
+    TaskEntity TASK_ENTITY;
     List<TaskEntity> taskEntities;
 
     @BeforeEach
@@ -64,7 +59,7 @@ class TaskEntityIntegrationTest {
         folder = FOLDER_DATA.folderEntityWithIdAndOwnerId(folderId, userId);
         user = FOLDER_DATA.userEntityWithId(userId);
 
-        taskEntity = builder.withRandomId().withOwnerId(userId.getValue()).withFolderId(folderId.getValue()).build();
+        TASK_ENTITY = builder.withRandomId().withOwnerId(userId.getValue()).withFolderId(folderId.getValue()).build();
 
         entityManager.persist(user);
         entityManager.persist(folder);
@@ -98,7 +93,7 @@ class TaskEntityIntegrationTest {
 
     @Test
     void persist_whenIdIsNull_thenThrowsIdentifierGenerationException() {
-        taskEntity = builder.withId(null).build();
+        TASK_ENTITY = builder.withId(null).build();
         assertThrowsException(IdentifierGenerationException.class);
     }
 
@@ -106,59 +101,59 @@ class TaskEntityIntegrationTest {
     @Test
     void persist_whenOwnerIsNull_thenThrowsConstraintViolationException() {
         System.out.println("Test is starting...");
-        taskEntity = builder.withRandomId().withOwnerId(null).build();
-        System.out.println("Task in test: " + taskEntity.getId());
+        TASK_ENTITY = builder.withRandomId().withOwnerId(null).build();
+        System.out.println("Task in test: " + TASK_ENTITY.getId());
         assertThrowsConstraintViolationException();
     }
 
 
     @Test
     void persist_whenFolderIdIsNull_thenThrowsConstraintViolationException() {
-        taskEntity = builder.withRandomId().withFolderId(null).build();
+        TASK_ENTITY = builder.withRandomId().withFolderId(null).build();
         assertThrowsConstraintViolationException();
     }
 
     @Test
     void persist_whenNameIsNull_thenThrowsConstraintViolationException() {
-        taskEntity = builder.withRandomId().withName(null).build();
+        TASK_ENTITY = builder.withRandomId().withName(null).build();
         assertThrowsConstraintViolationException();
     }
 
     @Test
     void persist_whenNameIsTooLong_thenThrowsDataException() {
-        taskEntity = builder.withRandomId().withName(MyStringUtils.generateString(TaskName.MAX_LENGTH + 1)).build();
+        TASK_ENTITY = builder.withRandomId().withName(MyStringUtils.generateString(TaskName.MAX_LENGTH + 1)).build();
         assertThrowsDataException();
     }
 
     @Test
     void persist_whenDescriptionIsTooLong_thenThrowsDataException() {
-        taskEntity = builder.withRandomId().withDescription(MyStringUtils.generateString(TaskDescription.MAX_LENGTH + 1)).build();
+        TASK_ENTITY = builder.withRandomId().withDescription(MyStringUtils.generateString(TaskDescription.MAX_LENGTH + 1)).build();
         assertThrowsDataException();
     }
 
     @Test
     void persist_whenUserNotExist_thenThrowsConstraintViolationException() {
         UUID differentOwnerId = UUID.randomUUID();
-        taskEntity = builder.withRandomId().withOwnerId(differentOwnerId).build();
+        TASK_ENTITY = builder.withRandomId().withOwnerId(differentOwnerId).build();
 
         assertThrowsConstraintViolationException();
     }
 
     @Test
     void persist_whenFolderNotExist_thenThrowsConstraintViolationException() {
-        taskEntity = builder.withRandomId().withFolderId(FolderId.random().getValue()).build();
+        TASK_ENTITY = builder.withRandomId().withFolderId(FolderId.random().getValue()).build();
 
         assertThrowsConstraintViolationException();
     }
 
     @Test
     void persist_whenValidEntity_thenPersistToDb() {
-        taskEntity = builder.withRandomId().build();
+        TASK_ENTITY = builder.withRandomId().build();
 
         assertDoesNotThrowException();
-        TaskEntity foundEntity = entityManager.find(TaskEntity.class, taskEntity.getId());
+        TaskEntity foundEntity = entityManager.find(TaskEntity.class, TASK_ENTITY.getId());
 
-        assertTaskEntitiesEqual(taskEntity, foundEntity);
+        assertTaskEntitiesEqual(TASK_ENTITY, foundEntity);
         assertNotNull(foundEntity.getCreatedAt());
         assertNotNull(foundEntity.getUpdatedAt());
     }
@@ -290,34 +285,9 @@ class TaskEntityIntegrationTest {
     }
 
 
-    private void assertDoesNotThrowException() {
-        assertDoesNotThrow(getPersistAndFlushExecutable());
-    }
-
-
-    private void assertThrowsDataException() {
-        assertThrowsException(DataException.class);
-    }
-
-    private void assertThrowsDataIntegrityViolationException() {
-        assertThrowsException(DataIntegrityViolationException.class);
-    }
-
-    private void assertThrowsConstraintViolationException() {
-        assertThrowsException(ConstraintViolationException.class);
-    }
-
-
-    private void assertThrowsException(Class<? extends Throwable> exClass) {
-        assertThrows(exClass, getPersistAndFlushExecutable());
-    }
-
-    private Executable getPersistAndFlushExecutable() {
-        return this::persistAndFlush;
-    }
-
-    private void persistAndFlush() {
-        entityManager.persist(taskEntity);
+    @Override
+    protected void persistAndFlush() {
+        entityManager.persist(TASK_ENTITY);
         entityManager.flush();
 
     }
