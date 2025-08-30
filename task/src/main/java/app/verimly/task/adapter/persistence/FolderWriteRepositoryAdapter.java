@@ -1,5 +1,6 @@
 package app.verimly.task.adapter.persistence;
 
+import app.verimly.commons.core.adapter.persistence.aspect.EnableSoftDeleteFilter;
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.FolderEntity;
@@ -34,6 +35,7 @@ public class FolderWriteRepositoryAdapter implements FolderWriteRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public Folder save(Folder folder) throws TaskDataAccessException {
         Assert.notNull(folder, "Folder cannot be null to save");
 
@@ -48,6 +50,8 @@ public class FolderWriteRepositoryAdapter implements FolderWriteRepository {
     }
 
     @Override
+    @EnableSoftDeleteFilter
+    @Transactional
     public Optional<Folder> findById(FolderId id) throws TaskDataAccessException {
         Assert.notNull(id, "FolderId cannot be null to fetch by id");
 
@@ -61,12 +65,15 @@ public class FolderWriteRepositoryAdapter implements FolderWriteRepository {
     }
 
     @Override
+    @Transactional
+    @EnableSoftDeleteFilter
     public List<Folder> findByOwner(UserId userId) throws TaskDataAccessException {
         return List.of();
     }
 
     @Override
     @Transactional(readOnly = true)
+    @EnableSoftDeleteFilter
     public Optional<UserId> findOwnerOf(FolderId folderId) throws FolderNotFoundException, TaskDataAccessException {
         Assert.notNull(folderId, "folderId canot be null to find owner of the folder");
 

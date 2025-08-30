@@ -3,9 +3,7 @@ package app.verimly.task.adapter.persistence.entity;
 import app.verimly.commons.core.adapter.persistence.BaseJpaEntity;
 import app.verimly.task.domain.vo.session.SessionName;
 import app.verimly.task.domain.vo.session.SessionStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +41,7 @@ public class SessionEntity extends BaseJpaEntity<UUID> {
     private Duration totalPause;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private SessionStatus status;
 
     @Builder(toBuilder = true)

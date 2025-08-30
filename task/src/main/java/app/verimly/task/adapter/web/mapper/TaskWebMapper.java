@@ -15,30 +15,18 @@ import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskComm
 import app.verimly.task.domain.vo.task.TaskId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.context.i18n.LocaleContextHolder;
 
-import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.TimeZone;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", uses = {TaskVoMapper.class, CoreVoMapper.class})
+@Mapper(componentModel = "spring", uses = {TaskVoMapper.class, CoreVoMapper.class, ZonedTimeMapper.class})
 public interface TaskWebMapper {
 
     CreateTaskCommand toCreateTaskCommand(CreateTaskWebRequest request);
 
 
     TaskCreationWebResponse toTaskCreationWebResponse(TaskCreationResponse source);
-
-    default ZonedDateTime toZonedDateTimeTimeZoneAware(Instant instant) {
-        if (instant == null)
-            return null;
-        TimeZone userTimeZone = LocaleContextHolder.getTimeZone();
-        return ZonedDateTime.ofInstant(instant, userTimeZone.toZoneId());
-
-    }
 
 
     TaskSummaryWebResponse toTaskSummaryWebResponse(TaskSummaryData source);

@@ -63,4 +63,8 @@ public class SecurityTestData {
     public ReplaceTaskContext replaceTaskContextWithTaskId(TaskId taskId) {
         return ReplaceTaskContext.createWithTaskId(taskId);
     }
+
+    public StartSessionContext startSessionContextWithId(TaskId id) {
+        return StartSessionContext.createWithTaskId(id);
+    }
 }

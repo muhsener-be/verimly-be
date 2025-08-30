@@ -20,4 +20,7 @@ public interface TaskAuthorizationService extends AuthorizationService {
     void authorizeReplaceTask(Principal principal, ReplaceTaskContext context);
 
     void authorizeDeleteTask(Principal principal, DeleteTaskContext context);
+
+
+    void authorizeStartSession(Principal principal, StartSessionContext context);
 }

@@ -3,6 +3,8 @@ package app.verimly.task.data;
 import app.verimly.commons.core.domain.vo.SessionId;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.SessionEntity;
+import app.verimly.task.application.usecase.command.session.start.SessionStartResponse;
+import app.verimly.task.application.usecase.command.session.start.StartSessionForTaskCommand;
 import app.verimly.task.domain.entity.TimeSession;
 import app.verimly.task.domain.input.SessionCreationDetails;
 import app.verimly.task.domain.vo.session.SessionName;
@@ -66,6 +68,19 @@ public class TimeSessionTestData {
     }
 
     public TimeSession session() {
-        return TimeSession.startForTask(taskId(),name(),ownerId());
+        return TimeSession.startForTask(taskId(), name(), ownerId());
+    }
+
+    public StartSessionForTaskCommand startSessionCommand() {
+        return new StartSessionForTaskCommand(name(), taskId());
+    }
+
+    public TimeSession sessionWithTaskIdAndOwnerId(TaskId taskId, UserId ownerId) {
+        return TimeSession.startForTask(taskId, name(), ownerId);
+
+    }
+
+    public SessionStartResponse sessionStartResponse(SessionId id, UserId ownerId, TaskId taskId) {
+        return new SessionStartResponse(id, ownerId, taskId, name(), Instant.now(), SessionStatus.RUNNING);
     }
 }

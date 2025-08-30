@@ -4,6 +4,7 @@ import app.verimly.commons.core.domain.mapper.CoreVoMapper;
 import app.verimly.task.domain.vo.folder.FolderDescription;
 import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.folder.FolderName;
+import app.verimly.task.domain.vo.session.SessionName;
 import app.verimly.task.domain.vo.task.*;
 import org.mapstruct.Mapper;
 
@@ -50,6 +51,10 @@ public interface TaskVoMapper {
 
     default TaskId toTaskId(UUID value) {
         return TaskId.of(value);
+    }
+
+    default SessionName toSessionName(String value) {
+        return SessionName.of(value);
     }
 
 }

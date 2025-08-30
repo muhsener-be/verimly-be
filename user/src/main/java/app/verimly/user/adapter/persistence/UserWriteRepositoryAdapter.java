@@ -1,5 +1,6 @@
 package app.verimly.user.adapter.persistence;
 
+import app.verimly.commons.core.adapter.persistence.aspect.EnableSoftDeleteFilter;
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
@@ -35,6 +36,7 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public User save(User user) throws UserDataAccessException, DuplicateEmailException {
         try {
             Assert.notNull(user, "User to persist cannot be null!");
@@ -68,6 +70,7 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public Optional<User> findById(UserId id) throws UserDataAccessException {
         Assert.notNull(id, "UserId cannot be null to find by id");
         try {
@@ -82,12 +85,14 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
     }
 
     @Override
+    @EnableSoftDeleteFilter
     public boolean existsByEmail(Email email) {
         return false;
     }
 
     @Override
     @Transactional(readOnly = true)
+    @EnableSoftDeleteFilter
     public Optional<User> findByEmail(Email email) {
         Assert.notNull(email, "Email cannot be null to findByEmail");
 

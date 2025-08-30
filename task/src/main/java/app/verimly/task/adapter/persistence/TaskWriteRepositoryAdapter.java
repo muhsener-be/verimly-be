@@ -1,5 +1,6 @@
 package app.verimly.task.adapter.persistence;
 
+import app.verimly.commons.core.adapter.persistence.aspect.EnableSoftDeleteFilter;
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.TaskEntity;
@@ -33,6 +34,7 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public Task save(Task task) throws TaskDataAccessException {
         Assert.notNull(task, "task cannot be null to save.");
         try {
@@ -46,7 +48,7 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
     }
 
     @Override
-    @Transactional
+    @EnableSoftDeleteFilter
     public Optional<Task> findById(TaskId taskId) throws TaskDataAccessException {
         Assert.notNull(taskId, "TaskId cannot be null to find by id");
         try {
@@ -59,6 +61,7 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public List<Task> findByOwnerId(UserId ownerId) throws TaskDataAccessException {
         Assert.notNull(ownerId, "OwnerId cannot be nul to find tasks by owner id");
         try {
@@ -72,6 +75,7 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public Task update(Task task) {
         Assert.notNull(task, "Task cannot be null to update.");
         try {
@@ -89,6 +93,7 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public Task deleteTask(TaskId taskId) {
         Assert.notNull(taskId, "taskId cannot be null to delete task.");
         try {
@@ -104,6 +109,7 @@ public class TaskWriteRepositoryAdapter implements TaskWriteRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public Optional<UserId> findOwnerOf(TaskId taskId) {
         Assert.notNull(taskId, "TaskId cannot be null to find owner");
         try {

@@ -1,5 +1,6 @@
 package app.verimly.task.adapter.persistence;
 
+import app.verimly.commons.core.adapter.persistence.aspect.EnableSoftDeleteFilter;
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.jparepo.FolderJpaRepository;
@@ -20,6 +21,7 @@ public class FolderReadRepositoryAdapter implements FolderReadRepository {
 
     @Override
     @Transactional
+    @EnableSoftDeleteFilter
     public List<FolderSummaryProjection> findSummariesByOwnerId(UserId ownerId) {
         Assert.notNull(ownerId, "OwnerId cannot be null to find summaries by owner id.");
         try {
