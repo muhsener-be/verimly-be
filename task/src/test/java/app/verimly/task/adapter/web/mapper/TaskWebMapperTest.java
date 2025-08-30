@@ -1,6 +1,7 @@
 package app.verimly.task.adapter.web.mapper;
 
 import app.verimly.commons.core.domain.mapper.CoreVoMapperImpl;
+import app.verimly.commons.core.domain.mapper.ZonedTimeMapperImpl;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.response.TaskCreationWebResponse;
 import app.verimly.task.adapter.web.dto.response.TaskSummaryWebResponse;
@@ -12,23 +13,19 @@ import app.verimly.task.data.task.TaskTestData;
 import app.verimly.task.utils.FixtureUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = {TaskWebMapperImpl.class, TaskVoMapperImpl.class, CoreVoMapperImpl.class})
+@SpringBootTest(classes = {TaskWebMapperImpl.class, TaskVoMapperImpl.class, CoreVoMapperImpl.class, ZonedTimeMapperImpl.class})
+
 class TaskWebMapperTest {
     TaskTestData DATA = TaskTestData.getInstance();
 
@@ -100,10 +97,6 @@ class TaskWebMapperTest {
     }
 
 
-
-
-
-
     @Test
     void toTaskSummaryWebResponse_shouldMapSuccessfully() {
 
@@ -164,7 +157,6 @@ class TaskWebMapperTest {
         );
 
     }
-
 
 
     private CreateTaskCommand mapToCommand() {

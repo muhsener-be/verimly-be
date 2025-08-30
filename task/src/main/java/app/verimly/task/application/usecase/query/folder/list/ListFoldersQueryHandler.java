@@ -1,13 +1,13 @@
 package app.verimly.task.application.usecase.query.folder.list;
 
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.mapper.FolderAppMapper;
 import app.verimly.task.application.ports.out.persistence.FolderReadRepository;
 import app.verimly.task.application.ports.out.persistence.FolderSummaryProjection;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.ListFoldersContext;
 import app.verimly.task.domain.repository.TaskDataAccessException;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ListFoldersQueryHandler {
 
-    private final TaskAuthenticationService authN;
+    private final AuthenticationService authN;
     private final TaskAuthorizationService authZ;
     private final FolderReadRepository repository;
     private final FolderAppMapper mapper;

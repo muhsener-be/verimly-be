@@ -41,10 +41,10 @@ public class JwtGeneratorSuccessHandler implements AuthenticationSuccessHandler 
 
         ResponseCookie cookie = cookieHelper.createAccessTokenCookie(accessToken);
 
-        writeUserDetailsToResponseBody(response , principal);
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         response.setStatus(HttpServletResponse.SC_OK);
         log.debug("Authentication success handled by generation a JWT token and put it in cookie.");
+        writeUserDetailsToResponseBody(response , principal);
     }
 
     private void writeUserDetailsToResponseBody(HttpServletResponse response, SecurityUser user) {

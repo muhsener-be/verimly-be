@@ -1,5 +1,6 @@
 package app.verimly.task.adapter.security;
 
+import app.verimly.commons.core.adapter.security.TaskAuthenticationServiceAdapter;
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AnonymousPrincipal;

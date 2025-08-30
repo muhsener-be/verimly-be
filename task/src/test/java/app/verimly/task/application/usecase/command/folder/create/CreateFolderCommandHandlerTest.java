@@ -2,13 +2,10 @@ package app.verimly.task.application.usecase.command.folder.create;
 
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.AuthenticatedPrincipal;
-import app.verimly.commons.core.security.AuthenticationRequiredException;
-import app.verimly.commons.core.security.Principal;
+import app.verimly.commons.core.security.*;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.FolderCreatedApplicationEvent;
 import app.verimly.task.application.mapper.FolderAppMapper;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
 import app.verimly.task.data.SecurityTestData;
@@ -39,7 +36,7 @@ class CreateFolderCommandHandlerTest {
     public static final FolderDomainException FOLDER_DOMAIN_EXCEPTION = new FolderDomainException();
     public static final TaskDataAccessException TASK_DATA_ACCESS_EXCEPTION = new TaskDataAccessException();
     @Mock
-    TaskAuthenticationService authN;
+    AuthenticationService authN;
 
     @Mock
     TaskAuthorizationService authZ;

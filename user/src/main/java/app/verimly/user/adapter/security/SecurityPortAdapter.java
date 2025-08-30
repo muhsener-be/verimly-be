@@ -1,8 +1,8 @@
 package app.verimly.user.adapter.security;
 
 import app.verimly.commons.core.domain.exception.Assert;
-import app.verimly.user.application.ports.out.EncryptionException;
-import app.verimly.user.application.ports.out.SecurityPort;
+import app.verimly.user.application.ports.out.security.EncryptionException;
+import app.verimly.user.application.ports.out.security.SecurityPort;
 import app.verimly.user.domain.vo.Password;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

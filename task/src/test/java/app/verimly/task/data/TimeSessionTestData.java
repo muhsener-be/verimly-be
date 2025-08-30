@@ -3,6 +3,7 @@ package app.verimly.task.data;
 import app.verimly.commons.core.domain.vo.SessionId;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.SessionEntity;
+import app.verimly.task.application.dto.SessionSummaryData;
 import app.verimly.task.application.usecase.command.session.start.SessionStartResponse;
 import app.verimly.task.application.usecase.command.session.start.StartSessionForTaskCommand;
 import app.verimly.task.domain.entity.TimeSession;
@@ -14,7 +15,11 @@ import com.github.javafaker.Faker;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TimeSessionTestData {
 
@@ -82,5 +87,25 @@ public class TimeSessionTestData {
 
     public SessionStartResponse sessionStartResponse(SessionId id, UserId ownerId, TaskId taskId) {
         return new SessionStartResponse(id, ownerId, taskId, name(), Instant.now(), SessionStatus.RUNNING);
+    }
+
+    public SessionSummaryData sessionSummaryDataWithRandomStartedAt() {
+        return new SessionSummaryData(id().getValue(),
+                ownerId().getValue(),
+                taskId().getValue(),
+                name().getValue(),
+                "FINISHED",
+                FAKER.date().future(365, TimeUnit.DAYS).toInstant(),
+                null,
+                null,
+                null
+        );
+
+    }
+
+    public List<SessionSummaryData> sessionSummaryDataWithRandomStartedAt(int count) {
+        return IntStream.range(0, count)
+                .mapToObj(i -> this.sessionSummaryDataWithRandomStartedAt())
+                .collect(Collectors.toList());
     }
 }

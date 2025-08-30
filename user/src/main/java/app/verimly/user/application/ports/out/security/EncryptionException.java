@@ -1,4 +1,4 @@
-package app.verimly.user.application.ports.out;
+package app.verimly.user.application.ports.out.security;
 
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.security.SecurityException;

@@ -1,12 +1,8 @@
-package app.verimly.task.adapter.security;
+package app.verimly.commons.core.adapter.security;
 
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.AnonymousPrincipal;
-import app.verimly.commons.core.security.AuthenticatedPrincipal;
-import app.verimly.commons.core.security.Principal;
-import app.verimly.commons.core.security.SecurityUser;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
+import app.verimly.commons.core.security.*;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,9 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TaskAuthenticationServiceAdapter implements TaskAuthenticationService {
-
-
+public class TaskAuthenticationServiceAdapter implements AuthenticationService {
 
 
     @Override

@@ -2,17 +2,15 @@ package app.verimly.task.application.usecase.query.task.list_by_folder;
 
 import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.dto.TaskSummaryData;
 import app.verimly.task.application.mapper.TaskAppMapper;
 import app.verimly.task.application.ports.out.persistence.TaskReadRepository;
 import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
-import app.verimly.task.application.ports.out.security.action.TaskActions;
 import app.verimly.task.application.ports.out.security.context.ListTasksByFolderContext;
-import app.verimly.task.application.ports.out.security.context.TaskAuthorizationContext;
 import app.verimly.task.domain.vo.folder.FolderId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,7 +23,7 @@ import java.util.List;
 public class ListTasksByFolderQueryHandler {
 
 
-    private final TaskAuthenticationService authN;
+    private final AuthenticationService authN;
     private final TaskAuthorizationService authZ;
     private final TaskReadRepository taskReadRepository;
     private final TaskAppMapper taskAppMapper;
@@ -33,7 +31,6 @@ public class ListTasksByFolderQueryHandler {
     @Transactional
     public List<TaskSummaryData> handle(FolderId folderId) {
         ensureFolderIdIsValid(folderId);
-
 
 
         Principal principal = authN.getCurrentPrincipal();
@@ -61,8 +58,6 @@ public class ListTasksByFolderQueryHandler {
     private static void ensureFolderIdIsValid(FolderId folderId) {
         Assert.notNull(folderId, "folderId cannot be null in ListTasksByFolderQueryHandler");
     }
-
-
 
 
 }

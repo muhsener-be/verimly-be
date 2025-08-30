@@ -1,14 +1,11 @@
 package app.verimly.task.application.usecase.command.task.create;
 
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.commons.core.security.Action;
-import app.verimly.commons.core.security.AuthenticationRequiredException;
-import app.verimly.commons.core.security.Principal;
+import app.verimly.commons.core.security.*;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.task.application.mapper.TaskAppMapper;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.action.TaskActions;
 import app.verimly.task.application.ports.out.security.context.CreateTaskContext;
@@ -46,7 +43,7 @@ public class CreateTaskCommandHandlerTest {
 
     public static final AuthenticationRequiredException AUTHENTICATION_REQUIRED_EXCEPTION = new AuthenticationRequiredException("Test exception");
     @Mock
-    private TaskAuthenticationService authN;
+    private AuthenticationService authN;
     @Mock
     private TaskAuthorizationService authZ;
     @Mock

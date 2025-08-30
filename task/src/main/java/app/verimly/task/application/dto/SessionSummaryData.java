@@ -4,6 +4,7 @@ import app.verimly.task.domain.vo.session.SessionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -19,6 +20,7 @@ public class SessionSummaryData {
     private UUID ownerId;
     private UUID taskId;
     private String name;
+    @Setter
     private String status;
     private Instant startedAt;
     private Instant pausedAt;

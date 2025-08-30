@@ -2,11 +2,11 @@ package app.verimly.task.application.usecase.query.task.list_by_folder;
 
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
+import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.task.application.AbstractUnitTest;
 import app.verimly.task.application.mapper.TaskAppMapper;
 import app.verimly.task.application.ports.out.persistence.TaskReadRepository;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.ListTasksByFolderContext;
 import app.verimly.task.domain.repository.TaskDataAccessException;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 class ListTasksByFolderQueryHandlerTest extends AbstractUnitTest {
 
     @Mock
-    private TaskAuthenticationService authN;
+    private AuthenticationService authN;
     @Mock
     private TaskAuthorizationService authZ;
     @Mock

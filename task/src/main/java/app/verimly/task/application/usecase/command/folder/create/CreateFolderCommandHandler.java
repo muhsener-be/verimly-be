@@ -1,10 +1,10 @@
 package app.verimly.task.application.usecase.command.folder.create;
 
+import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.FolderCreatedApplicationEvent;
 import app.verimly.task.application.mapper.FolderAppMapper;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
 import app.verimly.task.domain.entity.Folder;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateFolderCommandHandler {
 
-    private final TaskAuthenticationService authN;
+    private final AuthenticationService authN;
     private final TaskAuthorizationService authZ;
     private final FolderWriteRepository repository;
     private final ApplicationEventPublisher eventPublisher;

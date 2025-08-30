@@ -1,11 +1,11 @@
 package app.verimly.task.application.usecase.command.task.move_to_folder;
 
 import app.verimly.commons.core.domain.exception.Assert;
+import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.task.application.exception.TaskNotFoundException;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.MoveToFolderContext;
 import app.verimly.task.domain.entity.Folder;
@@ -27,7 +27,7 @@ public class MoveTaskToFolderCommandHandler {
 
     private final TaskWriteRepository taskRepository;
     private final FolderWriteRepository folderRepository;
-    private final TaskAuthenticationService taskAuthenticationService;
+    private final AuthenticationService taskAuthenticationService;
     private final TaskAuthorizationService authorizationService;
     private final TaskDomainService taskDomainService;
 

@@ -1,6 +1,8 @@
 package app.verimly.user.adapter.web.mapper;
 
 import app.verimly.commons.core.domain.mapper.CoreVoMapperImpl;
+import app.verimly.commons.core.domain.mapper.ZonedTimeMapper;
+import app.verimly.commons.core.domain.mapper.ZonedTimeMapperImpl;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
 import app.verimly.user.adapter.web.dto.response.UserCreationWebResponse;
 import app.verimly.user.application.mapper.UserAppMapperImpl;
@@ -14,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(classes = {UserWebMapperImpl.class, CoreVoMapperImpl.class, UserAppMapperImpl.class})
+@SpringBootTest(classes = {UserWebMapperImpl.class, CoreVoMapperImpl.class, UserAppMapperImpl.class, ZonedTimeMapperImpl.class})
 public class UserWebMapperTest {
 
     UserTestData DATA = UserTestData.getInstance();

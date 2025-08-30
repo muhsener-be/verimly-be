@@ -1,4 +1,4 @@
-package app.verimly.task.adapter.web.mapper;
+package app.verimly.commons.core.domain.mapper;
 
 import org.mapstruct.Mapper;
 import org.springframework.context.i18n.LocaleContextHolder;

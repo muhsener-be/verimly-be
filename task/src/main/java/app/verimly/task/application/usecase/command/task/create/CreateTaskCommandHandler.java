@@ -1,12 +1,13 @@
 package app.verimly.task.application.usecase.command.task.create;
 
 import app.verimly.commons.core.domain.exception.Assert;
+import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.exception.FolderNotFoundException;
 import app.verimly.task.application.mapper.TaskAppMapper;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
+
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.CreateTaskContext;
 import app.verimly.task.domain.entity.Folder;
@@ -26,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class CreateTaskCommandHandler {
-    private final TaskAuthenticationService authN;
+    private final AuthenticationService authN;
     private final TaskAuthorizationService authZ;
     private final FolderWriteRepository folderWriteRepository;
     private final TaskAppMapper mapper;

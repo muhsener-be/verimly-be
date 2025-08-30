@@ -1,14 +1,11 @@
 package app.verimly.task.application.usecase.query;
 
-import app.verimly.commons.core.security.Action;
-import app.verimly.commons.core.security.AuthenticationRequiredException;
-import app.verimly.commons.core.security.Principal;
+import app.verimly.commons.core.security.*;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.mapper.FolderAppMapper;
 import app.verimly.task.application.ports.out.persistence.FolderReadRepository;
 import app.verimly.task.application.ports.out.persistence.FolderSummaryProjection;
-import app.verimly.task.application.ports.out.security.TaskAuthenticationService;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.action.FolderActions;
 import app.verimly.task.application.ports.out.security.context.ListFoldersContext;
@@ -37,7 +34,7 @@ import static org.mockito.Mockito.*;
 class ListFoldersQueryHandlerTest {
     public static final Action ACTION = FolderActions.LIST;
     @Mock
-    private TaskAuthenticationService authN;
+    private AuthenticationService authN;
     @Mock
     private TaskAuthorizationService authZ;
     @Mock

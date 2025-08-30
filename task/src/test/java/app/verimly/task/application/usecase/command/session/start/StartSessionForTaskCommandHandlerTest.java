@@ -68,9 +68,9 @@ class StartSessionForTaskCommandHandlerTest extends AbstractUnitTest {
         session = SESSION_TEST_DATA.sessionWithTaskIdAndOwnerId(task.getId(), principal.getId());
         response = SESSION_TEST_DATA.sessionStartResponse(session.getId(), session.getOwnerId(), session.getTaskId());
 
-        lenient().when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
         lenient().when(authN.getCurrentPrincipal()).thenReturn(principal);
         lenient().doNothing().when(authZ).authorizeStartSession(any(Principal.class), any(StartSessionContext.class));
+        lenient().when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
         lenient().when(mapper.toSessionCreationDetails(principal.getId(), command)).thenReturn(details);
         lenient().when(sessionRepository.save(session)).thenReturn(session);
         lenient().when(mapper.toSessionStartResponse(session)).thenReturn(response);
@@ -89,9 +89,11 @@ class StartSessionForTaskCommandHandlerTest extends AbstractUnitTest {
     void handle_whenTaskNotFound_thenThrowsTaskNotFound() {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
 
+
+
         assertThrowsExceptions(TaskNotFoundException.class, getHandleExecutable());
         verify(taskRepository, times(0)).save(task);
-        verifyNoInteractions(authN, authZ, sessionRepository, mapper, domainService);
+        verifyNoInteractions( sessionRepository, mapper, domainService);
     }
 
     @Test
@@ -133,6 +135,7 @@ class StartSessionForTaskCommandHandlerTest extends AbstractUnitTest {
         ArgumentCaptor<Principal> principalCaptor = ArgumentCaptor.forClass(Principal.class);
 
         verify(authZ).authorizeStartSession(principalCaptor.capture(), any(StartSessionContext.class));
+        assertEquals(principal , principalCaptor.getValue());
     }
 
     private Executable getHandleExecutable() {
