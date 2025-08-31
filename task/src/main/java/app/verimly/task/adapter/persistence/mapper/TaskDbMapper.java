@@ -3,6 +3,10 @@ package app.verimly.task.adapter.persistence.mapper;
 import app.verimly.commons.core.domain.mapper.CoreVoMapper;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.TaskEntity;
+import app.verimly.task.application.dto.SessionSummaryData;
+import app.verimly.task.application.dto.TaskWithSessionsData;
+import app.verimly.task.application.ports.out.persistence.SessionSummaryProjection;
+import app.verimly.task.application.ports.out.persistence.TaskSummaryProjection;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.task.DueDate;
@@ -11,6 +15,8 @@ import app.verimly.task.domain.vo.task.TaskId;
 import app.verimly.task.domain.vo.task.TaskName;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {CoreVoMapper.class})
 public interface TaskDbMapper {
@@ -47,4 +53,11 @@ public interface TaskDbMapper {
         to.setFolderId(coreVoMapper.fromVO(from.getFolderId()));
 
     }
+
+    TaskWithSessionsData toTaskWithSessionsData(TaskSummaryProjection task, List<SessionSummaryProjection> sessions);
+
+    List<SessionSummaryData> toSessionSummaryData(List<SessionSummaryProjection> projections);
+
+    SessionSummaryData toSessionSummaryData(SessionSummaryProjection projection);
+
 }

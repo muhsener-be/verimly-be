@@ -17,7 +17,9 @@ public class SecurityPathConfig {
         return List.of(
                 "/h2-console/**",
                 "/swagger-ui/**",
+                "/swagger-ui.html/**",
                 "/v3/api-docs/**",
+                "/favicon.ico",
                 properties.getSignUpPath(),
                 properties.getLoginPath()
         );

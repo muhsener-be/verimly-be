@@ -10,8 +10,6 @@ import app.verimly.task.domain.vo.task.TaskDescription;
 import app.verimly.task.domain.vo.task.TaskId;
 import app.verimly.task.domain.vo.task.TaskName;
 import app.verimly.user.adapter.persistence.entity.UserEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.hibernate.id.IdentifierGenerationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -224,7 +222,7 @@ class TaskEntityIntegrationTest extends AbstractIntegrationTest {
     @Test
     void findDetailsProjections_whenFound_thenReturnsAllProjections() {
 
-        List<TaskSummaryProjection> projections = taskJpaRepository.findDetailsProjectionsByOwnerIdAndFolderId(this.userId.getValue(), this.folderId.getValue());
+        List<TaskSummaryProjection> projections = taskJpaRepository.findSummaryProjectionsByOwnerIdAndFolderId(this.userId.getValue(), this.folderId.getValue());
 
         assertTaskProjectionAndEntityEquals(taskEntities, projections);
 
@@ -235,7 +233,7 @@ class TaskEntityIntegrationTest extends AbstractIntegrationTest {
     void findDetailsProjections_whenFound_thenEmptyList() {
         UUID differentUserId = UserId.random().getValue();
 
-        List<TaskSummaryProjection> projections = taskJpaRepository.findDetailsProjectionsByOwnerIdAndFolderId(differentUserId, this.folderId.getValue());
+        List<TaskSummaryProjection> projections = taskJpaRepository.findSummaryProjectionsByOwnerIdAndFolderId(differentUserId, this.folderId.getValue());
 
         assertTrue(projections.isEmpty());
     }

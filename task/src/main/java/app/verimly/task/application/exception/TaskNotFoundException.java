@@ -9,6 +9,7 @@ public class TaskNotFoundException extends NotFoundException {
     public static ErrorMessage ERROR_MESSAGE = ErrorMessage.of("task.not-found", "Task not found.");
 
     public TaskNotFoundException(TaskId taskId) {
-        super(ERROR_MESSAGE.withDefaultMessage("Task not found with provided ID: %s".formatted(taskId)));
+        super("TASK", taskId == null ? null : taskId.toString());
     }
+
 }

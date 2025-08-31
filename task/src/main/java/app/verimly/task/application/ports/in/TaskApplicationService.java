@@ -1,6 +1,7 @@
 package app.verimly.task.application.ports.in;
 
 import app.verimly.task.application.dto.TaskSummaryData;
+import app.verimly.task.application.dto.TaskWithSessionsData;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommand;
@@ -21,4 +22,6 @@ public interface TaskApplicationService {
     TaskSummaryData replaceTask(ReplaceTaskCommand command);
 
     void deleteTask(TaskId taskId);
+
+    TaskWithSessionsData fetchTaskWithSessions(TaskId taskId);
 }

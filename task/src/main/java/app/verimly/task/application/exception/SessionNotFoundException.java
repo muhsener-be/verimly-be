@@ -9,6 +9,6 @@ public class SessionNotFoundException extends NotFoundException {
     public static ErrorMessage ERROR_MESSAGE = ErrorMessage.of("session.not-found", "Session not found.");
 
     public SessionNotFoundException(SessionId sessionId) {
-        super(ERROR_MESSAGE.withDefaultMessage("Session not found with provided ID: %s".formatted(sessionId)));
+        super("SESSION", sessionId == null ? null : sessionId.toString());
     }
 }

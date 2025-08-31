@@ -1,6 +1,7 @@
 package app.verimly.task.adapter.persistence.jparepo;
 
 import app.verimly.task.adapter.persistence.entity.SessionEntity;
+import app.verimly.task.application.ports.out.persistence.SessionSummaryProjection;
 import app.verimly.task.domain.vo.session.SessionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,4 +19,6 @@ public interface TimeSessionJpaRepository extends JpaRepository<SessionEntity, U
     void deleteByTaskId(UUID taskId);
 
     List<SessionEntity> findByTaskId(UUID taskId);
+
+    List<SessionSummaryProjection> findSummaryProjectionByTaskIdOrderByStartedAtDesc(UUID taskId);
 }

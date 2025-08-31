@@ -1,20 +1,22 @@
 package app.verimly.task.adapter.web.dto.aggregate;
 
-import app.verimly.task.application.dto.SessionSummaryData;
-import app.verimly.task.domain.vo.task.TaskStatus;
+import app.verimly.task.adapter.web.dto.response.SessionSummaryWebResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskDetailsWebResponse {
+@Data
+public class TaskWithSessionsWebResponse {
 
     private UUID id;
 
@@ -31,7 +33,7 @@ public class TaskDetailsWebResponse {
     @JsonProperty("due_date")
     private ZonedDateTime dueDate;
 
-    private TaskStatus status;
+    private String status;
 
 
     private String priority;
@@ -45,7 +47,7 @@ public class TaskDetailsWebResponse {
     @JsonProperty("total_time")
     private Duration totalTime;
 
+    private List<SessionSummaryWebResponse> sessions;
 
-    private SessionSummaryData sessions;
 
 }

@@ -15,10 +15,13 @@ public interface TaskJpaRepository extends JpaRepository<TaskEntity, UUID> {
     List<TaskEntity> findByOwnerId(UUID ownerId);
 
 
-    List<TaskSummaryProjection> findDetailsProjectionsByOwnerIdAndFolderId(UUID ownerId, UUID folderId);
+    List<TaskSummaryProjection> findSummaryProjectionsByOwnerIdAndFolderId(UUID ownerId, UUID folderId);
 
     TaskSummaryProjection findSummaryById(UUID id);
 
 
     Optional<TaskEntity> findTaskById(UUID value);
+
+
+    Optional<TaskSummaryProjection> findSummaryProjectionById(UUID id);
 }

@@ -46,6 +46,8 @@ public class TaskEntity extends BaseJpaEntity<UUID> {
     private Priority priority;
 
 
+
+
     @Builder(toBuilder = true)
     public TaskEntity(UUID id, UUID ownerId, UUID folderId, String name,
                       String description, Instant dueDate, TaskStatus status,

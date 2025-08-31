@@ -1,6 +1,7 @@
 package app.verimly.task.application;
 
 import app.verimly.task.application.dto.TaskSummaryData;
+import app.verimly.task.application.dto.TaskWithSessionsData;
 import app.verimly.task.application.ports.in.TaskApplicationService;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommandHandler;
@@ -10,6 +11,7 @@ import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTask
 import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTaskToFolderCommandHandler;
 import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
 import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommandHandler;
+import app.verimly.task.application.usecase.query.task.fetch_with_sessions.FetchTaskWithSessionsQueryHandler;
 import app.verimly.task.application.usecase.query.task.list_by_folder.ListTasksByFolderQueryHandler;
 import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.task.TaskId;
@@ -27,6 +29,7 @@ public class TaskApplicationServiceImpl implements TaskApplicationService {
     private final MoveTaskToFolderCommandHandler moveTaskToFolderCommandHandler;
     private final ReplaceTaskCommandHandler replaceTaskCommandHandler;
     private final DeleteTaskCommandHandler deleteTaskCommandHandler;
+    private final FetchTaskWithSessionsQueryHandler fetchTaskWithSessionsQueryHandler;
 
     @Override
     public TaskCreationResponse create(CreateTaskCommand command) {
@@ -52,5 +55,10 @@ public class TaskApplicationServiceImpl implements TaskApplicationService {
     @Override
     public void deleteTask(TaskId taskId) {
         deleteTaskCommandHandler.handle(taskId);
+    }
+
+    @Override
+    public TaskWithSessionsData fetchTaskWithSessions(TaskId taskId) {
+        return fetchTaskWithSessionsQueryHandler.handle(taskId);
     }
 }

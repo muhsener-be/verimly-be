@@ -5,6 +5,7 @@ import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.task.adapter.web.dto.response.SessionSummaryWebResponse;
 import app.verimly.task.adapter.web.mapper.SessionWebMapper;
 import app.verimly.task.application.exception.ActiveSessionExistsException;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,7 @@ public class TaskExceptionHandler {
 
     @ExceptionHandler(ActiveSessionExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
+    @Hidden
     public SessionSummaryWebResponse handleActiveSessionExistsException(ActiveSessionExistsException e, WebRequest request) {
         return mapper.toWebResponse(e.getSession());
 

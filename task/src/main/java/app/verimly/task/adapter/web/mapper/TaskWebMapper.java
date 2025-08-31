@@ -2,12 +2,14 @@ package app.verimly.task.adapter.web.mapper;
 
 import app.verimly.commons.core.domain.mapper.CoreVoMapper;
 import app.verimly.commons.core.domain.mapper.ZonedTimeMapper;
+import app.verimly.task.adapter.web.dto.aggregate.TaskWithSessionsWebResponse;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.request.MoveTaskToFolderWebRequest;
 import app.verimly.task.adapter.web.dto.request.ReplaceTaskWebRequest;
 import app.verimly.task.adapter.web.dto.response.TaskCreationWebResponse;
 import app.verimly.task.adapter.web.dto.response.TaskSummaryWebResponse;
 import app.verimly.task.application.dto.TaskSummaryData;
+import app.verimly.task.application.dto.TaskWithSessionsData;
 import app.verimly.task.application.mapper.TaskVoMapper;
 import app.verimly.task.application.usecase.command.task.create.CreateTaskCommand;
 import app.verimly.task.application.usecase.command.task.create.TaskCreationResponse;
@@ -50,5 +52,12 @@ public interface TaskWebMapper {
 
 
     ReplaceTaskCommand toReplaceTaskCommand(ReplaceTaskWebRequest source, TaskId taskId);
+
+
+    @Mapping(target = "sessions", source = "aggregate.sessions")
+    @Mapping(target = "totalTime", source = "aggregate.totalTime")
+    TaskWithSessionsWebResponse toWebResponse(TaskWithSessionsData data, TotalTimeAndSessionWebResponses aggregate);
+
+
 }
 

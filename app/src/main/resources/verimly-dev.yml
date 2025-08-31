@@ -17,6 +17,9 @@ spring:
   h2:
     console:
       enabled: true
+#  output:
+#    ansi:
+#      enabled: ALWAYS
 
 
 
@@ -61,6 +64,9 @@ security:
 
 
 logging:
+  pattern:
+    console: "%red(%date)  %highlight(%-5level) [%12.12thread] %red(%-40.40logger{40}) : %green(%msg) %n"
+    #    console: "%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n"
   level:
     app.verimly: TRACE
     org.springframework.security: TRACE

@@ -53,10 +53,7 @@ import java.lang.annotation.Target;
         @ApiResponse(
                 responseCode = "404",
                 description = "Folder not found",
-                content = @Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        examples = @ExampleObject(value = ApiExamples.FOLDER_NOT_FOUND)
-                )
+                ref = "#/components/responses/NotFoundResponse"
         ),
         @ApiResponse(
                 responseCode = "500",
@@ -67,7 +64,6 @@ import java.lang.annotation.Target;
                 )
         )
 })
-@Tag(name = "Task", description = "APIs for task management")
 @RequestMapping(
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE,

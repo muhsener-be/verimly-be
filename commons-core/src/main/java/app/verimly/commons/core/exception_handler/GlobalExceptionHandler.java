@@ -6,6 +6,8 @@ import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.NotFoundException;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.web.response.ErrorResponse;
+import app.verimly.commons.core.web.response.ErrorResponseFactory;
+import app.verimly.commons.core.web.response.NotFoundErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +34,11 @@ public class GlobalExceptionHandler {
 
 
     private final MessageSource messageSource;
+    private final ErrorResponseFactory errorResponseFactory;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @Hidden
     public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e, WebRequest request) {
         Map<String, Map<String, Object>> additional = new HashMap<>();
 
@@ -52,6 +56,7 @@ public class GlobalExceptionHandler {
     }
 
 
+    @Hidden
     @ExceptionHandler({DomainException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidAndUserDomainExceptions(DomainException ex, WebRequest request) {
@@ -64,6 +69,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({NoPermissionException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
+    @Hidden
     public ErrorResponse handleNoPermissionException(NoPermissionException ex, WebRequest request) {
 
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
@@ -72,14 +78,23 @@ public class GlobalExceptionHandler {
 
     }
 
+    @Hidden
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleFolderNotFoundException(NotFoundException e, WebRequest request) {
+    public NotFoundErrorResponse handleFolderNotFoundException(NotFoundException e, WebRequest request) {
         ErrorMessage actualErrorMessage = e.getErrorMessage();
         String extracted = findMessageFromErrorMessage(actualErrorMessage);
 
-        return ErrorResponse.notFound(actualErrorMessage.code(), extracted, request.getDescription(false));
+        return errorResponseFactory.notFound()
+                .message("Resource not found.")
+                .path(request.getDescription(false))
+                .resourceType(e.getResourceType())
+                .resourceId(e.getResourceId())
+                .build();
+
+//        return ErrorResponse.notFound(actualErrorMessage.code(), extracted, request.getDescription(false));
     }
+
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -94,6 +109,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @Hidden
     public ErrorResponse handleException(Exception e, WebRequest request) {
         log.error(e.getMessage(), e);
 

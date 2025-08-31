@@ -1,15 +1,15 @@
 package app.verimly.user.adapter.web.doc;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.lang.annotation.*;
 
 /**
- * OpenAPI documentation for the create user endpoint.
+ * OpenAPI documentation for  create user endpoint.
  * <p>
  * Use this annotation on the create() method of UserController to document the API in Swagger UI.
  */
