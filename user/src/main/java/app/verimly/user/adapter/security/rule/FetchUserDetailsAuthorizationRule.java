@@ -21,7 +21,7 @@ public class FetchUserDetailsAuthorizationRule extends AbstractAuthorizationRule
         super.ensurePrincipalIsNotNull(principal);
         super.ensureContextIsNotNull(context);
 
-        super.ensurePrincipalIsAuthenticated(principal, "Principal must be authenticated fetch user details of %s".formatted(context.getUserId()));
+        super.ensurePrincipalIsAuthenticated(principal, ACTION);
         ensureHimself(principal, context.getUserId());
     }
 

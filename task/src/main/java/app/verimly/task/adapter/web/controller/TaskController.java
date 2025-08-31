@@ -1,8 +1,11 @@
 package app.verimly.task.adapter.web.controller;
 
 import app.verimly.task.adapter.web.docs.CreateTaskSpringDoc;
+import app.verimly.task.adapter.web.docs.DeleteTaskSpringDoc;
+import app.verimly.task.adapter.web.docs.FetchTaskWithSessionSpringDoc;
 import app.verimly.task.adapter.web.docs.ListTasksByFolderSpringDoc;
 import app.verimly.task.adapter.web.docs.MoveToFolderSpringDoc;
+import app.verimly.task.adapter.web.docs.ReplaceTaskSpringDoc;
 import app.verimly.task.adapter.web.dto.aggregate.TaskWithSessionsWebResponse;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.request.MoveTaskToFolderWebRequest;
@@ -76,6 +79,7 @@ public class TaskController {
 
 
     @PutMapping("/{taskId}")
+    @ReplaceTaskSpringDoc
     public TaskSummaryWebResponse replaceTask(@PathVariable("taskId") UUID taskId,
                                               @RequestBody ReplaceTaskWebRequest request) {
 
@@ -87,11 +91,14 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
+    @DeleteTaskSpringDoc
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable("taskId") UUID taskUUID) {
         applicationService.deleteTask(TaskId.of(taskUUID));
     }
 
     @GetMapping("/{taskId}")
+    @FetchTaskWithSessionSpringDoc
     public TaskWithSessionsWebResponse fetchTaskWithSessions(@PathVariable("taskId") UUID taskId) {
         TaskId idTask = TaskId.of(taskId);
         TaskWithSessionsData data = applicationService.fetchTaskWithSessions(idTask);

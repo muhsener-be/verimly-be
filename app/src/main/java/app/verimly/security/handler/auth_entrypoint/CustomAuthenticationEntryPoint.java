@@ -1,6 +1,8 @@
 package app.verimly.security.handler.auth_entrypoint;
 
 import app.verimly.commons.core.web.response.ErrorResponse;
+import app.verimly.commons.core.web.response.ErrorResponseFactory;
+import app.verimly.commons.core.web.response.UnauthenticatedErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,12 +22,15 @@ import java.io.IOException;
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper;
+    private final ErrorResponseFactory errorResponseFactory;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.debug("Handling authentication entry point. [Reason: {}]", authException.getMessage());
 
-        ErrorResponse error = ErrorResponse.unauthorized(authException.getMessage(), request.getRequestURI());
+        UnauthenticatedErrorResponse error = errorResponseFactory.unauthenticated()
+                .message("Full authentication is required to access this resource")
+                .path(request.getRequestURI()).build();
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         objectMapper.writeValue(response.getWriter(), error);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-@Tag(name = "User Controller")
+@Tag(name = "User" , description = "APIs for manage user.")
 public class UserController {
 
     private final UserWebMapper webMapper;

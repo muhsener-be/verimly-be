@@ -1,6 +1,7 @@
 package app.verimly.user.adapter.web.controller;
 
-import app.verimly.user.adapter.web.UserExceptionHandler;
+import app.verimly.commons.core.exception_handler.GlobalExceptionHandler;
+import app.verimly.commons.core.web.response.ErrorResponseFactory;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
 import app.verimly.user.adapter.web.mapper.UserWebMapper;
 import app.verimly.user.application.ports.in.UserApplicationService;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import({UserController.class, UserExceptionHandler.class})
+@Import({UserController.class, GlobalExceptionHandler.class, ErrorResponseFactory.class})
 public class CreateUserValidationTest {
 
     @Autowired

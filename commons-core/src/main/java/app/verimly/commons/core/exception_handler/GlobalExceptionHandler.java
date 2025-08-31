@@ -4,10 +4,12 @@ import app.verimly.commons.core.domain.exception.ConflictException;
 import app.verimly.commons.core.domain.exception.DomainException;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.NotFoundException;
+import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.web.response.ErrorResponse;
 import app.verimly.commons.core.web.response.ErrorResponseFactory;
 import app.verimly.commons.core.web.response.NotFoundErrorResponse;
+import app.verimly.commons.core.web.response.UnauthenticatedErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +77,17 @@ public class GlobalExceptionHandler {
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
         String message = findMessageFromErrorMessage(actualErrorMessage);
         return ErrorResponse.forbidden(actualErrorMessage.code(), message, request.getDescription(false));
+
+    }
+
+    @ExceptionHandler({AuthenticationRequiredException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @Hidden
+    public UnauthenticatedErrorResponse handleAuthenticationRequiredException(AuthenticationRequiredException ex, WebRequest request) {
+        return errorResponseFactory.unauthenticated()
+                .path(request.getDescription(false))
+                .message(ex.getMessage())
+                .build();
 
     }
 

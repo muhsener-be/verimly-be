@@ -23,4 +23,9 @@ public abstract class AbstractAuthorizationRule<T extends AuthorizationContext> 
     }
 
 
+    protected void ensurePrincipalIsAuthenticated(Principal principal, Action action) throws AuthenticationRequiredException {
+        if (!(principal instanceof AuthenticatedPrincipal))
+            throw new AuthenticationRequiredException(action);
+    }
+
 }

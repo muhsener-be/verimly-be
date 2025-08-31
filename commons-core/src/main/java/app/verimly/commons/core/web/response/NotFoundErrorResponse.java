@@ -14,11 +14,11 @@ import java.time.Instant;
 @Getter
 @Schema(name = "NotFoundErrorResponse")
 public class NotFoundErrorResponse extends AbstractErrorResponse {
-    @Schema(description = "Type of the resource that is not found.")
+    @Schema(description = "Type of the resource that is not found.",example = "TASK")
     @JsonProperty("resource_type")
     private String resourceType;
 
-    @Schema(description = "ID of the resource that is not found.")
+    @Schema(description = "ID of the resource that is not found.", example = "d290f1ee-6c54-4b01-90e6-d701748f0851")
     @JsonProperty("resource_id")
     private String resourceId;
 

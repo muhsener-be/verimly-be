@@ -1,6 +1,7 @@
 package app.verimly.task.adapter.web.controller;
 
 import app.verimly.commons.core.domain.vo.SessionId;
+import app.verimly.task.adapter.web.docs.ChangeSessionStatusSpringDoc;
 import app.verimly.task.adapter.web.dto.common.SessionStatusAction;
 import app.verimly.task.adapter.web.dto.request.ChangeSessionStatusWebRequest;
 import app.verimly.task.adapter.web.dto.request.StartSessionForTaskWebRequest;
@@ -11,6 +12,8 @@ import app.verimly.task.application.dto.SessionSummaryData;
 import app.verimly.task.application.ports.in.SessionApplicationService;
 import app.verimly.task.application.usecase.command.session.start.SessionStartResponse;
 import app.verimly.task.application.usecase.command.session.start.StartSessionForTaskCommand;
+import app.verimly.task.adapter.web.docs.StartSessionSpringDoc;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/sessions")
 @RequiredArgsConstructor
+@Tag(name = "Session" , description = "APIs for session management")
 public class SessionController {
 
     private final SessionWebMapper mapper;
@@ -28,6 +32,7 @@ public class SessionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @StartSessionSpringDoc
     public SessionStartWebResponse startSessionForTask(@Valid @RequestBody StartSessionForTaskWebRequest request) {
         StartSessionForTaskCommand command = mapper.toStartSessionForTaskCommand(request);
         SessionStartResponse response = applicationService.startSession(command);
@@ -37,6 +42,7 @@ public class SessionController {
 
 
     @PutMapping("/{sessionId}/status")
+    @ChangeSessionStatusSpringDoc
     public SessionSummaryWebResponse actOnSessionStatus(@Valid @RequestBody ChangeSessionStatusWebRequest request, @PathVariable("sessionId") UUID sessionUUID) {
         String actionString = request.getAction();
         SessionStatusAction action = SessionStatusAction.of(actionString);

@@ -10,4 +10,7 @@ public class ErrorResponseFactory {
     }
 
 
+    public UnauthenticatedErrorResponse.UnauthenticatedErrorResponseBuilder unauthenticated() {
+        return new UnauthenticatedErrorResponse.UnauthenticatedErrorResponseBuilder();
+    }
 }

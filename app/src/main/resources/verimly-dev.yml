@@ -33,6 +33,7 @@ security:
     path: /**
     allowed-origins:
       - "http://localhost:5173"
+      - "http://localhost:3000"
     allowed-methods:
       - GET
       - POST
@@ -46,6 +47,7 @@ security:
       - Content-Type
       - X-Requested-With
       - X-Csrf-Token
+      - X-TimeZone
     allow-credentials: true
     max-age: 3600
   jwt:

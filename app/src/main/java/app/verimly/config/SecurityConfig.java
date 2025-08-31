@@ -68,7 +68,9 @@ public class SecurityConfig {
         CorsProperties props = properties.getCors();
 
         CorsConfiguration config = new CorsConfiguration();
+        System.out.println("Allowed Origins: " + props.getAllowedOrigins());
         config.setAllowedOrigins(props.getAllowedOrigins());
+        config.addAllowedOrigin("http://localhost:3000/**");
         config.setAllowedMethods(props.getAllowedMethods());
         config.setAllowedHeaders(props.getAllowedHeaders());
         config.setAllowCredentials(true);
