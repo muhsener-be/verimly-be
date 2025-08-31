@@ -1,6 +1,7 @@
 package app.verimly.config;
 
 import app.verimly.commons.core.web.response.AbstractErrorResponse;
+import app.verimly.commons.core.web.response.BadRequestErrorResponse;
 import app.verimly.commons.core.web.response.NotFoundErrorResponse;
 import app.verimly.commons.core.web.response.UnauthenticatedErrorResponse;
 import io.swagger.v3.core.converter.ModelConverters;
@@ -24,6 +25,7 @@ public class OpenAPIConfiguration {
                         .addSchemas("AbstractErrorResponse", ModelConverters.getInstance().read(AbstractErrorResponse.class).get("AbstractErrorResponse"))
                         .addSchemas("NotFoundErrorResponse", ModelConverters.getInstance().read(NotFoundErrorResponse.class).get("NotFoundErrorResponse"))
                         .addSchemas("UnauthenticatedErrorResponse", ModelConverters.getInstance().read(UnauthenticatedErrorResponse.class).get("UnauthenticatedErrorResponse"))
+                        .addSchemas("BadRequestErrorResponse", ModelConverters.getInstance().read(BadRequestErrorResponse.class).get("BadRequestErrorResponse"))
 
 
                         .addResponses("NotFoundResponse", new ApiResponse()
@@ -37,6 +39,13 @@ public class OpenAPIConfiguration {
                                 .description("Unauthorized - Login is required")
                                 .content(new Content().addMediaType("application/json", new MediaType()
                                                 .schema(new Schema().$ref("#/components/schemas/UnauthenticatedErrorResponse"))
+                                        )
+                                )
+                        )
+                        .addResponses("BadRequestResponse", new ApiResponse()
+                                .description("BadRequest")
+                                .content(new Content().addMediaType("application/json", new MediaType()
+                                                .schema(new Schema().$ref("#/components/schemas/BadRequestErrorResponse"))
                                         )
                                 )
                         )

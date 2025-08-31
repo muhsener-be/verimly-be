@@ -66,7 +66,7 @@ public class PersonName {
      */
     private static String validateAndNormalizeNamePart(String namePart) {
         String normalized = normalizeNamePart(namePart);
-        if (normalized == null || longerThanMaxLength(normalized)) {
+        if (normalized == null || isLongerThanMaxLength(normalized)) {
             throw new InvalidDomainObjectException(Errors.NAME_PART);
         }
 
@@ -79,7 +79,7 @@ public class PersonName {
      * @param normalized the normalized name part
      * @return true if longer than max length, false otherwise
      */
-    private static boolean longerThanMaxLength(String normalized) {
+    private static boolean isLongerThanMaxLength(String normalized) {
         return normalized.length() > NAME_PART_MAX_LENGTH;
     }
 

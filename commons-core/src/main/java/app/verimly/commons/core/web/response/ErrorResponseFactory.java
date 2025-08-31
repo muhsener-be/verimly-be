@@ -13,4 +13,12 @@ public class ErrorResponseFactory {
     public UnauthenticatedErrorResponse.UnauthenticatedErrorResponseBuilder unauthenticated() {
         return new UnauthenticatedErrorResponse.UnauthenticatedErrorResponseBuilder();
     }
+
+    public BadRequestErrorResponse.BadRequestErrorResponseBuilder badRequest() {
+        return new BadRequestErrorResponse.BadRequestErrorResponseBuilder();
+    }
+
+    public ConflictErrorResponse.ConflictErrorResponseBuilder conflict(String path, String resourceType) {
+        return new ConflictErrorResponse.ConflictErrorResponseBuilder().path(path).resourceType(resourceType);
+    }
 }

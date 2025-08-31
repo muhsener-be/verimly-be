@@ -45,10 +45,10 @@ public class User extends BaseEntity<UserId> {
      */
     @org.jetbrains.annotations.Contract("_, _, _ -> new")
     public static User create(PersonName name, Email email, Password password) {
-        checkInvariants(name, email, password);
 
         UserId randomUserId = UserId.random();
         User user = new User(randomUserId, name, email, password);
+        user.checkInvariants(name, email, password);
 
         UserCreated userCreatedEvent = UserCreated.of(user);
         user.addDomainEvent(userCreatedEvent);
@@ -56,7 +56,7 @@ public class User extends BaseEntity<UserId> {
     }
 
 
-    private static void checkInvariants(PersonName name, Email email, Password password) {
+    private void checkInvariants(PersonName name, Email email, Password password) {
         ensureNameExists(name);
         ensureEmailExists(email);
         ensurePasswordExists(password);
@@ -64,25 +64,25 @@ public class User extends BaseEntity<UserId> {
     }
 
 
-    private static void ensureNameExists(PersonName name) {
+    private void ensureNameExists(PersonName name) {
         if (name == null)
             throw new UserDomainException(Errors.NAME_NOT_EXIST);
     }
 
 
-    private static void ensureEmailExists(Email email) {
+    private void ensureEmailExists(Email email) {
         if (email == null)
             throw new UserDomainException(Errors.EMAIL_NOT_EXIST);
     }
 
 
-    private static void ensurePasswordExists(Password password) {
+    private void ensurePasswordExists(Password password) {
         if (password == null)
             throw new UserDomainException(PASSWORD_NOT_EXIST);
     }
 
 
-    private static void ensurePasswordEncrypted(Password password) {
+    private void ensurePasswordEncrypted(Password password) {
         if (!password.isEncrypted())
             throw new UserDomainException(Errors.NOT_ENCRYPTED_PASSWORD);
     }

@@ -1,16 +1,12 @@
-package app.verimly.task.adapter.web.exception;
+package app.verimly.user.adapter.web.exception;
 
 
 import app.verimly.commons.core.domain.exception.ErrorMessage;
+import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.web.response.ConflictErrorResponse;
 import app.verimly.commons.core.web.response.ErrorResponseFactory;
-import app.verimly.task.adapter.web.dto.response.SessionSummaryWebResponse;
-import app.verimly.task.adapter.web.mapper.SessionWebMapper;
-import app.verimly.task.application.exception.ActiveSessionExistsException;
-import io.swagger.v3.oas.annotations.Hidden;
+import app.verimly.user.application.exception.DuplicateEmailException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.Ordered;
@@ -23,36 +19,35 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Locale;
+import java.util.Map;
 
-@RestControllerAdvice()
-@RequiredArgsConstructor
+@RestControllerAdvice
 @Component
-@Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class TaskExceptionHandler {
+@RequiredArgsConstructor
+public class UserExceptionHandler {
 
-    private final SessionWebMapper mapper;
-    private final MessageSource messageSource;
     private final ErrorResponseFactory factory;
+    private final MessageSource messageSource;
 
-    @ExceptionHandler(ActiveSessionExistsException.class)
+
+    @ExceptionHandler(DuplicateEmailException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    @Hidden
-    public ConflictErrorResponse handleActiveSessionExistsException(ActiveSessionExistsException e, WebRequest request) {
-        SessionSummaryWebResponse conflictingResource = mapper.toWebResponse(e.getSession());
-        ErrorMessage actual = e.getErrorMessage();
-        String i18 = extractMessageFromErrorMessage(actual);
+    public ConflictErrorResponse handleDuplicateEmail(DuplicateEmailException duplicateEmailException, WebRequest request) {
+        Email email = duplicateEmailException.getEmail();
+        Map<String, String> conflictingResource = Map.of("email", email.toString());
 
-        return factory.conflict(request.getDescription(false), "Session")
-                .errorCode(actual.code())
+        ErrorMessage actualErrorMessage = duplicateEmailException.getErrorMessage();
+        String code = actualErrorMessage.code();
+        String i18 = extractMessageFromErrorMessage(actualErrorMessage);
+
+        return factory.conflict(request.getDescription(false), "User")
+                .errorCode(code)
                 .message(i18)
-                .resourceId(conflictingResource.getId().toString())
                 .conflictingResource(conflictingResource)
                 .build();
 
-
     }
-
 
     private String extractMessageFromErrorMessage(ErrorMessage errorMessage) {
         String code = errorMessage.code();
@@ -61,7 +56,8 @@ public class TaskExceptionHandler {
 
     }
 
-    private static @NotNull Locale getLocale() {
+    private Locale getLocale() {
         return LocaleContextHolder.getLocale();
     }
+
 }

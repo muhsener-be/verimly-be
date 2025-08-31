@@ -15,6 +15,6 @@ public class UnauthenticatedErrorResponse extends AbstractErrorResponse {
 
     @Builder
     public UnauthenticatedErrorResponse(String path, String message) {
-        super(Instant.now(), 401, path, message);
+        super(Instant.now(), 401, path, message,"unauthorized");
     }
 }

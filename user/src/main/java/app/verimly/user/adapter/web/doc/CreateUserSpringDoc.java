@@ -21,12 +21,14 @@ import java.lang.annotation.*;
         @ApiResponse(responseCode = "201", description = "User created successfully",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = app.verimly.user.adapter.web.dto.response.UserCreationWebResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid input data",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = app.verimly.commons.core.web.response.ErrorResponse.class))),
+        @ApiResponse(responseCode = "400",
+                description = "Invalid input data",
+                ref = "#/components/responses/BadRequestResponse"
+        ),
         @ApiResponse(responseCode = "409", description = "Email address already exists",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = app.verimly.commons.core.web.response.ErrorResponse.class))),
+
         @ApiResponse(responseCode = "500", description = "Internal server error",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = app.verimly.commons.core.web.response.ErrorResponse.class)))

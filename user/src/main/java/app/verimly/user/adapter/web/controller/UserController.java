@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-@Tag(name = "User" , description = "APIs for manage user.")
+@Tag(name = "User", description = "APIs for manage user.")
 public class UserController {
 
     private final UserWebMapper webMapper;
@@ -36,7 +36,6 @@ public class UserController {
 
         return webMapper.toUserCreationWebResponse(response);
     }
-
 
 
 }

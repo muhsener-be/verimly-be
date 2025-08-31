@@ -21,20 +21,20 @@ import org.hibernate.validator.constraints.Length;
 public class CreateUserWebRequest {
 
     @Schema(description = "User's first name", example = "John", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "person-name.name-part")
-    @Length(min = 1, max = 50, message = "person-name.name-part")
+    @NotBlank(message = "first-name.required")
+    @Length(min = 1, max = 50, message = "first-name.length")
     @JsonProperty("first_name")
     private String firstName;
 
     @Schema(description = "User's last name", example = "Doe", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "person-name.name-part")
-    @Length(min = 1, max = 50, message = "person-name.name-part")
+    @NotBlank(message = "last-name.required")
+    @Length(min = 1, max = 50, message = "last-name.length")
     @JsonProperty("last_name")
     private String lastName;
 
     @Schema(description = "User's email address", example = "john.doe@example.com", requiredMode = Schema.RequiredMode.REQUIRED)
     @EmailFormat(message = "email.format")
-    @NotNull(message = "email.format")
+    @NotNull(message = "email.required")
     private String email;
 
     @Schema(description = "User's password. Must be 8-30 characters, no white spaces.", example = "MyS3cretPwd", requiredMode = Schema.RequiredMode.REQUIRED)

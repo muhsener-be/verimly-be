@@ -1,15 +1,9 @@
 package app.verimly.commons.core.exception_handler;
 
-import app.verimly.commons.core.domain.exception.ConflictException;
-import app.verimly.commons.core.domain.exception.DomainException;
-import app.verimly.commons.core.domain.exception.ErrorMessage;
-import app.verimly.commons.core.domain.exception.NotFoundException;
+import app.verimly.commons.core.domain.exception.*;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
-import app.verimly.commons.core.web.response.ErrorResponse;
-import app.verimly.commons.core.web.response.ErrorResponseFactory;
-import app.verimly.commons.core.web.response.NotFoundErrorResponse;
-import app.verimly.commons.core.web.response.UnauthenticatedErrorResponse;
+import app.verimly.commons.core.web.response.*;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +21,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringJoiner;
 
 @Slf4j
 @RestControllerAdvice
@@ -41,27 +36,60 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @Hidden
-    public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e, WebRequest request) {
-        Map<String, Map<String, Object>> additional = new HashMap<>();
+    public BadRequestErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e, WebRequest request) {
+        Map<String, String> codeToMessageMap = new HashMap<>();
 
-        for (FieldError err : e.getFieldErrors()) {
-            String objectName = err.getObjectName();
-            String fieldName = err.getField();
+        StringJoiner generalMessage = new StringJoiner("***");
+        e.getFieldErrors().forEach(fieldError -> {
+            String errorCode = fieldError.getDefaultMessage();
+            String message = findMessageForCode(errorCode);
+            codeToMessageMap.put(errorCode, message);
+            generalMessage.add(message);
+        });
 
-            String message = findMessageFromFieldError(err);
+        return errorResponseFactory.badRequest().path(request.getDescription(false))
+                .errors(codeToMessageMap)
+                .message(generalMessage.toString())
+                .build();
 
-            additional.computeIfAbsent(objectName, k -> new HashMap<>())
-                    .put(fieldName, message);
-        }
-
-        return ErrorResponse.badRequest("invalid-request", "Invalid request.", request.getDescription(false), additional);
+//        Map<String, Map<String, Object>> additional = new HashMap<>();
+//
+//        for (FieldError err : e.getFieldErrors()) {
+//            String objectName = err.getObjectName();
+//            String fieldName = err.getField();
+//
+//            String message = findMessageFromFieldError(err);
+//
+//            additional.computeIfAbsent(objectName, k -> new HashMap<>())
+//                    .put(fieldName, message);
+//        }
+//
+//        return ErrorResponse.badRequest("invalid-request", "Invalid request.", request.getDescription(false), additional);
     }
 
+
+    @Hidden
+    @ExceptionHandler({InvalidDomainObjectException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BadRequestErrorResponse handleInvalidDomainObjectException(InvalidDomainObjectException ex, WebRequest request) {
+        ErrorMessage actualErrorMessage = ex.getErrorMessage();
+        String errorCode = actualErrorMessage.code();
+        String i18Message = findMessageFromErrorMessage(actualErrorMessage);
+
+
+        return errorResponseFactory.badRequest()
+                .errors(Map.of(errorCode, i18Message))
+                .message(i18Message)
+                .path(request.getDescription(false)).build();
+
+
+    }
 
     @Hidden
     @ExceptionHandler({DomainException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidAndUserDomainExceptions(DomainException ex, WebRequest request) {
+
 
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
         String message = findMessageFromErrorMessage(actualErrorMessage);
@@ -109,13 +137,14 @@ public class GlobalExceptionHandler {
     }
 
 
+
+
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @Hidden
     public ErrorResponse handleConflictException(ConflictException ex, WebRequest request) {
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
         String message = findMessageFromErrorMessage(actualErrorMessage);
-
         return ErrorResponse.conflict(actualErrorMessage.code(), message, request.getDescription(false));
     }
 
@@ -145,12 +174,16 @@ public class GlobalExceptionHandler {
 
     private String findMessageFromFieldError(FieldError error) {
         String code = error.getDefaultMessage();
-        Locale locale = getLocale();
-        if (code == null)
-            return null;
 
-        //  If there is no message, then pass code as the default message.
-        return messageSource.getMessage(code, null, code, locale);
+        return findMessageForCode(code);
+
+    }
+
+    private String findMessageForCode(String errorCode) {
+        if (errorCode == null || errorCode.isBlank())
+            return "";
+
+        return messageSource.getMessage(errorCode, null, errorCode, getLocale());
 
     }
 

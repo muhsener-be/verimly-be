@@ -24,7 +24,7 @@ public class NotFoundErrorResponse extends AbstractErrorResponse {
 
     @Builder
     public NotFoundErrorResponse(String path, String message, String resourceType, String resourceId) {
-        super(Instant.now(), HttpStatus.NOT_FOUND.value(), path, message);
+        super(Instant.now(), HttpStatus.NOT_FOUND.value(), path, message,"resource-not-found");
         this.resourceType = resourceType;
         this.resourceId = resourceId;
     }
