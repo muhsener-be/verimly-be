@@ -3,7 +3,12 @@ package app.verimly.security.handler.success;
 import app.verimly.commons.core.security.SecurityUser;
 import app.verimly.security.cookie.CookieHelper;
 import app.verimly.security.jwt.JwtHelper;
+import app.verimly.task.adapter.web.dto.response.SessionSummaryWebResponse;
+import app.verimly.task.adapter.web.mapper.SessionWebMapper;
+import app.verimly.task.application.dto.SessionSummaryData;
+import app.verimly.task.application.ports.in.SessionApplicationService;
 import app.verimly.user.adapter.web.dto.response.UserDetailsWebResponse;
+import app.verimly.user.adapter.web.dto.response.UserWithSessionsWebResponse;
 import app.verimly.user.adapter.web.mapper.UserWebMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -18,6 +23,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -27,6 +33,8 @@ public class JwtGeneratorSuccessHandler implements AuthenticationSuccessHandler 
     private final CookieHelper cookieHelper;
     private final ObjectMapper objectMapper;
     private final UserWebMapper userWebMapper;
+    private final SessionApplicationService sessionApplicationService;
+    private final SessionWebMapper sessionWebMapper;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -41,19 +49,42 @@ public class JwtGeneratorSuccessHandler implements AuthenticationSuccessHandler 
 
         ResponseCookie cookie = cookieHelper.createAccessTokenCookie(accessToken);
 
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        response.setStatus(HttpServletResponse.SC_OK);
-        log.debug("Authentication success handled by generation a JWT token and put it in cookie.");
-        writeUserDetailsToResponseBody(response , principal);
+        addCookieToResponse(response, cookie);
+        UserWithSessionsWebResponse responseBody = prepareResponseBody(principal);
+        writeResponseBody(response, responseBody);
+        log.debug("User logged in successfully: [ID: {}, Email: {}]", principal.getId(), principal.getEmail());
     }
 
-    private void writeUserDetailsToResponseBody(HttpServletResponse response, SecurityUser user) {
+    private static void addCookieToResponse(HttpServletResponse response, ResponseCookie cookie) {
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    private void writeResponseBody(HttpServletResponse response, UserWithSessionsWebResponse responseBody) {
         try {
-            UserDetailsWebResponse details = userWebMapper.toUserDetailsWebResponse(user);
-            objectMapper.writeValue(response.getWriter(), details);
+            objectMapper.writeValue(response.getWriter(), responseBody);
+            response.flushBuffer();
         } catch (Exception e) {
-            throw new RuntimeException(("Failed to write user details to successful login response. " +
-                    "User: [ID: %s, Email: %s]").formatted(user.getId(), user.getEmail()));
+            UserDetailsWebResponse user = responseBody.getUser();
+            throw new RuntimeException("Failed to write response body after successful login. User: [ID: %s, Email: %s]".formatted(user.getId(), user.getEmail()));
+        }
+    }
+
+
+    private UserWithSessionsWebResponse prepareResponseBody(SecurityUser user) {
+
+        UserDetailsWebResponse userDetails = userWebMapper.toUserDetailsWebResponse(user);
+        List<SessionSummaryWebResponse> sessions = fetchUserActiveSessions();
+        return new UserWithSessionsWebResponse(userDetails, sessions);
+
+    }
+
+    private List<SessionSummaryWebResponse> fetchUserActiveSessions() {
+        try {
+            List<SessionSummaryData> sessions = sessionApplicationService.fetchActiveSessions();
+            return sessionWebMapper.toWebResponses(sessions);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch user active sessions: " + e.getMessage(), e);
         }
     }
 }

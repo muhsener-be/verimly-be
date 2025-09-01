@@ -2,6 +2,7 @@ package app.verimly.task.adapter.web;
 
 import app.verimly.task.application.AbstractUnitTest;
 import app.verimly.task.application.dto.SessionSummaryData;
+import app.verimly.task.domain.vo.session.SessionStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ class SessionComparatorTest extends AbstractUnitTest {
 
         printSessions();
 
-        sessions.getLast().setStatus("RUNNING");
+        sessions.getLast().setStatus(SessionStatus.RUNNING);
         System.out.println("******");
         System.out.println("******");
         System.out.println("******");

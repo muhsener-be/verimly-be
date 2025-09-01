@@ -30,6 +30,8 @@ public interface SessionWebMapper {
     @Mapping(target = "totalTime", source = ".", qualifiedByName = "calculateTotalTime")
     SessionSummaryWebResponse toWebResponse(SessionSummaryData data);
 
+    List<SessionSummaryWebResponse> toWebResponses(List<SessionSummaryData> dataList);
+
     @Named("calculateTotalTime")
     default Duration calculateTotalTime(SessionSummaryData session) {
 

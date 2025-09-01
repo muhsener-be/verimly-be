@@ -37,6 +37,7 @@
         <dependency>
             <groupId>app.verimly</groupId>
             <artifactId>user</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

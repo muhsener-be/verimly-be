@@ -1,7 +1,12 @@
 package app.verimly.bootstrap;
 
+import app.verimly.commons.core.domain.vo.Color;
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.domain.vo.UserId;
+import app.verimly.task.domain.entity.Folder;
+import app.verimly.task.domain.repository.FolderWriteRepository;
+import app.verimly.task.domain.vo.folder.FolderId;
+import app.verimly.task.domain.vo.folder.FolderName;
 import app.verimly.user.adapter.persistence.jparepo.UserJpaRepository;
 import app.verimly.user.application.usecase.command.create.CreateUserCommand;
 import app.verimly.user.application.usecase.command.create.CreateUserCommandHandler;
@@ -24,8 +29,13 @@ public class TestUserInitializer {
     public static final Email EMAIL = Email.of("muhsener@mail.com");
     public static final Password PASSWORD = Password.withRaw("muhsener");
 
+
+    public static final Color LABEL_COLOR = Color.of("#EAB308");
+    public static final FolderName FOLDER_NAME = FolderName.of("My Folder");
+    public static final FolderId FOLDER_ID = FolderId.random();
     private final UserJpaRepository userJpaRepository;
     private final CreateUserCommandHandler createUserCommandHandler;
+    private final FolderWriteRepository folderWriteRepository;
 
 
     @PostConstruct
@@ -34,7 +44,14 @@ public class TestUserInitializer {
         if (userJpaRepository.count() == 0) {
             CreateUserCommand createUserCommand = new CreateUserCommand(NAME, EMAIL, PASSWORD);
             UserCreationResponse response = createUserCommandHandler.handle(createUserCommand);
-            log.info("Test user saved to database: {Email: {}, Password: {}}", EMAIL, "muhsener");
+            Folder folder = Folder.builder()
+                    .id(FOLDER_ID)
+                    .name(FOLDER_NAME)
+                    .labelColor(LABEL_COLOR)
+                    .ownerId(response.id())
+                    .build();
+            Folder savedFolder = folderWriteRepository.save(folder);
+            log.info("Test user saved to database: {Email: {}, Password: {}} and default folder: [Name: {}, ]", EMAIL, "muhsener", FOLDER_NAME);
         }
 
     }

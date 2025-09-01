@@ -8,8 +8,8 @@ import app.verimly.task.application.ports.out.persistence.SessionReadRepository;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.ViewSessionContext;
 import app.verimly.task.domain.vo.session.SessionStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

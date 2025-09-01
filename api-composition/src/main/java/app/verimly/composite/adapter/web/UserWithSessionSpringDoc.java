@@ -1,13 +1,12 @@
 package app.verimly.composite.adapter.web;
 
 import app.verimly.commons.core.web.response.ErrorResponse;
-import app.verimly.composite.adapter.web.dto.response.UserWithSessionsWebResponse;
+import app.verimly.user.adapter.web.dto.response.UserWithSessionsWebResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

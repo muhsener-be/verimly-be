@@ -94,7 +94,7 @@ public class TimeSessionTestData {
                 ownerId().getValue(),
                 taskId().getValue(),
                 name().getValue(),
-                "FINISHED",
+                SessionStatus.FINISHED,
                 FAKER.date().future(365, TimeUnit.DAYS).toInstant(),
                 null,
                 null,

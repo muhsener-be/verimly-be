@@ -10,7 +10,6 @@ import app.verimly.task.application.exception.ActiveSessionExistsException;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.Ordered;
@@ -61,7 +60,7 @@ public class TaskExceptionHandler {
 
     }
 
-    private static @NotNull Locale getLocale() {
+    private static  Locale getLocale() {
         return LocaleContextHolder.getLocale();
     }
 }
