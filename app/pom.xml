@@ -34,6 +34,10 @@
             <groupId>app.verimly</groupId>
             <artifactId>task</artifactId>
         </dependency>
+        <dependency>
+            <groupId>app.verimly</groupId>
+            <artifactId>api-composition</artifactId>
+        </dependency>
     </dependencies>
 
 

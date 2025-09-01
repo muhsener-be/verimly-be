@@ -27,4 +27,6 @@ public interface TaskAuthorizationService extends AuthorizationService {
     void authorizeChangeSessionStatus(Principal principal, ChangeSessionStatusContext context);
 
     void authorizeViewTask(Principal principal, ViewTaskContext context);
+
+    void authorizeViewSession(Principal principal, ViewSessionContext context);
 }

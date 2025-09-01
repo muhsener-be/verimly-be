@@ -9,8 +9,11 @@ import app.verimly.task.application.usecase.command.session.change_status.Resume
 import app.verimly.task.application.usecase.command.session.start.SessionStartResponse;
 import app.verimly.task.application.usecase.command.session.start.StartSessionForTaskCommand;
 import app.verimly.task.application.usecase.command.session.start.StartSessionForTaskCommandHandler;
+import app.verimly.task.application.usecase.query.session.fetch_active.FetchActiveSessionQueryHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +23,7 @@ public class SessionApplicationServiceImpl implements SessionApplicationService 
     private final PauseSessionCommandHandler pauseSessionCommandHandler;
     private final ResumeSessionCommandHandler resumeSessionCommandHandler;
     private final FinishSessionCommandHandler finishSessionCommandHandler;
+    private final FetchActiveSessionQueryHandler fetchActiveSessionQueryHandler;
 
 
     @Override
@@ -40,5 +44,10 @@ public class SessionApplicationServiceImpl implements SessionApplicationService 
     @Override
     public SessionSummaryData finishSession(SessionId sessionId) {
         return finishSessionCommandHandler.handle(sessionId);
+    }
+
+    @Override
+    public List<SessionSummaryData> fetchActiveSessions() {
+        return fetchActiveSessionQueryHandler.handle();
     }
 }

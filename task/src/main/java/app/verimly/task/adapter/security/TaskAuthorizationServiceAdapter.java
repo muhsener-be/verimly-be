@@ -20,6 +20,7 @@ public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService
     private final StartSessionAuthorizationRule startSessionAuthorizationRule;
     private final ChangeSessionStatusAuthorizationRule changeSessionStatusAuthorizationRule;
     private final ViewTaskAuthorizationRule viewTaskAuthorizationRule;
+    private final ViewSessionAuthorizationRule viewSessionAuthorizationRule;
 
 
     @Override
@@ -71,5 +72,10 @@ public class TaskAuthorizationServiceAdapter implements TaskAuthorizationService
     @Override
     public void authorizeViewTask(Principal principal, ViewTaskContext context) {
         viewTaskAuthorizationRule.apply(principal, context);
+    }
+
+    @Override
+    public void authorizeViewSession(Principal principal, ViewSessionContext context) {
+        viewSessionAuthorizationRule.apply(principal,context);
     }
 }

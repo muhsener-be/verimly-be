@@ -21,7 +21,7 @@ public class SessionSummaryData {
     private UUID taskId;
     private String name;
     @Setter
-    private String status;
+    private SessionStatus status;
     private Instant startedAt;
     private Instant pausedAt;
     private Instant finishedAt;
@@ -29,15 +29,15 @@ public class SessionSummaryData {
 
 
     public boolean isPaused() {
-        return Objects.equals(this.status, SessionStatus.PAUSED.name());
+        return Objects.equals(this.status, SessionStatus.PAUSED);
     }
 
     public boolean isRunning() {
-        return Objects.equals(this.status, SessionStatus.RUNNING.name());
+        return Objects.equals(this.status, SessionStatus.RUNNING);
     }
 
     public boolean isFinished() {
-        return Objects.equals(this.status, SessionStatus.FINISHED.name());
+        return Objects.equals(this.status, SessionStatus.FINISHED);
     }
 
 }

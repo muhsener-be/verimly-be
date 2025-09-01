@@ -6,6 +6,8 @@ import app.verimly.task.application.dto.SessionSummaryData;
 import app.verimly.task.application.usecase.command.session.start.SessionStartResponse;
 import app.verimly.task.application.usecase.command.session.start.StartSessionForTaskCommand;
 
+import java.util.List;
+
 public interface SessionApplicationService {
 
 
@@ -16,4 +18,8 @@ public interface SessionApplicationService {
     SessionSummaryData resumeSession(SessionId sessionId);
 
     SessionSummaryData finishSession(SessionId sessionId);
+
+
+
+    List<SessionSummaryData> fetchActiveSessions();
 }

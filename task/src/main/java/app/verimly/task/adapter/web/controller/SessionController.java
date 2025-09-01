@@ -41,7 +41,7 @@ public class SessionController {
     }
 
 
-    @PutMapping("/{sessionId}/status")
+    @PostMapping("/{sessionId}/status")
     @ChangeSessionStatusSpringDoc
     public SessionSummaryWebResponse actOnSessionStatus(@Valid @RequestBody ChangeSessionStatusWebRequest request, @PathVariable("sessionId") UUID sessionUUID) {
         String actionString = request.getAction();
