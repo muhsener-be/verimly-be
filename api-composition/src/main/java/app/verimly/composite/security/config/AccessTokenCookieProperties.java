@@ -1,4 +1,4 @@
-package app.verimly.config;
+package app.verimly.composite.security.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

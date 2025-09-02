@@ -1,4 +1,4 @@
-package app.verimly.config;
+package app.verimly.composite.security.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

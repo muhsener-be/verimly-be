@@ -1,4 +1,4 @@
-package app.verimly.config;
+package app.verimly.composite.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

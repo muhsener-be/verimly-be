@@ -1,4 +1,4 @@
-package app.verimly.config;
+package app.verimly.composite.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

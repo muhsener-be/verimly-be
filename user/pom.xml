@@ -48,10 +48,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>app.verimly</groupId>
-            <artifactId>task</artifactId>
-        </dependency>
+
 
     </dependencies>
 </project>

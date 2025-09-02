@@ -1,4 +1,4 @@
-package app.verimly.security.handler.access_denied;
+package app.verimly.composite.security.handler.access_denied;
 
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.web.response.ErrorResponse;

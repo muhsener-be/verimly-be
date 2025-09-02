@@ -1,6 +1,6 @@
-package app.verimly.security.cookie;
+package app.verimly.composite.security.cookie;
 
-import app.verimly.config.AccessTokenCookieProperties;
+import app.verimly.composite.security.config.AccessTokenCookieProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;

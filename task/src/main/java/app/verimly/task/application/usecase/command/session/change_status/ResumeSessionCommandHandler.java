@@ -32,6 +32,7 @@ public class ResumeSessionCommandHandler extends ChangeSessionStatusCommandHandl
 
         ensureNoActiveSessionExist(principal.getId());
 
+
         TimeSession session = fetchSessionAndCheckExistence(sessionId);
         session.resume();
         TimeSession persisted = persistChanges(session);

@@ -1,6 +1,7 @@
-package app.verimly.security.jwt;
+package app.verimly.composite.security.jwt;
 
-import app.verimly.config.JwtProperties;
+
+import app.verimly.composite.security.JwtProperties;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;

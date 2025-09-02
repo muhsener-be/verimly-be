@@ -1,7 +1,7 @@
 package app.verimly.composite.adapter.web;
 
 import app.verimly.commons.core.web.response.ErrorResponse;
-import app.verimly.user.adapter.web.dto.response.UserWithSessionsWebResponse;
+import app.verimly.composite.adapter.web.dto.response.UserWithSessionsWebResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

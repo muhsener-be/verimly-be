@@ -1,4 +1,4 @@
-package app.verimly.security;
+package app.verimly.composite.security;
 
 import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.security.SecurityUser;

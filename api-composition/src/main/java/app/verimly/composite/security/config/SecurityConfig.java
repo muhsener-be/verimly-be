@@ -1,6 +1,7 @@
-package app.verimly.config;
+package app.verimly.composite.security.config;
 
-import app.verimly.security.filter.JwtAuthenticationFilter;
+import app.verimly.composite.security.CorsProperties;
+import app.verimly.composite.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

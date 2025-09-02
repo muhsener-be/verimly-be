@@ -1,4 +1,4 @@
-package app.verimly.security.handler.auth_entrypoint;
+package app.verimly.composite.security.handler.auth_entrypoint;
 
 import app.verimly.commons.core.web.response.ErrorResponse;
 import app.verimly.commons.core.web.response.ErrorResponseFactory;

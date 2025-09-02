@@ -1,5 +1,7 @@
-package app.verimly.config;
+package app.verimly.composite.security.config;
 
+import app.verimly.composite.security.CorsProperties;
+import app.verimly.composite.security.JwtProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

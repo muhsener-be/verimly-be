@@ -1,4 +1,4 @@
-package app.verimly.security.jwt;
+package app.verimly.composite.security.jwt;
 
 import java.util.UUID;
 

@@ -1,14 +1,14 @@
-package app.verimly.security.handler.success;
+package app.verimly.composite.security.handler.success;
 
 import app.verimly.commons.core.security.SecurityUser;
-import app.verimly.security.cookie.CookieHelper;
-import app.verimly.security.jwt.JwtHelper;
+import app.verimly.composite.adapter.web.dto.response.UserWithSessionsWebResponse;
+import app.verimly.composite.security.cookie.CookieHelper;
+import app.verimly.composite.security.jwt.JwtHelper;
 import app.verimly.task.adapter.web.dto.response.SessionSummaryWebResponse;
 import app.verimly.task.adapter.web.mapper.SessionWebMapper;
 import app.verimly.task.application.dto.SessionSummaryData;
 import app.verimly.task.application.ports.in.SessionApplicationService;
 import app.verimly.user.adapter.web.dto.response.UserDetailsWebResponse;
-import app.verimly.user.adapter.web.dto.response.UserWithSessionsWebResponse;
 import app.verimly.user.adapter.web.mapper.UserWebMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -62,6 +63,7 @@ public class JwtGeneratorSuccessHandler implements AuthenticationSuccessHandler 
 
     private void writeResponseBody(HttpServletResponse response, UserWithSessionsWebResponse responseBody) {
         try {
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             objectMapper.writeValue(response.getWriter(), responseBody);
             response.flushBuffer();
         } catch (Exception e) {

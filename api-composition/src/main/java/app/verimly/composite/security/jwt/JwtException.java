@@ -1,4 +1,4 @@
-package app.verimly.security.jwt;
+package app.verimly.composite.security.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 

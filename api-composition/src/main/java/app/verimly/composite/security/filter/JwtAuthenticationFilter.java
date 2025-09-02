@@ -1,11 +1,10 @@
-package app.verimly.security.filter;
+package app.verimly.composite.security.filter;
 
 import app.verimly.commons.core.security.SecurityUser;
-import app.verimly.config.AccessTokenCookieProperties;
-import app.verimly.config.SecurityProperties;
-import app.verimly.security.jwt.JwtException;
-import app.verimly.security.jwt.JwtHelper;
-import app.verimly.security.jwt.VerifiedToken;
+import app.verimly.composite.security.config.AccessTokenCookieProperties;
+import app.verimly.composite.security.jwt.JwtException;
+import app.verimly.composite.security.jwt.JwtHelper;
+import app.verimly.composite.security.jwt.VerifiedToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -91,8 +90,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return false;
         return Arrays.stream(cookies).anyMatch(this::cookieNameMatches);
     }
-
-
 
 
     private boolean cookieNameMatches(Cookie cookie) {

@@ -1,4 +1,4 @@
-package app.verimly.security.handler.failure;
+package app.verimly.composite.security.handler.failure;
 
 import app.verimly.commons.core.web.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
