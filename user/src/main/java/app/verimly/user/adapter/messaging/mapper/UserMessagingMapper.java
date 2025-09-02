@@ -14,4 +14,8 @@ public interface UserMessagingMapper {
     @Mapping(target = "id", source = "user.id")
     @Mapping(target = "email", source = "user.email")
     UserCreatedMessage toUserCreatedMessage(UserCreatedApplicationEvent event);
+
+
+
+
 }
