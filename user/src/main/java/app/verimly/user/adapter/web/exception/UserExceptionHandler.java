@@ -6,6 +6,7 @@ import app.verimly.commons.core.domain.vo.Email;
 import app.verimly.commons.core.web.response.ConflictErrorResponse;
 import app.verimly.commons.core.web.response.ErrorResponseFactory;
 import app.verimly.user.application.exception.DuplicateEmailException;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -33,6 +34,7 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(DuplicateEmailException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
+    @Hidden
     public ConflictErrorResponse handleDuplicateEmail(DuplicateEmailException duplicateEmailException, WebRequest request) {
         Email email = duplicateEmailException.getEmail();
         Map<String, String> conflictingResource = Map.of("email", email.toString());

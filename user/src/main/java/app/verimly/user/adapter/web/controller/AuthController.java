@@ -30,7 +30,7 @@ public class AuthController {
                     ref = "#/components/responses/UnauthenticatedResponse"
             )
     })
-    @PostMapping
+    @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     public void logout() {
 
