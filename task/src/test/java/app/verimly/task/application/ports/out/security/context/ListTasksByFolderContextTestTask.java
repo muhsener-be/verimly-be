@@ -1,12 +1,12 @@
 package app.verimly.task.application.ports.out.security.context;
 
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.domain.vo.folder.FolderId;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ListTasksByFolderContextTest extends AbstractUnitTest {
+class ListTasksByFolderContextTestTask extends TaskAbstractUnitTest {
 
     FolderId folderId = FolderId.random();
 

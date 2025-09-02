@@ -1,7 +1,7 @@
 package app.verimly.task.domain.service;
 
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.entity.TimeSession;
 import app.verimly.task.domain.exception.TimeSessionDomainException;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = TimeSessionDomainService.class)
-class TimeSessionDomainServiceTest extends AbstractUnitTest {
+class TimeSessionDomainServiceTestTask extends TaskAbstractUnitTest {
 
     static UserId ownerId;
     static Task task;

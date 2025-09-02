@@ -1,6 +1,6 @@
 package app.verimly.task.adapter.web;
 
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.application.dto.SessionSummaryData;
 import app.verimly.task.domain.vo.session.SessionStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-class SessionComparatorTest extends AbstractUnitTest {
+class SessionComparatorTestTask extends TaskAbstractUnitTest {
 
     List<SessionSummaryData> sessions;
 

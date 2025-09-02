@@ -4,7 +4,7 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.application.ports.out.security.context.StartSessionContext;
 import app.verimly.task.domain.repository.TaskWriteRepository;
 import app.verimly.task.domain.vo.task.TaskId;
@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class StartSessionAuthorizationRuleTest extends AbstractUnitTest {
+class StartSessionAuthorizationRuleTestTask extends TaskAbstractUnitTest {
     static Principal principal;
     static StartSessionContext context;
 

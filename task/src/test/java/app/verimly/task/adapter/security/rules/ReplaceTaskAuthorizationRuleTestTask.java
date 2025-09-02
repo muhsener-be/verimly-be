@@ -4,7 +4,7 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.application.ports.out.security.context.ReplaceTaskContext;
 import app.verimly.task.domain.entity.Task;
 import app.verimly.task.domain.repository.TaskWriteRepository;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ReplaceTaskAuthorizationRuleTest extends AbstractUnitTest {
+class ReplaceTaskAuthorizationRuleTestTask extends TaskAbstractUnitTest {
 
     @Mock
     TaskWriteRepository repository;
