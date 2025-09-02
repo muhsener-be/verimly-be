@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -254,10 +255,15 @@ class TaskEntityIntegrationTest extends AbstractIntegrationTest {
         assertEquals(expected.getPriority(), actual.getPriority());
         assertEquals(expected.getStatus(), actual.getStatus());
 
-        assertTrue(Duration.between(expected.getCreatedAt(), actual.getCreatedAt()).abs().toMillis() < 1);
-        assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
+        assertTrue(areInstantsEquals(expected.getCreatedAt(), actual.getCreatedAt()));
+        assertTrue(areInstantsEquals(expected.getUpdatedAt(), actual.getUpdatedAt()));
 
 
+
+    }
+
+    private static boolean areInstantsEquals(Instant expected, Instant actual) {
+        return Duration.between(expected, actual).abs().toMillis() < 1;
     }
 
 
