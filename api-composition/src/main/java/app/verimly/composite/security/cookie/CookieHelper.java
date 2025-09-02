@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 @Component
 @RequiredArgsConstructor
 public class CookieHelper {
@@ -22,7 +24,18 @@ public class CookieHelper {
                 .domain(props.getDomain())
                 .secure(props.isSecure())
                 .build();
+    }
 
 
+    public ResponseCookie createLogoutCookie() {
+        return ResponseCookie.from(props.getName())
+                .value("")
+                .path(props.getPath())
+                .maxAge(Duration.ZERO)
+                .httpOnly(props.isHttpOnly())
+                .sameSite(props.getSameSite())
+                .domain(props.getDomain())
+                .secure(props.isSecure())
+                .build();
     }
 }
