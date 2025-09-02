@@ -15,7 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -62,7 +61,9 @@ public class SecurityConfig {
 
                 .logout(lg -> lg
                         .logoutUrl(properties.getLogoutPath())
-                        .logoutSuccessHandler(logoutSuccessHandler))
+                        .permitAll(false)
+                        .logoutSuccessHandler(logoutSuccessHandler)
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, LogoutFilter.class)
                 .userDetailsService(userDetailsService)
