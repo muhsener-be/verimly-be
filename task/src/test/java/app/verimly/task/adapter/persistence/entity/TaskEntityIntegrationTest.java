@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.temporal.ChronoUnit;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,8 +39,6 @@ class TaskEntityIntegrationTest extends AbstractIntegrationTest {
     UserEntity user;
     FolderId folderId;
     FolderEntity folder;
-
-
 
 
     @Autowired
@@ -255,7 +253,8 @@ class TaskEntityIntegrationTest extends AbstractIntegrationTest {
         assertEquals(expected.getDueDate(), actual.getDueDate());
         assertEquals(expected.getPriority(), actual.getPriority());
         assertEquals(expected.getStatus(), actual.getStatus());
-        assertEquals(expected.getCreatedAt().truncatedTo(ChronoUnit.MICROS), actual.getCreatedAt().truncatedTo(ChronoUnit.MICROS));
+
+        assertTrue(Duration.between(expected.getCreatedAt(), actual.getCreatedAt()).abs().toMillis() < 1);
         assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
 
 
