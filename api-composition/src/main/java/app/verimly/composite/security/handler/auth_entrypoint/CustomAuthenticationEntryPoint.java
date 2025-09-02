@@ -32,8 +32,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                 .message("Full authentication is required to access this resource")
                 .path(request.getRequestURI()).build();
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        objectMapper.writeValue(response.getWriter(), error);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        objectMapper.writeValue(response.getWriter(), error);
         response.flushBuffer();
     }
 }

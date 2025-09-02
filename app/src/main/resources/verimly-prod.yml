@@ -28,6 +28,7 @@ spring:
 security:
   sign-up-path: "/api/v1/users"
   login-path: "/api/v1/auth/login"
+  logout-path: "/api/v1/auth/logout"
   username-parameter: "email"
   password-parameter: "password"
   front-end-origin: ${FE_ORIGIN}

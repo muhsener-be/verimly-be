@@ -13,6 +13,7 @@ public class SecurityProperties {
     private String signUpPath;
     private String frontEndOrigin;
     private String loginPath;
+    private String logoutPath;
     private String usernameParameter;
     private String passwordParameter;
     private CorsProperties cors;
