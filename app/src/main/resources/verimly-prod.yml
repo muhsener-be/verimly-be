@@ -19,59 +19,37 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
   h2:
     console:
       enabled: false
 
-
 security:
-  sign-up-path: "/api/v1/users"
-  login-path: "/api/v1/auth/login"
-  logout-path: "/api/v1/auth/logout"
-  username-parameter: "email"
-  password-parameter: "password"
   front-end-origin: ${FE_ORIGIN}
   cors:
-    path: /**
     allowed-origins:
       - ${FE_ORIGIN}
-    allowed-methods:
-      - GET
-      - POST
-      - PUT
-      - DELETE
-      - OPTIONS
-      - PATCH
-    allowed-headers:
-      - Authorization
-      - Cache-Control
-      - Content-Type
-      - X-Requested-With
-      - X-Csrf-Token
-      - X-TimeZone
-    allow-credentials: true
-    max-age: 3600
+    max-age: ${CORS_MAX_AGE}
   jwt:
-    expires-in: 86400000
+    expires-in: ${JWT_EXPIRES_IN}
     secret-key: ${JWT_SECRET_KEY}
-    issuer: verimly
-    email-claim: email
   access-token-cookie:
-    name: access_token
-    http-only: true
     secure: true
-    same-site: None
-    max-age-seconds: 86400
-    path: /
-    domain:
+    same-site: ${COOKIE_SAME_SITE:None}
+    max-age-seconds: ${COOKIE_MAX_AGE:3600}
+    domain: ${COOKIE_DOMAIN:""}
 
+bootstrap:
+  user:
+    firstName: ${BOOTSTRAP_USER_FIRSTNAME}
+    lastName: ${BOOTSTRAP_USER_LASTNAME}
+    email: ${BOOTSTRAP_USER_EMAIL}
+    password: ${BOOTSTRAP_USER_PASSWORD}
 
 logging:
   pattern:
     console: "%red(%date)  %highlight(%-5level) [%12.12thread] %red(%-40.40logger{40}) : %green(%msg) %n"
     #    console: "%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n"
   level:
-    app.verimly: INFO
+    app.verimly: ${LOG_LEVEL:INFO}
 server:
   port: ${PORT:8080}
