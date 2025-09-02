@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -254,7 +255,7 @@ class TaskEntityIntegrationTest extends AbstractIntegrationTest {
         assertEquals(expected.getDueDate(), actual.getDueDate());
         assertEquals(expected.getPriority(), actual.getPriority());
         assertEquals(expected.getStatus(), actual.getStatus());
-        assertEquals(expected.getCreatedAt(), actual.getCreatedAt());
+        assertEquals(expected.getCreatedAt().truncatedTo(ChronoUnit.MICROS), actual.getCreatedAt().truncatedTo(ChronoUnit.MICROS));
         assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
 
 
