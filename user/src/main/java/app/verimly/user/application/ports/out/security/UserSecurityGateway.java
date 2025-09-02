@@ -2,7 +2,7 @@ package app.verimly.user.application.ports.out.security;
 
 import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.user.application.ports.out.security.context.FetchUserDetailsContext;
+import app.verimly.user.application.ports.out.security.context.ViewUserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ public class UserSecurityGateway {
         return authN.getCurrentPrincipal();
     }
 
-    public void authorizeFetchUserDetails(Principal principal, FetchUserDetailsContext context) {
+    public void authorizeFetchUserDetails(Principal principal, ViewUserContext context) {
         authZ.authorizeFetchDetails(principal, context);
     }
 

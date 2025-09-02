@@ -5,15 +5,15 @@ import app.verimly.commons.core.security.AuthorizationContext;
 import lombok.Getter;
 
 @Getter
-public class FetchUserDetailsContext implements AuthorizationContext {
+public class ViewUserContext implements AuthorizationContext {
 
     private final UserId userId;
 
-    private FetchUserDetailsContext(UserId userId) {
+    private ViewUserContext(UserId userId) {
         this.userId = userId;
     }
 
-    public static FetchUserDetailsContext createWithUserId(UserId userId) {
-        return new FetchUserDetailsContext(userId);
+    public static ViewUserContext createWithUserId(UserId userId) {
+        return new ViewUserContext(userId);
     }
 }

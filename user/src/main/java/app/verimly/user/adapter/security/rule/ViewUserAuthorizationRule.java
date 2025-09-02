@@ -6,18 +6,18 @@ import app.verimly.commons.core.security.Action;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.user.application.ports.out.security.UserActions;
-import app.verimly.user.application.ports.out.security.context.FetchUserDetailsContext;
+import app.verimly.user.application.ports.out.security.context.ViewUserContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Component
-public class FetchUserDetailsAuthorizationRule extends AbstractAuthorizationRule<FetchUserDetailsContext> {
+public class ViewUserAuthorizationRule extends AbstractAuthorizationRule<ViewUserContext> {
 
-    public static final Action ACTION = UserActions.FETCH_DETAILS;
+    public static final Action ACTION = UserActions.VIEW;
 
     @Override
-    public void apply(Principal principal, FetchUserDetailsContext context) {
+    public void apply(Principal principal, ViewUserContext context) {
         super.ensurePrincipalIsNotNull(principal);
         super.ensureContextIsNotNull(context);
 
