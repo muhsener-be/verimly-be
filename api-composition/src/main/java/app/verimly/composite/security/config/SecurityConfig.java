@@ -16,6 +16,8 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -34,6 +36,7 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final List<String> permitAllPaths;
+    private final LogoutSuccessHandler logoutSuccessHandler;
 
 
     @Bean
@@ -57,8 +60,11 @@ public class SecurityConfig {
                                 .failureHandler(failureHandler)
                                 .successHandler(successHandler))
 
+                .logout(lg -> lg
+                        .logoutUrl(properties.getLogoutPath())
+                        .logoutSuccessHandler(logoutSuccessHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, LogoutFilter.class)
                 .userDetailsService(userDetailsService)
                 .build();
     }

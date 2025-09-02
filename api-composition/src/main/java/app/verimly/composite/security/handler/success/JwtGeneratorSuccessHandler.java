@@ -57,12 +57,14 @@ public class JwtGeneratorSuccessHandler implements AuthenticationSuccessHandler 
     }
 
     private static void addCookieToResponse(HttpServletResponse response, ResponseCookie cookie) {
+
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
     private void writeResponseBody(HttpServletResponse response, UserWithSessionsWebResponse responseBody) {
         try {
+            response.setCharacterEncoding("UTF-8");
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             objectMapper.writeValue(response.getWriter(), responseBody);
             response.flushBuffer();

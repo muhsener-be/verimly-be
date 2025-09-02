@@ -1,4 +1,4 @@
-CREATE TABLE users
+CREATE  TABLE IF NOT EXISTS users
 (
     id         UUID PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE users
     is_deleted BOOLEAN DEFAULT FALSE,
     CONSTRAINT u_users_email UNIQUE (email)
 );
-CREATE TABLE folders
+CREATE TABLE IF NOT EXISTS folders
 (
     id          UUID PRIMARY KEY,
     owner_id    UUID         NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE folders
     is_deleted BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_folders_owner_id FOREIGN KEY (owner_id) REFERENCES users (id)
 );
-CREATE TABLE tasks
+CREATE TABLE  IF NOT EXISTS tasks
 (
     id UUID PRIMARY KEY,
     owner_id UUID NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE tasks
     FOREIGN KEY (owner_id) REFERENCES users (id),
     FOREIGN KEY (folder_id) REFERENCES folders (id)
 );
-CREATE TABLE sessions
+CREATE TABLE IF NOT EXISTS sessions
 (
     id UUID PRIMARY KEY,
     owner_id UUID NOT NULL,
