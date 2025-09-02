@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class UserCreatedApplicationEventTest {
 
+
     private User user = UserTestData.getInstance().user();
 
     @Test

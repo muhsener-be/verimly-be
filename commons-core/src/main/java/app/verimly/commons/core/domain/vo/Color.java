@@ -6,6 +6,8 @@ import app.verimly.commons.core.domain.validation.InputValidator;
 
 public class Color extends ValueObject<String> {
 
+    public static final String YELLOW_HEX = "#EAB308";
+
     private Color(String value) {
         super(value);
     }
@@ -17,6 +19,10 @@ public class Color extends ValueObject<String> {
         Color color = new Color(hex);
         color.checkInvariants();
         return color;
+    }
+
+    public static Color yellow() {
+        return new Color(YELLOW_HEX);
     }
 
     public static Color reconstruct(String hex) {
@@ -32,4 +38,6 @@ public class Color extends ValueObject<String> {
     public static final class Errors {
         public static final ErrorMessage HEX_FORMAT = ErrorMessage.of("color.hex-format", "Color must be in a valid hex format");
     }
+
+
 }

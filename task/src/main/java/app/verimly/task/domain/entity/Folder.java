@@ -16,6 +16,11 @@ import lombok.Getter;
 @Getter
 public class Folder extends BaseEntity<FolderId> {
 
+    public static final FolderName DEFAULT_FOLDER_NAME = FolderName.of("My Folder");
+    public static final Color DEFAULT_LABEL_COLOR = Color.yellow();
+    public static final FolderDescription DEFAULT_DESCRIPTION = null;
+
+
     private FolderName name;
     private UserId ownerId;
     private FolderDescription description;
@@ -47,6 +52,11 @@ public class Folder extends BaseEntity<FolderId> {
         Folder folder = new Folder(randomId, ownerId, name, description, labelColor);
         folder.checkInvariants();
         return folder;
+    }
+
+
+    public static Folder defaultFor(UserId ownerId) {
+        return createWithDescriptionAndLabelColor(ownerId, DEFAULT_FOLDER_NAME, DEFAULT_DESCRIPTION, DEFAULT_LABEL_COLOR);
     }
 
     public static Folder reconstruct(FolderId id,
