@@ -42,7 +42,7 @@ bootstrap:
     firstName: Muhammet
     lastName: Şener
     email: muhsener@verimly.com
-    password: muhsener
+    password: "muhsener"
 
 
 logging:
