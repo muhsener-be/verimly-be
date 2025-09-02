@@ -2,7 +2,6 @@ package app.verimly.bootstrap;
 
 import app.verimly.commons.core.domain.vo.Color;
 import app.verimly.commons.core.domain.vo.Email;
-import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.repository.FolderWriteRepository;
 import app.verimly.task.domain.vo.folder.FolderId;
@@ -14,25 +13,35 @@ import app.verimly.user.application.usecase.command.create.UserCreationResponse;
 import app.verimly.user.domain.vo.Password;
 import app.verimly.user.domain.vo.PersonName;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Configuration
-@RequiredArgsConstructor
 public class TestUserInitializer {
 
-    public static final UserId USER_ID = UserId.random();
-    public static final PersonName NAME = PersonName.of("Muhammet", "Şener");
-    public static final Email EMAIL = Email.of("muhsener@mail.com");
-    public static final Password PASSWORD = Password.withRaw("muhsener");
+    private final BootstrapProperties bootstrapProperties;
+
+    public TestUserInitializer(BootstrapProperties bootstrapProperties, UserJpaRepository userJpaRepository, CreateUserCommandHandler createUserCommandHandler, FolderWriteRepository folderWriteRepository) {
+        this.bootstrapProperties = bootstrapProperties;
+        this.userJpaRepository = userJpaRepository;
+        this.createUserCommandHandler = createUserCommandHandler;
+        this.folderWriteRepository = folderWriteRepository;
+
+        NAME = PersonName.of(bootstrapProperties.getUser().getFirstName(), bootstrapProperties.getUser().getLastName());
+        EMAIL = Email.of(bootstrapProperties.getUser().getEmail());
+        PASSWORD = Password.withRaw(bootstrapProperties.getUser().getPassword());
+    }
+
+    public final PersonName NAME;
+    public final Email EMAIL;
+    public final Password PASSWORD;
 
 
-    public static final Color LABEL_COLOR = Color.of("#EAB308");
-    public static final FolderName FOLDER_NAME = FolderName.of("My Folder");
-    public static final FolderId FOLDER_ID = FolderId.random();
+    public final Color LABEL_COLOR = Color.of("#EAB308");
+    public final FolderName FOLDER_NAME = FolderName.of("My Folder");
+    public final FolderId FOLDER_ID = FolderId.random();
     private final UserJpaRepository userJpaRepository;
     private final CreateUserCommandHandler createUserCommandHandler;
     private final FolderWriteRepository folderWriteRepository;

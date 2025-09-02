@@ -65,6 +65,13 @@ security:
     path: /
     domain: localhost
 
+bootstrap:
+  user:
+    firstName: Muhammet
+    lastName: Şener
+    email: muhsener98@gmail.com
+    password: muhsener
+
 
 logging:
   pattern:

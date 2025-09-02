@@ -29,9 +29,11 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
         ResponseCookie logoutCookie = cookieHelper.createLogoutCookie();
 
-        SecurityUser principal = (SecurityUser) authentication.getPrincipal();
 
         response.setHeader(HttpHeaders.SET_COOKIE, logoutCookie.toString());
-        log.info("User logout successfully. [ID: {}, Email: {}]", principal.getId(), principal.getEmail());
+        if (authentication != null) {
+            SecurityUser principal = (SecurityUser) authentication.getPrincipal();
+            log.info("User logout successfully. [ID: {}, Email: {}]", principal.getId(), principal.getEmail());
+        }
     }
 }
