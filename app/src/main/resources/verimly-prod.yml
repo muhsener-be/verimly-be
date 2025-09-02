@@ -1,0 +1,76 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  sql:
+    init:
+      mode: ${SPRING_SQL_INIT_MODE:never}
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    defer-datasource-initialization: false
+    database: postgresql
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  h2:
+    console:
+      enabled: false
+
+
+security:
+  sign-up-path: "/api/v1/users"
+  login-path: "/api/v1/auth/login"
+  username-parameter: "email"
+  password-parameter: "password"
+  front-end-origin: ${FE_ORIGIN}
+  cors:
+    path: /**
+    allowed-origins:
+      - ${FE_ORIGIN}
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+      - PATCH
+    allowed-headers:
+      - Authorization
+      - Cache-Control
+      - Content-Type
+      - X-Requested-With
+      - X-Csrf-Token
+      - X-TimeZone
+    allow-credentials: true
+    max-age: 3600
+  jwt:
+    expires-in: 86400000
+    secret-key: ${JWT_SECRET_KEY}
+    issuer: verimly
+    email-claim: email
+  access-token-cookie:
+    name: access_token
+    http-only: true
+    secure: true
+    same-site: None
+    max-age-seconds: 86400
+    path: /
+    domain:
+
+
+logging:
+  pattern:
+    console: "%red(%date)  %highlight(%-5level) [%12.12thread] %red(%-40.40logger{40}) : %green(%msg) %n"
+    #    console: "%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n"
+  level:
+    app.verimly: INFO
+server:
+  port: ${PORT:8080}

@@ -43,6 +43,7 @@ public class TaskEntity extends BaseJpaEntity<UUID> {
     private TaskStatus status;
 
     @Column(name = "priority", nullable = true)
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
 
