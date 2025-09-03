@@ -2,6 +2,8 @@ package app.verimly.commons.core.domain.exception;
 
 import lombok.Getter;
 
+import java.util.Locale;
+
 @Getter
 public class NotFoundException extends ApplicationException {
 
@@ -12,6 +14,7 @@ public class NotFoundException extends ApplicationException {
     }
 
     public NotFoundException(String resourceType, String resourceId) {
+        super("No such %s found with provided ID: '%s'".formatted(resourceType.toLowerCase(Locale.US), resourceId));
         this.resourceType = resourceType;
         this.resourceId = resourceId;
     }

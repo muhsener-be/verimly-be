@@ -21,7 +21,6 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringJoiner;
 
 @Slf4j
 @RestControllerAdvice
@@ -39,17 +38,16 @@ public class GlobalExceptionHandler {
     public BadRequestErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e, WebRequest request) {
         Map<String, String> codeToMessageMap = new HashMap<>();
 
-        StringJoiner generalMessage = new StringJoiner("***");
+
         e.getFieldErrors().forEach(fieldError -> {
             String errorCode = fieldError.getDefaultMessage();
             String message = findMessageForCode(errorCode);
             codeToMessageMap.put(errorCode, message);
-            generalMessage.add(message);
         });
 
         return errorResponseFactory.badRequest().path(request.getDescription(false))
                 .errors(codeToMessageMap)
-                .message(generalMessage.toString())
+                .message("invalid inputs")
                 .build();
 
 //        Map<String, Map<String, Object>> additional = new HashMap<>();
@@ -127,7 +125,7 @@ public class GlobalExceptionHandler {
         String extracted = findMessageFromErrorMessage(actualErrorMessage);
 
         return errorResponseFactory.notFound()
-                .message("Resource not found.")
+                .message(e.getMessage())
                 .path(request.getDescription(false))
                 .resourceType(e.getResourceType())
                 .resourceId(e.getResourceId())
@@ -135,8 +133,6 @@ public class GlobalExceptionHandler {
 
 //        return ErrorResponse.notFound(actualErrorMessage.code(), extracted, request.getDescription(false));
     }
-
-
 
 
     @ExceptionHandler(ConflictException.class)

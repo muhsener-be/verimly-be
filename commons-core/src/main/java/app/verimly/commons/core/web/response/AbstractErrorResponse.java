@@ -26,8 +26,7 @@ public abstract class AbstractErrorResponse {
     @Schema(description = "Detailed error message.", example = "Invalid input provided.", nullable = true)
     private String message;
 
-    @Schema(description = "A machine-readable error code that identifies the specific error condition. This code can be used for programmatic error handling and internationalization.",
-            example = "user.owner-not-exist", nullable = true)
+    @Schema(description = "A machine-readable error code that identifies the specific error condition. This code can be used for programmatic error handling and internationalization.", nullable = true)
     @JsonProperty("error_code")
     private String errorCode;
 
