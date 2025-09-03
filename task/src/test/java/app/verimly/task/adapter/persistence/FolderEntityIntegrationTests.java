@@ -24,7 +24,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,6 +45,7 @@ public class FolderEntityIntegrationTests {
     FolderEntity jpaWithUser;
     UserEntity userEntity;
 
+
     @Autowired
     public FolderJpaRepository folderJpaRepository;
 
@@ -55,7 +55,8 @@ public class FolderEntityIntegrationTests {
 
     @BeforeEach
     void setup() {
-        userEntity = new UserEntity(UUID.randomUUID(), "TEset", "Test", "email.com", "aslkdjaksd");
+
+        userEntity = DATA.userEntityWithId(UserId.random());
         entityManager.persist(userEntity);
         folder = DATA.folderWithFullFields();
         jpa = dbMapper.toJpaEntity(folder);
