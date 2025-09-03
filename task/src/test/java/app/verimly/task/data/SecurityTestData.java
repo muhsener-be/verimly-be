@@ -53,7 +53,7 @@ public class SecurityTestData {
     }
 
     public CreateTaskContext createTaskContext() {
-        return new CreateTaskContext();
+        return CreateTaskContext.createWithFolderId(getFolderId());
     }
 
     public MoveToFolderContext moveTaskToFolderContext(TaskId taskId, FolderId folderId) {
