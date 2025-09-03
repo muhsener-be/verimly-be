@@ -42,6 +42,7 @@ public class FolderController {
 
         FolderLog.folderCreated(
                 Actor.user(response.ownerId().getValue()),
+                response.ownerId(),
                 response.id(),
                 response.name()
         );
