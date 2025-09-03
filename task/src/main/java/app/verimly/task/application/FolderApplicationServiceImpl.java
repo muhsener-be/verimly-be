@@ -1,11 +1,13 @@
 package app.verimly.task.application;
 
+import app.verimly.commons.core.domain.exception.Assert;
 import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.ports.in.FolderApplicationService;
 import app.verimly.task.application.usecase.command.folder.create.CreateFolderCommand;
 import app.verimly.task.application.usecase.command.folder.create.CreateFolderCommandHandler;
 import app.verimly.task.application.usecase.command.folder.create.FolderCreationResponse;
 import app.verimly.task.application.usecase.query.folder.list.ListFoldersQueryHandler;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,8 @@ public class FolderApplicationServiceImpl implements FolderApplicationService {
     private final ListFoldersQueryHandler listFoldersQueryHandler;
 
     @Override
-    public FolderCreationResponse create(CreateFolderCommand command) {
+    public FolderCreationResponse create(@NotNull CreateFolderCommand command) {
+        Assert.notNull(command, "command cannot be null to create folder");
         return createFolderCommandHandler.handle(command);
     }
 

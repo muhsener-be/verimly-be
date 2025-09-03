@@ -4,6 +4,8 @@ import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.FolderCreatedApplicationEvent;
+import app.verimly.task.application.exception.FolderBusinessException;
+import app.verimly.task.application.exception.FolderSystemException;
 import app.verimly.task.application.mapper.FolderAppMapper;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.CreateFolderContext;
@@ -31,11 +33,12 @@ public class CreateFolderCommandHandler {
     public FolderCreationResponse handle(CreateFolderCommand command) {
         Principal principal = authN.getCurrentPrincipal();
         authorizeRequest(principal, command);
+
         Folder folder = createFolder(principal, command);
         Folder persistedFolder = persistFolder(folder);
+
         FolderCreatedApplicationEvent event = prepareEvent(principal, persistedFolder);
         publishEvent(event);
-
 
         return prepareResponse(persistedFolder);
     }
@@ -45,12 +48,22 @@ public class CreateFolderCommandHandler {
     }
 
     protected Folder createFolder(Principal principal, CreateFolderCommand command) throws FolderDomainException {
-        return Folder.createWithDescriptionAndLabelColor(principal.getId(), command.name(), command.description(), command.labelColor());
+        try {
+            return Folder.createWithDescriptionAndLabelColor(principal.getId(), command.name(), command.description(), command.labelColor());
+
+        } catch (FolderDomainException domainException) {
+            throw new FolderBusinessException(domainException.getErrorMessage(), domainException.getMessage(), domainException);
+        }
 
     }
 
     private Folder persistFolder(Folder folder) throws TaskDataAccessException {
-        return repository.save(folder);
+        try {
+            return repository.save(folder);
+
+        } catch (TaskDataAccessException dataAccessException) {
+            throw new FolderSystemException(dataAccessException.getMessage(), dataAccessException);
+        }
     }
 
     protected FolderCreatedApplicationEvent prepareEvent(Principal principal, Folder folder) {
