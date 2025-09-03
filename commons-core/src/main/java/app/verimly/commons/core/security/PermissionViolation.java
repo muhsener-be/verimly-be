@@ -8,15 +8,15 @@ import java.util.UUID;
 @Getter
 public abstract class PermissionViolation {
 
-    UUID principal;
-    String action;
-    String resource;
-    List<PermissionRequirement> requirement;
+    private UUID principal;
+    private String action;
+    private String resource;
+    private List<PermissionRequirement> requirements;
 
-    protected PermissionViolation(UUID principal, String action, String resource, List<PermissionRequirement> requirement) {
+    protected PermissionViolation(UUID principal, String action, String resource, List<PermissionRequirement> requirements) {
         this.principal = principal;
         this.action = action;
         this.resource = resource;
-        this.requirement = requirement;
+        this.requirements = requirements;
     }
 }
