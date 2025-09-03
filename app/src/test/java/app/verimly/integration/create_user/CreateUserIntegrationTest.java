@@ -2,7 +2,7 @@ package app.verimly.integration.create_user;
 
 import app.verimly.bootstrap.BootstrapUserProps;
 import app.verimly.commons.core.domain.vo.UserId;
-import app.verimly.integration.IntegrationWithPostgreSqlTest;
+import app.verimly.integration.BaseIntegrationTest;
 import app.verimly.user.adapter.persistence.jparepo.UserJpaRepository;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
 import app.verimly.user.adapter.web.dto.response.UserCreationWebResponse;
@@ -11,13 +11,11 @@ import app.verimly.user.domain.repository.UserWriteRepository;
 import app.verimly.utils.FixtureLoader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
@@ -30,10 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-public class CreateUserIntegrationTest extends IntegrationWithPostgreSqlTest {
+public class CreateUserIntegrationTest extends BaseIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
 
     CreateUserWebRequest webRequest;
 
@@ -48,10 +44,6 @@ public class CreateUserIntegrationTest extends IntegrationWithPostgreSqlTest {
     @Autowired
     private UserJpaRepository userJpaRepository;
 
-    @BeforeAll
-    static void beforeAll() {
-        postgres.start();
-    }
 
     @BeforeEach
     void setUp() {
@@ -61,7 +53,6 @@ public class CreateUserIntegrationTest extends IntegrationWithPostgreSqlTest {
     @Test
     void should_setUp_isOk() {
         assertNotNull(mockMvc);
-        assertTrue(postgres.isRunning());
         assertNotNull(webRequest);
         assertNotNull(objectMapper);
         assertNotNull(userProps);
