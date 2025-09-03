@@ -31,7 +31,6 @@ public class TestUserInitializer {
 
         NAME = PersonName.of(bootstrapProperties.getUser().getFirstName(), bootstrapProperties.getUser().getLastName());
         EMAIL = Email.of(bootstrapProperties.getUser().getEmail());
-        System.out.println("Password: " + bootstrapProperties.getUser().getPassword());
         PASSWORD = Password.withRaw(bootstrapProperties.getUser().getPassword());
     }
 

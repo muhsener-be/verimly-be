@@ -18,8 +18,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 @Component
 @RequiredArgsConstructor
 public class CreateUserCommandHandler {
@@ -39,10 +37,6 @@ public class CreateUserCommandHandler {
 
         UserCreatedApplicationEvent event = prepareEvent(savedUser);
         publishEvent(event);
-
-        if (Objects.equals(command.email().getValue(), "email@email.com"))
-            throw new RuntimeException("Test Exception", new RuntimeException("Root cause"));
-
 
         return prepareResponse(savedUser);
 

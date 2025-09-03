@@ -63,9 +63,5 @@ import java.lang.annotation.Target;
                 )
         )
 })
-@org.springframework.web.bind.annotation.RequestMapping(
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE
-)
 public @interface FetchTaskWithSessionSpringDoc {
 }
