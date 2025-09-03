@@ -10,6 +10,7 @@ import app.verimly.task.application.dto.FolderSummaryData;
 import app.verimly.task.application.ports.in.FolderApplicationService;
 import app.verimly.task.application.usecase.command.folder.create.CreateFolderCommand;
 import app.verimly.task.application.usecase.command.folder.create.FolderCreationResponse;
+import app.verimly.task.logging.FolderLog;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,13 @@ public class FolderController {
 
 
         FolderCreationResponse response = folderApplicationService.create(command);
-        log.info("Folder created successfully. [Owner: {}, FolderId: {}, FolderName: {}]",
-                response.ownerId(), response.id(), response.name());
+
+        FolderLog.folderCreated(
+                "user: " + response.ownerId().toString(),
+                response.id(),
+                response.name()
+        );
+
 
         return mapper.toFolderCreationWebResponse(response);
     }
