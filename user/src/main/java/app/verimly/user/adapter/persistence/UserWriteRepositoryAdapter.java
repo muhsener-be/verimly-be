@@ -38,20 +38,19 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
     @Transactional
     @EnableSoftDeleteFilter
     public User save(User user) throws UserDataAccessException, DuplicateEmailException {
-        try {
-            Assert.notNull(user, "User to persist cannot be null!");
+        Assert.notNull(user, "User to persist cannot be null!");
 
+        try {
             UserEntity jpa = mapper.toJpaEntity(user);
             entityManager.persist(jpa);
             entityManager.flush();
             return user;
         } catch (ConstraintViolationException cve) {
-            var kind = cve.getKind();
 
-            if (kind.equals(ConstraintViolationException.ConstraintKind.UNIQUE)) {
-                String constraintName = cve.getConstraintName();
-                if (constraintName != null && isUserEmailUniqueConstraint(constraintName))
-                    throw new DuplicateEmailException(user.getEmail());
+
+            String constraintName = cve.getConstraintName();
+            if (constraintName != null && isUserEmailUniqueConstraint(constraintName)) {
+                throw new DuplicateEmailException(user.getEmail());
             }
 
             throw new UserDataAccessException(cve.getMessage(), cve);
@@ -87,7 +86,9 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
     @Override
     @EnableSoftDeleteFilter
     public boolean existsByEmail(Email email) {
-        return false;
+        if (email == null)
+            return false;
+        return userJpaRepository.existsByEmail(email.getValue());
     }
 
     @Override

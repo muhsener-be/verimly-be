@@ -53,6 +53,7 @@ public class TestUserInitializer {
         if (userJpaRepository.count() == 0) {
             CreateUserCommand createUserCommand = new CreateUserCommand(NAME, EMAIL, PASSWORD);
             UserCreationResponse response = createUserCommandHandler.handle(createUserCommand);
+            System.out.println("response: " + response);
             Folder folder = Folder.builder()
                     .id(FOLDER_ID)
                     .name(FOLDER_NAME)
@@ -60,7 +61,7 @@ public class TestUserInitializer {
                     .ownerId(response.id())
                     .build();
             Folder savedFolder = folderWriteRepository.save(folder);
-            log.info("Test user saved to database: {Email: {}, Password: {}} and default folder: [Name: {}, ]", EMAIL, "muhsener", FOLDER_NAME);
+            log.info("Test user saved to database: {Email: {}, Password: {}} and default folder: [ ID: {},Name: {} ]", response.email(), PASSWORD, savedFolder.getId(), FOLDER_NAME);
         }
 
     }

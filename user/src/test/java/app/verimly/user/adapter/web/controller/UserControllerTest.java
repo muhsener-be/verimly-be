@@ -5,6 +5,7 @@ import app.verimly.commons.core.domain.exception.InvalidDomainObjectException;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
 import app.verimly.user.adapter.web.dto.response.UserCreationWebResponse;
 import app.verimly.user.adapter.web.mapper.UserWebMapper;
+import app.verimly.user.application.exception.UserSystemException;
 import app.verimly.user.application.ports.in.UserApplicationService;
 import app.verimly.user.application.usecase.command.create.CreateUserCommand;
 import app.verimly.user.application.usecase.command.create.UserCreationResponse;

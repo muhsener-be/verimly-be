@@ -24,53 +24,25 @@ spring:
 
 
 security:
-  sign-up-path: "/api/v1/users"
-  login-path: "/api/v1/auth/login"
-  logout-path: "/api/v1/auth/logout"
-  username-parameter: "email"
-  password-parameter: "password"
-  front-end-origin: http://localhost:5173
+  front-end-origin: http://localhost:3000
   cors:
-    path: /**
     allowed-origins:
-      - "http://localhost:5173"
-      - "http://localhost:3000"
-    allowed-methods:
-      - GET
-      - POST
-      - PUT
-      - DELETE
-      - OPTIONS
-      - PATCH
-    allowed-headers:
-      - Authorization
-      - Cache-Control
-      - Content-Type
-      - X-Requested-With
-      - X-Csrf-Token
-      - X-TimeZone
-    allow-credentials: true
-    max-age: 3600
+      - ${security.front-end-origin}
   jwt:
     expires-in: 86400000
     secret-key: mydevsecretkeymydevsecretkeymydevsecretkey
-    issuer: verimly
-    email-claim: email
   access-token-cookie:
-    name: access_token
-    http-only: true
     secure: false
     same-site: Lax
     max-age-seconds: 86400
-    path: /
     domain: localhost
 
 bootstrap:
   user:
     firstName: Muhammet
     lastName: Şener
-    email: muhsener98@gmail.com
-    password: muhsener
+    email: muhsener@verimly.com
+    password: "muhsener"
 
 
 logging:
@@ -79,4 +51,4 @@ logging:
     #    console: "%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n"
   level:
     app.verimly: TRACE
-    org.springframework.security: TRACE
+    org.springframework.security: DEBUG

@@ -46,10 +46,8 @@ import java.lang.annotation.Target;
         @ApiResponse(
                 responseCode = "403",
                 description = "Forbidden - User doesn't have permission to view this task",
-                content = @Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = @Schema(implementation = ErrorResponse.class)
-                )
+                ref = "#/components/responses/NoPermissionResponse"
+
         ),
         @ApiResponse(
                 responseCode = "404",
@@ -65,9 +63,5 @@ import java.lang.annotation.Target;
                 )
         )
 })
-@org.springframework.web.bind.annotation.RequestMapping(
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE
-)
 public @interface FetchTaskWithSessionSpringDoc {
 }

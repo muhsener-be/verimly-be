@@ -1,16 +1,13 @@
 package app.verimly.task.adapter.web.docs;
 
-import app.verimly.commons.core.docs.ApiExamples;
 import app.verimly.commons.core.web.response.ErrorResponse;
 import app.verimly.task.adapter.web.dto.response.TaskSummaryWebResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -67,10 +64,6 @@ import java.lang.annotation.Target;
                 )
         )
 })
-@org.springframework.web.bind.annotation.RequestMapping(
-        method = RequestMethod.PUT,
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        consumes = MediaType.APPLICATION_JSON_VALUE
-)
+
 public @interface ReplaceTaskSpringDoc {
 }

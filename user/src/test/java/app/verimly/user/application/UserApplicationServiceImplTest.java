@@ -12,10 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserApplicationServiceImplTest {
@@ -23,9 +21,9 @@ public class UserApplicationServiceImplTest {
     @Mock
     CreateUserCommandHandler createUserCommandHandler;
 
-    private final UserTestData DATA = new UserTestData();
-    private final CreateUserCommand createUserCommand = DATA.createUserCommand();
-    private final UserCreationResponse mockCreationResponse = Mockito.mock(UserCreationResponse.class);
+    private UserTestData DATA = UserTestData.getInstance();
+    private CreateUserCommand createUserCommand = DATA.createUserCommand();
+    private UserCreationResponse mockCreationResponse = Mockito.mock(UserCreationResponse.class);
 
     @InjectMocks
     UserApplicationServiceImpl applicationService;
@@ -50,5 +48,15 @@ public class UserApplicationServiceImplTest {
 
         assertEquals(mockCreationResponse, response);
         verify(createUserCommandHandler).handle(createUserCommand);
+    }
+
+    @Test
+    void create_whenCommandIsNull_thenThrowsIllegalArgumentException() {
+        createUserCommand = null;
+
+        assertThrows(IllegalArgumentException.class, () -> applicationService.create(createUserCommand));
+
+
+        verifyNoInteractions(createUserCommandHandler);
     }
 }

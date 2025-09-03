@@ -19,4 +19,6 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
                          FROM UserEntity u 
                                     WHERE u.id = :id """)
     Optional<UserDetailsData> fetchDetailsDataById(UUID id);
+
+    boolean existsByEmail(String email);
 }

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.function.Executable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public abstract class AbstractUnitTest {
+public abstract class TaskAbstractUnitTest {
 
     protected static final SecurityTestData SECURITY_TEST_DATA = SecurityTestData.getInstance();
     protected static final TaskTestData TASK_TEST_DATA = TaskTestData.getInstance();

@@ -4,7 +4,7 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.application.ports.out.security.context.MoveToFolderContext;
 import app.verimly.task.domain.entity.Folder;
 import app.verimly.task.domain.entity.Task;
@@ -29,7 +29,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MoveTaskToFolderAuthorizationRuleTest extends AbstractUnitTest {
+class MoveTaskToFolderAuthorizationRuleTestTask extends TaskAbstractUnitTest {
 
 
     @Mock

@@ -6,7 +6,7 @@ import app.verimly.user.application.dto.UserDetailsData;
 import app.verimly.user.application.exception.UserNotFoundException;
 import app.verimly.user.application.ports.out.persistence.UserReadRepository;
 import app.verimly.user.application.ports.out.security.UserSecurityGateway;
-import app.verimly.user.application.ports.out.security.context.FetchUserDetailsContext;
+import app.verimly.user.application.ports.out.security.context.ViewUserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ public class FetchUserDetailsQueryHandler {
     }
 
     private void authorizeRequest(Principal principal) {
-        FetchUserDetailsContext context = FetchUserDetailsContext.createWithUserId(principal.getId());
+        ViewUserContext context = ViewUserContext.createWithUserId(principal.getId());
         securityGateway.authorizeFetchUserDetails(principal, context);
     }
 }

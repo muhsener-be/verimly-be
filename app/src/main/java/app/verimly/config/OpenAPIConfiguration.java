@@ -1,9 +1,6 @@
 package app.verimly.config;
 
-import app.verimly.commons.core.web.response.AbstractErrorResponse;
-import app.verimly.commons.core.web.response.BadRequestErrorResponse;
-import app.verimly.commons.core.web.response.NotFoundErrorResponse;
-import app.verimly.commons.core.web.response.UnauthenticatedErrorResponse;
+import app.verimly.commons.core.web.response.*;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -26,6 +23,7 @@ public class OpenAPIConfiguration {
                         .addSchemas("NotFoundErrorResponse", ModelConverters.getInstance().read(NotFoundErrorResponse.class).get("NotFoundErrorResponse"))
                         .addSchemas("UnauthenticatedErrorResponse", ModelConverters.getInstance().read(UnauthenticatedErrorResponse.class).get("UnauthenticatedErrorResponse"))
                         .addSchemas("BadRequestErrorResponse", ModelConverters.getInstance().read(BadRequestErrorResponse.class).get("BadRequestErrorResponse"))
+                        .addSchemas("NoPermissionErrorResponse", ModelConverters.getInstance().read(NoPermissionErrorResponse.class).get("NoPermissionErrorResponse"))
 
 
                         .addResponses("NotFoundResponse", new ApiResponse()
@@ -46,6 +44,13 @@ public class OpenAPIConfiguration {
                                 .description("BadRequest")
                                 .content(new Content().addMediaType("application/json", new MediaType()
                                                 .schema(new Schema().$ref("#/components/schemas/BadRequestErrorResponse"))
+                                        )
+                                )
+                        )
+                        .addResponses("NoPermissionResponse", new ApiResponse()
+                                .description("Forbidden")
+                                .content(new Content().addMediaType("application/json", new MediaType()
+                                                .schema(new Schema().$ref("#/components/schemas/NoPermissionErrorResponse"))
                                         )
                                 )
                         )

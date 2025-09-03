@@ -4,7 +4,7 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.application.mapper.TaskAppMapper;
 import app.verimly.task.application.ports.out.persistence.TaskReadRepository;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ListTasksByFolderQueryHandlerTest extends AbstractUnitTest {
+class ListTasksByFolderQueryHandlerTestTask extends TaskAbstractUnitTest {
 
     @Mock
     private AuthenticationService authN;

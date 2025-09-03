@@ -3,7 +3,7 @@ package app.verimly.task.application.usecase.command.session.start;
 import app.verimly.commons.core.security.AuthenticationService;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.application.exception.TaskNotFoundException;
 import app.verimly.task.application.mapper.SessionAppMapper;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
@@ -31,7 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class StartSessionForTaskCommandHandlerTest extends AbstractUnitTest {
+class StartSessionForTaskCommandHandlerTestTask extends TaskAbstractUnitTest {
 
     @Mock
     private AuthenticationService authN;

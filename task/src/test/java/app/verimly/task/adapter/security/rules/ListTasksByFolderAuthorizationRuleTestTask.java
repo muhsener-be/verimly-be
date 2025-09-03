@@ -4,7 +4,7 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.security.Principal;
-import app.verimly.task.application.AbstractUnitTest;
+import app.verimly.task.application.TaskAbstractUnitTest;
 import app.verimly.task.application.ports.out.security.context.ListTasksByFolderContext;
 import app.verimly.task.data.SecurityTestData;
 import app.verimly.task.data.folder.FolderTestData;
@@ -23,7 +23,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ListTasksByFolderAuthorizationRuleTest extends AbstractUnitTest {
+class ListTasksByFolderAuthorizationRuleTestTask extends TaskAbstractUnitTest {
     private static final SecurityTestData SECURITY_DATA = SecurityTestData.getInstance();
     private static final FolderTestData FOLDER_DATA = FolderTestData.getInstance();
 
