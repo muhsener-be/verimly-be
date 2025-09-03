@@ -48,7 +48,7 @@ public class OpenAPIConfiguration {
                                 )
                         )
                         .addResponses("NoPermissionResponse", new ApiResponse()
-                                .description("NoPermission")
+                                .description("Forbidden")
                                 .content(new Content().addMediaType("application/json", new MediaType()
                                                 .schema(new Schema().$ref("#/components/schemas/NoPermissionErrorResponse"))
                                         )
