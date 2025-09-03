@@ -31,7 +31,7 @@ public class NoPermissionException extends SecurityException {
                         violation.getPrincipal(),
                         violation.getAction(),
                         violation.getResource(),
-                        violation.getRequirement()
+                        violation.getRequirement().getExpression()
                 ));
         this.violation = violation;
     }
