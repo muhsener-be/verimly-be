@@ -7,6 +7,7 @@ import app.verimly.user.adapter.web.mapper.UserWebMapper;
 import app.verimly.user.application.ports.in.UserApplicationService;
 import app.verimly.user.application.usecase.command.create.CreateUserCommand;
 import app.verimly.user.application.usecase.command.create.UserCreationResponse;
+import app.verimly.user.logging.UserLog;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,11 @@ public class UserController {
         CreateUserCommand command = webMapper.toCreateUserCommand(request);
         UserCreationResponse response = applicationService.create(command);
 
-        log.info("User registered successfully. [Name: {}, Email: {}]", response.name(), response.email());
+
+//        log.info("User registered successfully. [Name: {}, Email: {}]", response.name(), response.email());
+
+        UserLog.userRegistered("system", response.id(), response.email());
+
 
         return webMapper.toUserCreationWebResponse(response);
     }

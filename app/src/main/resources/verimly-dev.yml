@@ -51,4 +51,4 @@ logging:
     #    console: "%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n"
   level:
     app.verimly: TRACE
-    org.springframework.security: TRACE
+    org.springframework.security: DEBUG

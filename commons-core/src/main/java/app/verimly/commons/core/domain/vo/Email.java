@@ -3,8 +3,6 @@ package app.verimly.commons.core.domain.vo;
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.exception.InvalidDomainObjectException;
 import app.verimly.commons.core.domain.validation.InputValidator;
-import org.mapstruct.Builder;
-import org.mapstruct.ObjectFactory;
 
 /**
  * Value object representing an email address.
@@ -59,6 +57,21 @@ public class Email extends ValueObject<String> {
         return trimmed;
     }
 
+
+    public String maskEmail() {
+        return maskEmail(this.value);
+    }
+
+
+    private String maskEmail(String email) {
+        if (email == null || !email.contains("@")) return "unknown";
+        String[] parts = email.split("@", 2);
+        String local = parts[0];
+        String maskedLocal = local.length() <= 2 ? "***" : local.substring(0, 2) + "***";
+        return maskedLocal + "@" + parts[1];
+    }
+
+
     /**
      * Reconstructs an {@code Email} value object from a raw value without validation.
      * <p>
@@ -80,5 +93,6 @@ public class Email extends ValueObject<String> {
 
         public static final ErrorMessage FORMAT = ErrorMessage.of("email.format", "Invalid email format.");
     }
+
 
 }

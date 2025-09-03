@@ -41,6 +41,7 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <springdoc.version>2.8.1</springdoc.version>
         <java-jwt.version>4.5.0</java-jwt.version>
+        <logstash.version>8.1</logstash.version>
     </properties>
     <dependencies>
         <dependency>
@@ -83,6 +84,11 @@
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+        </dependency>
+
 
 
     </dependencies>
@@ -138,6 +144,11 @@
                 <groupId>app.verimly</groupId>
                 <artifactId>api-composition</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash.version}</version>
             </dependency>
 
         </dependencies>

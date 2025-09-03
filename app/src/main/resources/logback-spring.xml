@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Konsola JSON -->
+<!--    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+
+<!--        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">-->
+
+<!--            <providers>-->
+<!--                &lt;!&ndash; Metadata &ndash;&gt;-->
+<!--                <timestamp timeZone="UTC"/>-->
+<!--                <logLevel/>-->
+<!--                <loggerName/>-->
+<!--                <threadName/>-->
+<!--                <message/>-->
+
+<!--                &lt;!&ndash; EN ÖNEMLİSİ: StructuredArguments için &ndash;&gt;-->
+<!--                <arguments/>-->
+
+<!--                &lt;!&ndash; Request-scope context (MDC) &ndash;&gt;-->
+<!--                <mdc/>-->
+
+<!--                &lt;!&ndash; Opsiyonel: Logger context (app name vs.) &ndash;&gt;-->
+<!--                <context/>-->
+
+<!--                &lt;!&ndash; Hatalar için kısaltılmış stacktrace &ndash;&gt;-->
+<!--                <stackTrace>-->
+<!--                    &lt;!&ndash;                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <maxDepthPerThrowable>30</maxDepthPerThrowable>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <maxLength>8192</maxLength>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <rootCauseFirst>true</rootCauseFirst>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                    </throwableConverter>&ndash;&gt;-->
+<!--                </stackTrace>-->
+<!--            </providers>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+    <appender name="JSON_EVENT_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp timeZone="UTC"/>
+                <logLevel/>
+                <loggerName/>
+                <threadName/>
+                <message/>
+                <arguments/>
+                <mdc/>
+                <context/>
+            </providers>
+        </encoder>
+    </appender>
+
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--            <pattern>-->
+            <!--                %highlight(%-5level) %cyan(%d{HH:mm:ss.SSS}) %yellow([%thread]) %green(%logger{36}) - %msg %n%throwable-->
+            <!--            </pattern>-->
+            <!--            <pattern>-->
+            <!--                %highlight(%-5level) %cyan(%d{HH:mm:ss.SSS}) %yellow([%thread]) %green(%logger{36}) %magenta([req:%X{request_id} ip:%X{ip_address} ua:%X{user_agent}]) - %msg %n%throwable-->
+            <!--            </pattern>-->
+            <pattern>
+                %highlight(%-5level) %cyan(%d{HH:mm:ss.SSS}) %yellow([%thread]) %green(%logger{36}) %magenta([req:%X{request_id:-"-"} ip:%X{ip_address:-"-"}]) - %msg %n%ex{5}
+            </pattern>
+            <!--            <throwableProxyConverter class="ch.qos.logback.classic.pattern.ShortenedThrowableConverter">-->
+            <!--                &lt;!&ndash; ilk 5 satır göster &ndash;&gt;-->
+            <!--                <maxDepthPerThrowable>5</maxDepthPerThrowable>-->
+            <!--                &lt;!&ndash; neden-sonuç zincirini max 3 exception ile sınırla &ndash;&gt;-->
+            <!--                <maxLength>5000</maxLength>-->
+            <!--                <rootCauseFirst>true</rootCauseFirst>-->
+            <!--            </throwableProxyConverter>-->
+        </encoder>
+    </appender>
+
+
+    <appender name="JSON_ERROR_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp timeZone="UTC"/>
+                <logLevel/>
+                <loggerName/>
+                <threadName/>
+                <message/>
+                <arguments/>
+                <mdc/>
+                <context/>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <maxDepthPerThrowable>50</maxDepthPerThrowable>
+                        <maxLength>10000</maxLength>
+                        <rootCauseFirst>true</rootCauseFirst>
+                    </throwableConverter>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="JSON_ERROR_CONSOLE"/>
+    </root>
+
+    <!-- Sadece belirli package JSON'a düşsün -->
+    <logger name="app.verimly.user.logging" level="INFO" additivity="false">
+        <appender-ref ref="JSON_EVENT_CONSOLE"/>
+    </logger>
+
+
+</configuration>
