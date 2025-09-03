@@ -26,9 +26,9 @@ public class ViewUserAuthorizationRule extends AbstractAuthorizationRule<ViewUse
         ensureHimself(principal, context.getUserId());
     }
 
-    private void ensureHimself(Principal principal, UserId userId) {
-        if (!Objects.equals(principal.getId(), userId)) {
-            UserPermissionViolation viewUserViolation = UserPermissionViolation.viewUser(principal.getId().getValue(), userId.getValue());
+    private void ensureHimself(Principal principal, UserId userIdToView) {
+        if (!Objects.equals(principal.getId(), userIdToView)) {
+            UserPermissionViolation viewUserViolation = UserPermissionViolation.viewUser(principal.getId().getValue(), userIdToView.getValue());
             throw new NoPermissionException(viewUserViolation);
         }
     }

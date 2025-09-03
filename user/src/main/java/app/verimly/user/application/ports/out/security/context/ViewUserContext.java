@@ -16,4 +16,6 @@ public class ViewUserContext implements AuthorizationContext {
     public static ViewUserContext createWithUserId(UserId userId) {
         return new ViewUserContext(userId);
     }
+
+
 }

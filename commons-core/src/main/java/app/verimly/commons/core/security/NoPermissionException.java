@@ -2,9 +2,11 @@ package app.verimly.commons.core.security;
 
 import app.verimly.commons.core.domain.exception.ErrorMessage;
 import app.verimly.commons.core.domain.vo.UserId;
+import lombok.Getter;
 
 public class NoPermissionException extends SecurityException {
 
+    @Getter
     private PermissionViolation violation;
 
 
@@ -29,7 +31,7 @@ public class NoPermissionException extends SecurityException {
                         violation.getPrincipal(),
                         violation.getAction(),
                         violation.getResource(),
-                        violation.getRequirements()
+                        violation.getRequirement()
                 ));
         this.violation = violation;
     }
