@@ -46,12 +46,11 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
             entityManager.flush();
             return user;
         } catch (ConstraintViolationException cve) {
-            var kind = cve.getKind();
 
-            if (kind.equals(ConstraintViolationException.ConstraintKind.UNIQUE)) {
-                String constraintName = cve.getConstraintName();
-                if (constraintName != null && isUserEmailUniqueConstraint(constraintName))
-                    throw new DuplicateEmailException(user.getEmail());
+
+            String constraintName = cve.getConstraintName();
+            if (constraintName != null && isUserEmailUniqueConstraint(constraintName)) {
+                throw new DuplicateEmailException(user.getEmail());
             }
 
             throw new UserDataAccessException(cve.getMessage(), cve);

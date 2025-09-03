@@ -78,6 +78,8 @@ public class CreateUserCommandHandler {
     protected User persistUser(User user) {
         try {
             return userWriteRepository.save(user);
+        } catch (DuplicateEmailException duplicateEmailException) {
+            throw duplicateEmailException;
         } catch (UserDataAccessException exception) {
             throw new UserSystemException(exception.getErrorMessage(), exception.getMessage(), exception);
         }
