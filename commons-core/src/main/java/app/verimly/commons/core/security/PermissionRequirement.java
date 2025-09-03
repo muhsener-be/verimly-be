@@ -4,6 +4,8 @@ import lombok.Getter;
 
 public class PermissionRequirement {
 
+    public static final String AND = " and ";
+    public static final String OR = " or ";
     @Getter
     private String expression;
 
@@ -18,82 +20,77 @@ public class PermissionRequirement {
 
     public static PermissionRequirement and(String op1, String op2, String... operands) {
         StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        sb.append(op1).append(" and ").append(op2);
-        for (String operand : operands) {
-            sb.append(" and ").append(operand);
-        }
-        sb.append(")");
+        bindInParenthesis(sb, AND, op1, op2, operands);
         return new PermissionRequirement(sb.toString());
     }
 
     public static PermissionRequirement or(String op1, String op2, String... operands) {
         StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        sb.append(op1).append(" or ").append(op2);
-        for (String operand : operands) {
-            sb.append(" or ").append(operand);
-        }
-        sb.append(")");
+        bindInParenthesis(sb, OR, op1, op2, operands);
         return new PermissionRequirement(sb.toString());
     }
 
 
     public PermissionRequirement and(String operand) {
-        return new PermissionRequirement(this.expression + " and " + operand);
+        return new PermissionRequirement(this.expression + AND + operand);
     }
 
     public PermissionRequirement or(String operand) {
-        return new PermissionRequirement(this.expression + " or " + operand);
+        return new PermissionRequirement(this.expression + OR + operand);
     }
 
     public PermissionRequirement andOr(String op1, String op2, String... ops) {
         StringBuilder sb = new StringBuilder(this.expression);
-        sb.append(" and ");
-        sb.append("(").append(op1).append(" or ").append(op2);
-        for (String op : ops) {
-            sb.append(" or ").append(op);
-        }
-
-        sb.append(")");
+        sb.append(AND);
+        bindInParenthesis(sb, OR, op1, op2, ops);
         return new PermissionRequirement(sb.toString());
     }
 
     public PermissionRequirement andAnd(String op1, String op2, String... ops) {
         StringBuilder sb = new StringBuilder(this.expression);
-        sb.append(" and ");
-        sb.append("(").append(op1).append(" and ").append(op2);
-        for (String op : ops) {
-            sb.append(" and ").append(op);
-        }
-
-        sb.append(")");
+        sb.append(AND);
+        bindInParenthesis(sb, AND, op1, op2, ops);
         return new PermissionRequirement(sb.toString());
     }
+
 
     public PermissionRequirement orOr(String op1, String op2, String... ops) {
         StringBuilder sb = new StringBuilder(this.expression);
-        sb.append(" or ");
-        sb.append("(").append(op1).append(" or ").append(op2);
-        for (String op : ops) {
-            sb.append(" or ").append(op);
-        }
-
-        sb.append(")");
+        sb.append(OR);
+        bindInParenthesis(sb, OR, op1, op2, ops);
         return new PermissionRequirement(sb.toString());
     }
+
 
     public PermissionRequirement orAnd(String op1, String op2, String... ops) {
         StringBuilder sb = new StringBuilder(this.expression);
-        sb.append(" or ");
-        sb.append("(").append(op1).append(" and ").append(op2);
-        for (String op : ops) {
-            sb.append(" and ").append(op);
-        }
-
-        sb.append(")");
+        sb.append(OR);
+        bindInParenthesis(sb, AND, op1, op2, ops);
         return new PermissionRequirement(sb.toString());
     }
 
 
+    private static void bindFirstTwo(StringBuilder sb, String operator, String op1, String op2) {
+        sb.append("(").append(op1).append(operator).append(op2);
+    }
+
+
+    private static void bindArrayOperands(StringBuilder sb, String operator, String[] operands) {
+        for (String op : operands) {
+            sb.append(operator).append(op);
+        }
+
+    }
+
+
+    private static void bindInParenthesis(StringBuilder sb, String operator, String op1, String op2, String[] operands) {
+        bindFirstTwo(sb, operator, op1, op2);
+        bindArrayOperands(sb, operator, operands);
+        sb.append(")");
+    }
+
+    @Override
+    public String toString() {
+        return expression;
+    }
 }
