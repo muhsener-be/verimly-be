@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/folders")
 @RequiredArgsConstructor
-@Tag(name = "Folder" , description = "APIs for folder management" )
+@Tag(name = "Folder", description = "APIs for folder management")
 public class FolderController {
 
     private final FolderWebMapper mapper;
