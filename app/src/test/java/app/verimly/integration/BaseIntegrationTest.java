@@ -16,7 +16,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,16 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class BaseIntegrationTest {
 
 
-    @Container
-    private static final PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>("postgres:latest")
-                    .withDatabaseName("testdb")
-                    .withUsername("test")
-                    .withPassword("test");
+    private static final PostgreSQLContainer<?> postgres = SingletonPostgresContainer.getInstance();
 
-    static {
-        postgres.start();
-    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
