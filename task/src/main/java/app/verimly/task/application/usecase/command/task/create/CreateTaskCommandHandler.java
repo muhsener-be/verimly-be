@@ -6,6 +6,8 @@ import app.verimly.commons.core.security.Principal;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.exception.FolderNotFoundException;
+import app.verimly.task.application.exception.TaskBusinessException;
+import app.verimly.task.application.exception.TaskSystemException;
 import app.verimly.task.application.mapper.TaskAppMapper;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.context.CreateTaskContext;
@@ -18,6 +20,7 @@ import app.verimly.task.domain.repository.TaskDataAccessException;
 import app.verimly.task.domain.repository.TaskWriteRepository;
 import app.verimly.task.domain.service.TaskDomainService;
 import app.verimly.task.domain.vo.folder.FolderId;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -36,7 +39,7 @@ public class CreateTaskCommandHandler {
 
 
     @Transactional
-    public TaskCreationResponse handle(CreateTaskCommand command) {
+    public TaskCreationResponse handle(@NotNull CreateTaskCommand command) {
         assertInputIsNotNull(command);
 
         Principal principal = authN.getCurrentPrincipal();
@@ -60,19 +63,31 @@ public class CreateTaskCommandHandler {
     }
 
     private Folder fetchFolderAndCheckExistence(FolderId folderId) throws TaskDataAccessException, FolderNotFoundException {
-        return folderWriteRepository.findById(folderId).orElseThrow(
-                () -> new FolderNotFoundException(folderId)
-        );
+        try {
+            return folderWriteRepository.findById(folderId).orElseThrow(
+                    () -> new FolderNotFoundException(folderId, "Folder('%s') not found to create task".formatted(folderId.toString()))
+            );
+        } catch (TaskDataAccessException dataAccessException) {
+            throw new TaskSystemException("Failed to fetch folder ('%s') due to %s ".formatted(folderId.toString(), dataAccessException.getMessage()), dataAccessException);
+        }
     }
 
     private Task createTask(Principal principal, Folder folder, CreateTaskCommand command) throws TaskDomainException {
-        TaskCreationDetails details = mapper.toTaskCreationDetails(command, principal.getId());
-        return taskDomainService.createTask(folder, details);
+        try {
+            TaskCreationDetails details = mapper.toTaskCreationDetails(command, principal.getId());
+            return taskDomainService.createTask(folder, details);
+        } catch (TaskDomainException domainException) {
+            throw new TaskBusinessException(domainException.getErrorMessage(), "Failed to create task due to : " + domainException.getMessage(), domainException);
+        }
     }
 
 
     private Task persistTask(Task task) throws TaskDataAccessException {
-        return repository.save(task);
+        try {
+            return repository.save(task);
+        } catch (TaskDataAccessException e) {
+            throw new TaskSystemException("Failed to save created task due to : " + e.getMessage(), e);
+        }
     }
 
     protected TaskCreatedApplicationEvent prepareEvent(Principal actor, Task task) throws IllegalArgumentException {

@@ -12,4 +12,9 @@ public class FolderNotFoundException extends NotFoundException {
         super("FOLDER", folderId.toString());
     }
 
+    public FolderNotFoundException(FolderId id, String message) {
+        super("FOLDER", id.toString(), message);
+    }
+
+
 }
