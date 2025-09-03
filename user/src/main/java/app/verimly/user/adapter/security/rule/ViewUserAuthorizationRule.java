@@ -6,6 +6,7 @@ import app.verimly.commons.core.security.Action;
 import app.verimly.commons.core.security.NoPermissionException;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.user.application.ports.out.security.UserActions;
+import app.verimly.user.application.ports.out.security.UserPermissionViolation;
 import app.verimly.user.application.ports.out.security.context.ViewUserContext;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,9 @@ public class ViewUserAuthorizationRule extends AbstractAuthorizationRule<ViewUse
     }
 
     private void ensureHimself(Principal principal, UserId userId) {
-        if (!Objects.equals(principal.getId(), userId))
-            throw new NoPermissionException(principal, ACTION);
+        if (!Objects.equals(principal.getId(), userId)) {
+            UserPermissionViolation viewUserViolation = UserPermissionViolation.viewUser(principal.getId().getValue(), userId.getValue());
+            throw new NoPermissionException(viewUserViolation);
+        }
     }
 }
