@@ -21,4 +21,8 @@ public class ErrorResponseFactory {
     public ConflictErrorResponse.ConflictErrorResponseBuilder conflict(String path, String resourceType) {
         return new ConflictErrorResponse.ConflictErrorResponseBuilder().path(path).resourceType(resourceType);
     }
+
+    public NoPermissionErrorResponse.NoPermissionErrorResponseBuilder forbidden(String path) {
+        return NoPermissionErrorResponse.builder();
+    }
 }

@@ -3,6 +3,7 @@ package app.verimly.commons.core.exception_handler;
 import app.verimly.commons.core.domain.exception.*;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
+import app.verimly.commons.core.security.PermissionViolation;
 import app.verimly.commons.core.web.response.*;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -99,6 +100,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @Hidden
     public ErrorResponse handleNoPermissionException(NoPermissionException ex, WebRequest request) {
+
+        PermissionViolation violation = ex.getViolation();
+        if (violation != null) {
+            NoPermissionErrorResponse response = errorResponseFactory.forbidden(request.getDescription(false))
+                    .action(violation.getAction())
+                    .message(ex.getMessage())
+                    .principal(violation.getPrincipal().toString())
+                    .requirement(violation.getRequirement().toString())
+                    .resource(violation.getResource())
+                    .build();
+            // TODO: Change return type of the method.
+        }
 
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
         String message = findMessageFromErrorMessage(actualErrorMessage);

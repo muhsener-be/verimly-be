@@ -20,15 +20,19 @@ public class NoPermissionErrorResponse extends AbstractErrorResponse {
     @Schema(description = "The action attempted by the principal", example = "VIEW_TASK")
     private String action;
 
+    @Schema(description = "The resource on which action performed")
+    private String resource;
+
     @Schema(description = "The required permission or role", example = "(OWNERSHIP or ROLE_ADMIN)")
     private String requirement;
 
 
     @Builder
-    public NoPermissionErrorResponse(String path, String principal, String action, String requirement, String message) {
+    public NoPermissionErrorResponse(String path, String principal, String action, String resource, String requirement, String message) {
         super(Instant.now(), HttpStatus.FORBIDDEN.value(), path, message, "forbidden");
         this.principal = principal;
         this.action = action;
         this.requirement = requirement;
+        this.resource = resource;
     }
 }
