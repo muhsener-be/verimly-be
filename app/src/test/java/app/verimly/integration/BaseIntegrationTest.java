@@ -2,8 +2,10 @@ package app.verimly.integration;
 
 import app.verimly.bootstrap.BootstrapUserProps;
 import app.verimly.composite.security.config.SecurityProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,44 +16,58 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@SpringBootTest
+@Testcontainers
 @AutoConfigureMockMvc
-public abstract class IntegrationWithPostgreSqlTest {
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class BaseIntegrationTest {
 
 
-    @Autowired
-    protected BootstrapUserProps userProps;
+    @Container
+    private static final PostgreSQLContainer<?> postgres =
+            new PostgreSQLContainer<>("postgres:latest")
+                    .withDatabaseName("testdb")
+                    .withUsername("test")
+                    .withPassword("test");
 
-    @Autowired
-    protected SecurityProperties securityProperties;
-
-    @Autowired
-    protected MockMvc mockMvc;
-
-    protected MockCookie loginCookie;
-
-    @BeforeEach
-    void setup() throws Exception {
-        if(loginCookie == null){
-            loginCookie = loginAndGetCookie(userProps.getEmail(),userProps.getPassword());
-        }
+    static {
+        postgres.start();
     }
-
-    protected static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("testdb")
-            .withUsername("testuser")
-            .withPassword("testpass");
-
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+
+    }
+
+    @Autowired
+    protected MockMvc mockMvc;
+
+    @Autowired
+    protected BootstrapUserProps bootstrapUserProps;
+
+    @Autowired
+    protected SecurityProperties securityProperties;
+
+    protected static MockCookie loginCookie;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
+
+    @BeforeAll
+    void beforeAll() throws Exception {
+        if (loginCookie == null) {
+            System.out.println("Kaç kez çalıştı?");
+            loginCookie = loginAndGetCookie(bootstrapUserProps.getEmail(), bootstrapUserProps.getPassword());
+        }
     }
 
 
@@ -67,5 +83,4 @@ public abstract class IntegrationWithPostgreSqlTest {
 
         return (MockCookie) cookie;
     }
-
 }
