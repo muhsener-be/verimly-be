@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Data
 @Schema(description = "Request object for creating a new folder.")
 public class CreateFolderWebRequest {

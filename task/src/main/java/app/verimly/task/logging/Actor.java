@@ -27,6 +27,6 @@ public final class Actor {
 
     @Override
     public String toString() {
-        return type + (id == null ? "" : ": " + id);
+        return type + (id == null ? "" : ":" + id);
     }
 }
