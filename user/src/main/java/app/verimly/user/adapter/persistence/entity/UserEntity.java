@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "u_users_email", columnNames = "email"))
 @Entity
 @Setter
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
 public class UserEntity extends BaseJpaEntity<UUID> {
     public static final String EMAIL_UNIQUE_CONSTRAINT_NAME = "u_users_email";
 

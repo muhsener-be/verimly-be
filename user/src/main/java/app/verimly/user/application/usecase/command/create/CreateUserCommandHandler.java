@@ -30,7 +30,6 @@ public class CreateUserCommandHandler {
 
     @Transactional
     public UserCreationResponse handle(CreateUserCommand command) {
-        assert command != null : "'command' cannot be null to handle create user command.";
         validateBusinessRules(command);
 
         User user = createUser(command);
@@ -78,8 +77,6 @@ public class CreateUserCommandHandler {
     protected User persistUser(User user) {
         try {
             return userWriteRepository.save(user);
-        } catch (DuplicateEmailException duplicateEmailException) {
-            throw duplicateEmailException;
         } catch (UserDataAccessException exception) {
             throw new UserSystemException(exception.getErrorMessage(), exception.getMessage(), exception);
         }

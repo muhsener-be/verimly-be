@@ -1,8 +1,12 @@
 package app.verimly.integration.create_user;
 
 import app.verimly.bootstrap.BootstrapUserProps;
+import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.integration.IntegrationWithPostgreSqlTest;
+import app.verimly.user.adapter.persistence.jparepo.UserJpaRepository;
 import app.verimly.user.adapter.web.dto.request.CreateUserWebRequest;
+import app.verimly.user.adapter.web.dto.response.UserCreationWebResponse;
+import app.verimly.user.domain.entity.User;
 import app.verimly.user.domain.repository.UserWriteRepository;
 import app.verimly.utils.FixtureLoader;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,8 +21,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +37,7 @@ public class CreateUserIntegrationTest extends IntegrationWithPostgreSqlTest {
 
     CreateUserWebRequest webRequest;
 
+    @Autowired
     UserWriteRepository repository;
 
     @Autowired
@@ -38,6 +45,8 @@ public class CreateUserIntegrationTest extends IntegrationWithPostgreSqlTest {
 
     @Autowired
     private BootstrapUserProps userProps;
+    @Autowired
+    private UserJpaRepository userJpaRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -58,6 +67,29 @@ public class CreateUserIntegrationTest extends IntegrationWithPostgreSqlTest {
         assertNotNull(userProps);
     }
 
+
+    @Test
+    void whenValidRequest_thenCreatesUserAndSavesToDB() throws Exception {
+        // ARRANGE
+        ResultMatcher idExist = jsonPath("$.id").exists();
+
+        // ACT
+        MvcResult result = performCreateUser(201, idExist);
+
+        // ASSERT
+        String responseJson = result.getResponse().getContentAsString();
+        UserCreationWebResponse responseDTO = objectMapper.readValue(responseJson, UserCreationWebResponse.class);
+        UUID createdUserId = responseDTO.getId();
+        Optional<User> optionalUser = repository.findById(UserId.of(createdUserId));
+
+
+        assertTrue(optionalUser.isPresent());
+        User foundUser = optionalUser.get();
+        assertEquals(webRequest.getEmail().trim(), foundUser.getEmail().getValue());
+
+        userJpaRepository.deleteById(createdUserId);
+
+    }
 
     @Test
     void whenFirstNameIsNull_thenReturns400() throws Exception {

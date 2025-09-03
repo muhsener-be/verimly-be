@@ -5,10 +5,12 @@ import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.user.adapter.persistence.entity.UserEntity;
 import app.verimly.user.adapter.persistence.jparepo.UserJpaRepository;
 import app.verimly.user.adapter.persistence.mapper.UserDbMapper;
+import app.verimly.user.application.exception.DuplicateEmailException;
 import app.verimly.user.data.UserTestData;
 import app.verimly.user.domain.entity.User;
 import app.verimly.user.domain.repository.UserDataAccessException;
 import jakarta.persistence.EntityManager;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -27,6 +30,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("UserWriteRepositoryAdapter Unit Tests")
 class UserWriteRepositoryAdapterUnitTest {
 
     UserTestData DATA = UserTestData.getInstance();
@@ -49,6 +53,7 @@ class UserWriteRepositoryAdapterUnitTest {
 
 
     @BeforeEach
+    @DisplayName("Setup is OK")
     public void setup() {
         user = DATA.user();
         userEntity = DATA.userEntity();
@@ -74,9 +79,11 @@ class UserWriteRepositoryAdapterUnitTest {
     }
 
     @Nested
-    @DisplayName("Save Tests")
+    @DisplayName("Test of save()")
     class saveTests {
+
         @Test
+        @DisplayName("Happy Path")
         void save_whenValidUser_thenSavesAndReturnsUser() {
             //ACT
             User savedUser = adapter.save(user);
@@ -90,7 +97,8 @@ class UserWriteRepositoryAdapterUnitTest {
         }
 
         @Test
-        void save_whenNullUser_thenThrowsUserDataAccessException() {
+        @DisplayName("Null user -> IllegalArgumentException")
+        void save_whenNullUser_thenThrowsIllegalArgumentException() {
             // Arrange
             user = null;
 
@@ -98,15 +106,14 @@ class UserWriteRepositoryAdapterUnitTest {
             Executable executable = () -> adapter.save(user);
 
             // Assert
-            UserDataAccessException exception = assertThrows(UserDataAccessException.class, executable);
-            Throwable cause = exception.getCause();
-            assertInstanceOf(IllegalArgumentException.class, cause);
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
+
         }
 
         @Test
+        @DisplayName("Persist problem ->  UserDataAccessException")
         void save_whenProblemOccursDuringPersist_thenThrowsUserDataAccessException() {
             // Arrange
-
             RuntimeException anException = new RuntimeException("An exception message.");
             doThrow(anException).when(entityManager).persist(userEntity);
 
@@ -118,14 +125,29 @@ class UserWriteRepositoryAdapterUnitTest {
             Throwable cause = exception.getCause();
             assertEquals(anException, cause);
         }
+
+        @Test
+        @DisplayName("Unique Email Problem ->  DuplicateEmailException")
+        void save_whenThrowsConstraintViolationExceptionForEmailUniqueness_thenConvertsToDuplicateEmailException() {
+            ConstraintViolationException violationException = Mockito.mock(ConstraintViolationException.class);
+            when(violationException.getConstraintName()).thenReturn(UserEntity.EMAIL_UNIQUE_CONSTRAINT_NAME);
+            doThrow(violationException).when(entityManager).flush();
+
+            DuplicateEmailException exception = assertThrows(DuplicateEmailException.class, () -> adapter.save(user));
+
+
+            assertEquals(user.getEmail(), exception.getEmail());
+        }
     }
 
 
     @Nested
-    @DisplayName("findById Tests")
+    @DisplayName("Test of findById()")
     class findByIdTests {
+
         @Test
-        void findById_whenNullUserId_thenThrowsUserDataAccessException() {
+        @DisplayName("Null UserId -> IllegalArgumentException")
+        void findById_whenNullUserId_thenThrowsIllegalArgumentExceptiom() {
             // Arrange
             userId = null;
 
@@ -140,6 +162,7 @@ class UserWriteRepositoryAdapterUnitTest {
 
 
         @Test
+        @DisplayName("User not exists -> Empty Optional")
         void findById_whenUserNotExists_thenReturnEmptyOptional() {
             // Arrange
             UUID userUUID = userId.getValue();
@@ -153,6 +176,7 @@ class UserWriteRepositoryAdapterUnitTest {
         }
 
         @Test
+        @DisplayName("Happy Path")
         void findById_whenValidUserId_thenReturnsUser() {
             // Arrange
             when(entityManager.find(UserEntity.class, userId.getValue())).thenReturn(userEntity);
@@ -166,6 +190,7 @@ class UserWriteRepositoryAdapterUnitTest {
         }
 
         @Test
+        @DisplayName("DB Problem -> UserDataAccessException")
         void findById_whenProblemOccursDuringFetching_thenThrowsUserDataAccessException() {
             // Arrange
             RuntimeException anException = new RuntimeException("An Exception");
@@ -183,10 +208,11 @@ class UserWriteRepositoryAdapterUnitTest {
 
 
     @Nested
-    @DisplayName("findByEmail Tests")
+    @DisplayName("Test of findByEmail()")
     class findByEmailTests {
 
         @Test
+        @DisplayName("Happy path")
         void findByEmail_whenValidEmail_thenReturnsUser() {
 
             Optional<User> optional = adapter.findByEmail(email);
@@ -198,6 +224,7 @@ class UserWriteRepositoryAdapterUnitTest {
         }
 
         @Test
+        @DisplayName("Null Email -> IllegalArgumentException")
         void findByEmail_whenNullEmail_thenThrowsIllegalArgumentException() {
             email = null;
 
@@ -208,6 +235,7 @@ class UserWriteRepositoryAdapterUnitTest {
         }
 
         @Test
+        @DisplayName("User Not Found  --> Empty Optional")
         void findByEmail_whenNotFound_thenReturnsEmptyOptional() {
             when(userJpaRepository.findByEmail(email.getValue())).thenReturn(Optional.empty());
 
@@ -216,6 +244,7 @@ class UserWriteRepositoryAdapterUnitTest {
         }
 
         @Test
+        @DisplayName("DB Problem -> UserDataAccessException")
         void findByEmail_whenProblemDuringFetching_thenThrowsUserDataAccessException() {
             RuntimeException anException = new RuntimeException("An Exception");
             doThrow(anException).when(userJpaRepository).findByEmail(email.getValue());

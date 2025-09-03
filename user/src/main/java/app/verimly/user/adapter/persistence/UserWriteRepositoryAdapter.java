@@ -38,9 +38,9 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
     @Transactional
     @EnableSoftDeleteFilter
     public User save(User user) throws UserDataAccessException, DuplicateEmailException {
-        try {
-            Assert.notNull(user, "User to persist cannot be null!");
+        Assert.notNull(user, "User to persist cannot be null!");
 
+        try {
             UserEntity jpa = mapper.toJpaEntity(user);
             entityManager.persist(jpa);
             entityManager.flush();
@@ -86,7 +86,9 @@ public class UserWriteRepositoryAdapter implements UserWriteRepository {
     @Override
     @EnableSoftDeleteFilter
     public boolean existsByEmail(Email email) {
-        return false;
+        if (email == null)
+            return false;
+        return userJpaRepository.existsByEmail(email.getValue());
     }
 
     @Override
