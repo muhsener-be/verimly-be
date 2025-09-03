@@ -11,11 +11,11 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 @Slf4j
 public class FolderLog {
 
-    public static void folderCreated(String actor, FolderId folderId, FolderName folderName) {
+    public static void folderCreated(Actor actor, FolderId folderId, FolderName folderName) {
         log.info("New Folder created",
                 kv("event", "folder.created"),
                 kv("details", Map.of(
-                        "actor", actor,
+                        "actor", actor.toString(),
                         "folder_id", folderId.toString(),
                         "folder_name", folderName.toString()
                 ))

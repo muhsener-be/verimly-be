@@ -110,5 +110,9 @@
         <appender-ref ref="JSON_EVENT_CONSOLE"/>
     </logger>
 
+    <logger name="app.verimly.task.logging" level="INFO" additivity="false">
+        <appender-ref ref="JSON_EVENT_CONSOLE"/>
+    </logger>
+
 
 </configuration>
