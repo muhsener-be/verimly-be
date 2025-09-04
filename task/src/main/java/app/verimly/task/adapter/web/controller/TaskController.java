@@ -45,6 +45,7 @@ public class TaskController {
 
     @PostMapping
     @CreateTaskSpringDoc
+    @ResponseStatus(HttpStatus.CREATED)
     public TaskCreationWebResponse createTask(@Valid @RequestBody CreateTaskWebRequest request) {
 
         CreateTaskCommand command = taskMapper.toCreateTaskCommand(request);
