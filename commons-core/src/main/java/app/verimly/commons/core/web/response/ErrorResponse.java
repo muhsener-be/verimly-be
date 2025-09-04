@@ -1,5 +1,6 @@
 package app.verimly.commons.core.web.response;
 
+import app.verimly.commons.core.exception_handler.TemporaryResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.util.Map;
 @Builder
 @Data
 @Schema(name = "TestErrorResponse", description = "Standard error response structure for API endpoints.")
-public class ErrorResponse {
+public class ErrorResponse implements TemporaryResponse {
     @Schema(description = "Timestamp when the error occurred.", example = "2025-08-31T12:34:56.789Z")
     private Instant timestamp;
     @Schema(description = "HTTP status code of the error.", example = "400")

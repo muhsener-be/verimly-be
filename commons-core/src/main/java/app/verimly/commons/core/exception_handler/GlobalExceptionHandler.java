@@ -3,6 +3,7 @@ package app.verimly.commons.core.exception_handler;
 import app.verimly.commons.core.domain.exception.*;
 import app.verimly.commons.core.security.AuthenticationRequiredException;
 import app.verimly.commons.core.security.NoPermissionException;
+import app.verimly.commons.core.security.PermissionViolation;
 import app.verimly.commons.core.web.response.*;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -98,13 +99,30 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({NoPermissionException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @Hidden
-    public ErrorResponse handleNoPermissionException(NoPermissionException ex, WebRequest request) {
+    public TemporaryResponse handleNoPermissionException(NoPermissionException ex, WebRequest request) {
+
+        PermissionViolation violation = ex.getViolation();
+        if (violation != null) {
+            return handleNoPermissionErrorResponse(ex, request.getDescription(false));
+        }
 
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
         String message = findMessageFromErrorMessage(actualErrorMessage);
         return ErrorResponse.forbidden(actualErrorMessage.code(), message, request.getDescription(false));
 
     }
+
+    public NoPermissionErrorResponse handleNoPermissionErrorResponse(NoPermissionException ex, String path) {
+        PermissionViolation violation = ex.getViolation();
+        return errorResponseFactory.forbidden(path)
+                .action(violation.getAction())
+                .message(ex.getMessage())
+                .principal(violation.getPrincipal().toString())
+                .requirement(violation.getRequirement().toString())
+                .resource(violation.getResource())
+                .build();
+    }
+
 
     @ExceptionHandler({AuthenticationRequiredException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

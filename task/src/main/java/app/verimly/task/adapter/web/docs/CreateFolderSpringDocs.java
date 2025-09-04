@@ -1,7 +1,6 @@
 package app.verimly.task.adapter.web.docs;
 
 import app.verimly.commons.core.web.response.BadRequestErrorResponse;
-import app.verimly.commons.core.web.response.ErrorResponse;
 import app.verimly.task.adapter.web.dto.response.FolderCreationWebResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

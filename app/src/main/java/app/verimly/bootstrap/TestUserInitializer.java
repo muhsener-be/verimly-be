@@ -61,6 +61,14 @@ public class TestUserInitializer {
                     .ownerId(response.id())
                     .build();
             Folder savedFolder = folderWriteRepository.save(folder);
+
+            bootstrapProperties.getUser().setId(response.id().getValue());
+
+            BootstrapFolderProps folderProps = new BootstrapFolderProps();
+            folderProps.setId(savedFolder.getId().getValue());
+            bootstrapProperties.setFolder(folderProps);
+
+
             log.info("Test user saved to database: {Email: {}, Password: {}} and default folder: [ ID: {},Name: {} ]", response.email(), PASSWORD, savedFolder.getId(), FOLDER_NAME);
         }
 

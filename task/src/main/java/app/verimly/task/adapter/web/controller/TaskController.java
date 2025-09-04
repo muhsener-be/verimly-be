@@ -1,11 +1,6 @@
 package app.verimly.task.adapter.web.controller;
 
-import app.verimly.task.adapter.web.docs.CreateTaskSpringDoc;
-import app.verimly.task.adapter.web.docs.DeleteTaskSpringDoc;
-import app.verimly.task.adapter.web.docs.FetchTaskWithSessionSpringDoc;
-import app.verimly.task.adapter.web.docs.ListTasksByFolderSpringDoc;
-import app.verimly.task.adapter.web.docs.MoveToFolderSpringDoc;
-import app.verimly.task.adapter.web.docs.ReplaceTaskSpringDoc;
+import app.verimly.task.adapter.web.docs.*;
 import app.verimly.task.adapter.web.dto.aggregate.TaskWithSessionsWebResponse;
 import app.verimly.task.adapter.web.dto.request.CreateTaskWebRequest;
 import app.verimly.task.adapter.web.dto.request.MoveTaskToFolderWebRequest;
@@ -24,6 +19,8 @@ import app.verimly.task.application.usecase.command.task.move_to_folder.MoveTask
 import app.verimly.task.application.usecase.command.task.replace.ReplaceTaskCommand;
 import app.verimly.task.domain.vo.folder.FolderId;
 import app.verimly.task.domain.vo.task.TaskId;
+import app.verimly.task.logging.Actor;
+import app.verimly.task.logging.TaskLog;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,14 +45,23 @@ public class TaskController {
 
     @PostMapping
     @CreateTaskSpringDoc
+    @ResponseStatus(HttpStatus.CREATED)
     public TaskCreationWebResponse createTask(@Valid @RequestBody CreateTaskWebRequest request) {
 
         CreateTaskCommand command = taskMapper.toCreateTaskCommand(request);
         TaskCreationResponse response = applicationService.create(command);
-        log.info("Task created successfully: [ID: {}, Name: {}, Description: {}, Priority: {}, OwnerId: {}, FolderId: {}]",
-                response.id(), response.name(), response.description(), response.priority(), response.ownerId(), response.folderId());
+
+        TaskLog.taskCreated(
+                Actor.user(response.ownerId().getValue()),
+                response.id(),
+                response.ownerId(),
+                response.folderId(),
+                response.name()
+        );
+
         return taskMapper.toTaskCreationWebResponse(response);
     }
+
 
     @GetMapping
     @ListTasksByFolderSpringDoc

@@ -5,6 +5,8 @@ import app.verimly.commons.core.security.*;
 import app.verimly.commons.core.security.SecurityException;
 import app.verimly.task.application.event.TaskCreatedApplicationEvent;
 import app.verimly.task.application.exception.FolderNotFoundException;
+import app.verimly.task.application.exception.TaskBusinessException;
+import app.verimly.task.application.exception.TaskSystemException;
 import app.verimly.task.application.mapper.TaskAppMapper;
 import app.verimly.task.application.ports.out.security.TaskAuthorizationService;
 import app.verimly.task.application.ports.out.security.action.TaskActions;
@@ -138,7 +140,7 @@ public class CreateTaskCommandHandlerTest {
     private void verifyAuthZIsCalled() {
         ArgumentCaptor<Principal> argumentCaptor = ArgumentCaptor.forClass(Principal.class);
         verify(authZ).authorizeCreateTask(argumentCaptor.capture(), any(CreateTaskContext.class));
-        assertEquals(principal,argumentCaptor.getValue());
+        assertEquals(principal, argumentCaptor.getValue());
     }
 
 
@@ -172,10 +174,12 @@ public class CreateTaskCommandHandlerTest {
     }
 
     @Test
-    void handle_whenProblemDuringFetchingFolder_thenThrowsTaskDataAccessException() {
+    void handle_whenFailedToFetchFolder_thenThrowsTaskSystemException() {
         doThrow(TaskDataAccessException.class).when(folderWriteRepository).findById(folderId);
 
-        assertThrowsException(TaskDataAccessException.class);
+        TaskSystemException exception = assertThrowsException(TaskSystemException.class);
+        assertNotNull(exception.getCause());
+        assertInstanceOf(TaskDataAccessException.class, exception.getCause());
         verify(authN).getCurrentPrincipal();
         verifyAuthZIsCalled();
         verify(folderWriteRepository).findById(folderId);
@@ -185,10 +189,11 @@ public class CreateTaskCommandHandlerTest {
     }
 
     @Test
-    void handle_whenProblemDuringCreationTask_thenThrowsTaskDomainException() {
-        doThrow(TaskDomainException.class).when(taskDomainService).createTask(folder, details);
+    void handle_whenFailedToCreateTask_thenThrowsTaskBusinessException() {
+        TaskDomainException anException = new TaskDomainException(Task.Errors.FOLDER_OWNER_NOT_MATCH);
+        doThrow(anException).when(taskDomainService).createTask(folder, details);
 
-        assertThrowsException(TaskDomainException.class);
+        assertThrowsException(TaskBusinessException.class);
         verify(authN).getCurrentPrincipal();
         verifyAuthZIsCalled();
         verify(folderWriteRepository).findById(folderId);
@@ -200,10 +205,10 @@ public class CreateTaskCommandHandlerTest {
 
 
     @Test
-    void handle_whenProblemDuringPersistingTask_thenThrowsTaskDataAccessException() {
+    void handle_whenFailedToPersisTask_thenThrowsTaskSystemException() {
         doThrow(TaskDataAccessException.class).when(repository).save(task);
 
-        assertThrowsException(TaskDataAccessException.class);
+        assertThrowsException(TaskSystemException.class);
         verify(authN).getCurrentPrincipal();
         verifyAuthZIsCalled();
         verify(folderWriteRepository).findById(folderId);
@@ -219,8 +224,8 @@ public class CreateTaskCommandHandlerTest {
         assertThrowsException(IllegalArgumentException.class);
     }
 
-    private void assertThrowsException(Class<? extends Throwable> exClass) {
-        assertThrows(exClass, getHandleExecutable());
+    private <T extends Throwable> T assertThrowsException(Class<T> exClass) {
+        return assertThrows(exClass, getHandleExecutable());
     }
 
     private @NotNull Executable getHandleExecutable() {

@@ -10,4 +10,5 @@ import org.springframework.stereotype.Component;
 public class BootstrapProperties {
 
     private BootstrapUserProps user;
+    private BootstrapFolderProps folder;
 }

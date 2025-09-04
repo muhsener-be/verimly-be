@@ -6,13 +6,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@ConfigurationProperties("bootstrap.user")
+@ConfigurationProperties("bootstrap.folder")
 @Component
 @Data
-public class BootstrapUserProps {
+public class BootstrapFolderProps {
     private UUID id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
+    private String name;
+    private String description;
+    private String labelColor;
 }

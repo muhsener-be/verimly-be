@@ -14,7 +14,11 @@ public class NotFoundException extends ApplicationException {
     }
 
     public NotFoundException(String resourceType, String resourceId) {
-        super("No such %s found with provided ID: '%s'".formatted(resourceType.toLowerCase(Locale.US), resourceId));
+        this(resourceType, resourceId, "No such %s found with provided ID: '%s'".formatted(resourceType.toLowerCase(Locale.US), resourceId));
+    }
+
+    public NotFoundException(String resourceType, String resourceId, String message) {
+        super(message);
         this.resourceType = resourceType;
         this.resourceId = resourceId;
     }

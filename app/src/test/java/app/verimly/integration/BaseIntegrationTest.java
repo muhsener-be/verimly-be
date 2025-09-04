@@ -1,5 +1,6 @@
 package app.verimly.integration;
 
+import app.verimly.bootstrap.BootstrapProperties;
 import app.verimly.bootstrap.BootstrapUserProps;
 import app.verimly.composite.security.config.SecurityProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +45,9 @@ public class BaseIntegrationTest {
 
     @Autowired
     protected BootstrapUserProps bootstrapUserProps;
+
+    @Autowired
+    protected BootstrapProperties bootstrapProps;
 
     @Autowired
     protected SecurityProperties securityProperties;

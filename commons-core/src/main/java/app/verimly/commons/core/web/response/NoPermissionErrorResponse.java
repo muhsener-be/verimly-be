@@ -1,5 +1,6 @@
 package app.verimly.commons.core.web.response;
 
+import app.verimly.commons.core.exception_handler.TemporaryResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +12,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Schema(name = "NoPermissionErrorResponse")
-public class NoPermissionErrorResponse extends AbstractErrorResponse {
-
+public class NoPermissionErrorResponse extends AbstractErrorResponse implements TemporaryResponse { //TODO: Delete this marker interface
 
     @Schema(description = "The principal (e.g., user) identifier", example = "123e4567-e89b-12d3-a456-426614174000")
     private String principal;
@@ -20,15 +20,19 @@ public class NoPermissionErrorResponse extends AbstractErrorResponse {
     @Schema(description = "The action attempted by the principal", example = "VIEW_TASK")
     private String action;
 
+    @Schema(description = "The resource on which action performed")
+    private String resource;
+
     @Schema(description = "The required permission or role", example = "(OWNERSHIP or ROLE_ADMIN)")
     private String requirement;
 
 
     @Builder
-    public NoPermissionErrorResponse(String path, String principal, String action, String requirement, String message) {
+    public NoPermissionErrorResponse(String path, String principal, String action, String resource, String requirement, String message) {
         super(Instant.now(), HttpStatus.FORBIDDEN.value(), path, message, "forbidden");
         this.principal = principal;
         this.action = action;
         this.requirement = requirement;
+        this.resource = resource;
     }
 }
