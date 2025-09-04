@@ -1,5 +1,6 @@
 package app.verimly.user.application.exception;
 
+import app.verimly.commons.core.domain.exception.UserNotFoundException;
 import app.verimly.commons.core.domain.vo.UserId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,6 +2,7 @@ package app.verimly.task.adapter.persistence;
 
 import app.verimly.commons.core.adapter.persistence.aspect.EnableSoftDeleteFilter;
 import app.verimly.commons.core.domain.exception.Assert;
+import app.verimly.commons.core.domain.exception.UserNotFoundException;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.task.adapter.persistence.entity.FolderEntity;
 import app.verimly.task.adapter.persistence.jparepo.FolderJpaRepository;
@@ -16,12 +17,11 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -44,9 +44,23 @@ public class FolderWriteRepositoryAdapter implements FolderWriteRepository {
             entityManager.persist(jpaEntity);
             entityManager.flush();
             return folder;
+        } catch (ConstraintViolationException cve) {
+            String constraintName = cve.getConstraintName();
+            System.out.println("Constraint Name: " + constraintName);
+            if (constraintName != null && isFkConstraint(constraintName)) {
+                throw new UserNotFoundException(folder.getOwnerId(),
+                        "Failed to save folder entity ('%s') because owner could not found.: '%s' ".formatted(folder.getId(), folder.getOwnerId()));
+            }
+
+            throw new TaskDataAccessException(cve.getMessage(), cve);
         } catch (Exception e) {
             throw new TaskDataAccessException(e.getMessage(), e);
         }
+    }
+
+    private static boolean isFkConstraint(String constraintName) {
+        return FolderEntity.OWNER_CONSTRAINT_NAME.contains(constraintName.toUpperCase(Locale.US));
+
     }
 
     @Override

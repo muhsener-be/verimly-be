@@ -20,6 +20,7 @@ import java.util.UUID;
 @Setter
 public class FolderEntity extends BaseJpaEntity<UUID> {
 
+    public static final String OWNER_CONSTRAINT_NAME = "FK_FOLDERS_OWNER_ID";
     @Column(name = "owner_id", nullable = false)
     private UUID ownerId;
 

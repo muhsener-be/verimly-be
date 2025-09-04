@@ -3,7 +3,7 @@ package app.verimly.user.application.usecase.query.view;
 import app.verimly.commons.core.domain.vo.UserId;
 import app.verimly.commons.core.security.Principal;
 import app.verimly.user.application.dto.UserDetailsData;
-import app.verimly.user.application.exception.UserNotFoundException;
+import app.verimly.commons.core.domain.exception.UserNotFoundException;
 import app.verimly.user.application.ports.out.persistence.UserReadRepository;
 import app.verimly.user.application.ports.out.security.UserSecurityGateway;
 import app.verimly.user.application.ports.out.security.context.ViewUserContext;
