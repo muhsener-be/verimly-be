@@ -23,6 +23,6 @@ public class ErrorResponseFactory {
     }
 
     public NoPermissionErrorResponse.NoPermissionErrorResponseBuilder forbidden(String path) {
-        return NoPermissionErrorResponse.builder();
+        return NoPermissionErrorResponse.builder().path(path);
     }
 }

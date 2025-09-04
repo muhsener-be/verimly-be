@@ -99,18 +99,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({NoPermissionException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @Hidden
-    public ErrorResponse handleNoPermissionException(NoPermissionException ex, WebRequest request) {
+    public TemporaryResponse handleNoPermissionException(NoPermissionException ex, WebRequest request) {
 
         PermissionViolation violation = ex.getViolation();
         if (violation != null) {
-            NoPermissionErrorResponse response = errorResponseFactory.forbidden(request.getDescription(false))
-                    .action(violation.getAction())
-                    .message(ex.getMessage())
-                    .principal(violation.getPrincipal().toString())
-                    .requirement(violation.getRequirement().toString())
-                    .resource(violation.getResource())
-                    .build();
-            // TODO: Change return type of the method.
+            return handleNoPermissionErrorResponse(ex, request.getDescription(false));
         }
 
         ErrorMessage actualErrorMessage = ex.getErrorMessage();
@@ -118,6 +111,18 @@ public class GlobalExceptionHandler {
         return ErrorResponse.forbidden(actualErrorMessage.code(), message, request.getDescription(false));
 
     }
+
+    public NoPermissionErrorResponse handleNoPermissionErrorResponse(NoPermissionException ex, String path) {
+        PermissionViolation violation = ex.getViolation();
+        return errorResponseFactory.forbidden(path)
+                .action(violation.getAction())
+                .message(ex.getMessage())
+                .principal(violation.getPrincipal().toString())
+                .requirement(violation.getRequirement().toString())
+                .resource(violation.getResource())
+                .build();
+    }
+
 
     @ExceptionHandler({AuthenticationRequiredException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
