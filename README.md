@@ -1,174 +1,143 @@
-Verimly API
-Verimly, kullanıcıların görevlerini ve bu görevlere harcadıkları zamanı verimli bir şekilde yönetmelerini sağlayan bir backend servisidir. Modern, modüler ve test edilebilir bir mimari ile geliştirilmiştir.
+# **Verimly API**
 
-✨ Öne Çıkan Özellikler
-Kullanıcı Yönetimi: Kayıt, giriş ve çıkış işlemleri.
+Verimly is a backend service that enables users to efficiently manage their tasks and the time they spend on them. It is built with a modern, modular, and testable architecture.
 
-Görev Yönetimi: Görev oluşturma, listeleme, güncelleme ve silme.
+### **✨ Key Features**
+- **User Management**: Registration, login, and logout operations.
 
-Klasör Yönetimi: Görevleri klasörler altında organize etme.
+- **Task Management**: Create, list, update, and delete tasks.
 
-Zaman Takibi: Görevler için çalışma oturumları başlatma, duraklatma ve bitirme.
+- **Folder Management**: Organize tasks under folders.
 
-Güvenlik: JWT (JSON Web Token) tabanlı, HttpOnly cookie'ler ile güvenli kimlik doğrulama.
+- **Time Tracking**: Start, pause, and stop work sessions for tasks.
 
-API Dokümantasyonu: SpringDoc OpenAPI ile otomatik oluşturulan interaktif API dokümantasyonu.
+- **Security**: Secure authentication with JWT (JSON Web Token) and HttpOnly cookies.
 
-Çoklu Dil Desteği: Hata mesajları için İngilizce ve Türkçe dil desteği.
+- **API Documentation**: Automatically generated interactive API documentation with SpringDoc OpenAPI.
 
-🛠️ Kullanılan Teknolojiler
-Backend: Java 21, Spring Boot 3
+- **Multilingual Support**: English and Turkish language support for error messages.
 
-Veritabanı: PostgreSQL, H2 (test için)
 
-Veri Erişimi: Spring Data JPA, Hibernate
+### **🛠️ Technologies Used**
+- **Backend**: Java 21, Spring Boot 3
 
-Güvenlik: Spring Security, JWT
+- **Database**: PostgreSQL, H2 (for testing)
 
-Build & Bağımlılık Yönetimi: Maven
+- **Data Access**: Spring Data JPA, Hibernate
 
-Test: JUnit 5, Mockito, Testcontainers
+- **Security**: Spring Security, JWT
 
-API Dokümantasyonu: SpringDoc OpenAPI
+- **Build & Dependency Management**: Maven
 
-Diğer: Lombok, MapStruct
+- **Testing**: JUnit 5, Mockito, Testcontainers
 
-🏗️ Mimari
-Proje, Hexagonal (Ports & Adapters) mimari prensiplerine uygun olarak tasarlanmış çok modüllü bir monolitik yapıdır. Bu yapı, iş mantığını (domain ve application katmanları) dış dünyadan (web, veritabanı vb.) izole ederek yüksek test edilebilirlik ve esneklik sağlar.
+- **API Documentation**: SpringDoc OpenAPI
 
-commons-core: Tüm modüller tarafından paylaşılan temel sınıflar, istisnalar ve güvenlik altyapısı.
+- **Others**: Lombok, MapStruct
 
-user: Kullanıcı yönetimi ile ilgili iş mantığını içerir.
 
-task: Görev, klasör ve oturum yönetimi ile ilgili iş mantığını içerir.
+### **🏗️ Architecture**
 
-api-composition: Farklı modüllerin servislerini birleştirerek yeni API'lar sunar ve genel güvenlik yapılandırmasını yönetir.
+The project is a multi-module monolithic structure designed according to Hexagonal (Ports & Adapters) architecture principles.  
+This structure isolates the business logic (domain and application layers) from the outside world (web, database, etc.), providing high testability and flexibility.
 
-app: Tüm modülleri bir araya getiren ve Spring Boot uygulamasını başlatan ana modüldür.
+- **commons-core**: Core classes, exceptions, and security infrastructure shared across all modules.
 
-🚀 Projeyi Başlatma Rehberi
-Ön Gereksinimler
-Git
+- **user**: Contains the business logic related to user management.
 
-Java 21 (Temurin veya eşdeğeri)
+- **task**: Contains the business logic for task, folder, and session management.
 
-Apache Maven 3.9+
+- **api-composition**: Combines services from different modules to expose new APIs and manages overall security configuration.
 
-Docker (isteğe bağlı, Docker ile çalıştırma için)
+- **app**: The main module that brings all modules together and bootstraps the Spring Boot application.
 
-Kurulum ve Çalıştırma (Lokal)
-Projeyi klonlayın:
 
-git clone [https://github.com/kullaniciadi/verimly-be.git](https://github.com/kullaniciadi/verimly-be.git)
-cd verimly-be
+### **🚀Getting Started Guide**
+**Prerequisites**
 
-Yapılandırma Dosyasını Oluşturun:
-Projenin ana dizininde .env adında bir dosya oluşturun ve içeriğini .env.example dosyasını referans alarak doldurun.
+- Git
+- Java 21 (Temurin veya eşdeğeri)
+- Apache Maven 3.9+
+- Docker (isteğe bağlı, Docker ile çalıştırma için)
 
-Projeyi derleyin ve bağımlılıkları yükleyin:
+### **Installation & Running (Local)**
+**1. Clone the project:**
 
-mvn clean install
+  ```
+  git clone https://github.com/muhsener-be/verimly-be.git verimly-be
+  cd verimly-be
+  ```
 
-Uygulamayı çalıştırın:
+**2. Create the configuration file:**
+* In the root directory of the project, create a file named .env and fill it in by referring to the contents of the .env.example file.
 
-java -jar app/target/app-0.0.1-SNAPSHOT.jar
+**3. Compile project and install dependencies:**
 
-Uygulama varsayılan olarak 8080 portunda başlayacaktır.
+  ```
+  mvn clean install
+  ```
 
-🐳 Docker ile Çalıştırma
-Proje, Docker Hub üzerinde muhsener98/verimly-be-api:latest imajı ile mevcuttur.
 
-Docker imajını çekin:
+**4. Run the app:**
 
+```
+ java -jar app/target/app-0.0.1-SNAPSHOT.jar
+```
+_Project will start on port `8080` by default._
+
+
+### 🐳 Docker ile Çalıştırma
+Project is available in DockerHub on image `muhsener98/verimly-be-api:latest`
+
+1. **Pull docker image:**
+
+```
 docker pull muhsener98/verimly-be-api:latest
+```
 
-Konteyneri çalıştırın:
-Aşağıdaki komutu çalıştırmadan önce, .env.example dosyasındaki tüm değişkenleri -e parametresi ile komutunuza eklediğinizden emin olun.
 
+2. **Run the container:**
+
+Before running the following command, make sure to add all variables from [the table](#-configuration-environment-variables) to your command using the -e parameter.
+```
 docker run -p 8080:8080 \
-  -e DB_URL="your_database_url_here" \
-  -e DB_USERNAME="your_database_username" \
-  -e DB_PASSWORD="your_database_password" \
-  -e PROFILE="prod" \
-  -e FE_ORIGIN="[https://verimly-fe-abc.vercel.app](https://verimly-fe-abc.vercel.app)" \
-  -e SPRING_SQL_INIT_MODE="never" \
-  -e BOOTSTRAP_USER_FIRSTNAME="YourFirstName" \
-  -e BOOTSTRAP_USER_LASTNAME="YourLastName" \
-  -e BOOTSTRAP_USER_EMAIL="your_email@example.com" \
-  -e BOOTSTRAP_USER_PASSWORD="your_strong_password" \
-  -e JWT_SECRET_KEY="your_super_secret_jwt_key" \
-  muhsener98/verimly-be-api:latest
+-e DB_URL="your_database_url_here" \
+-e DB_USERNAME="your_database_username" \
+-e DB_PASSWORD="your_database_password" \
+-e PROFILE="prod" \
+-e FE_ORIGIN="[https://verimly-fe-abc.vercel.app](https://verimly-fe-abc.vercel.app)" \
+-e SPRING_SQL_INIT_MODE="never" \
+-e BOOTSTRAP_USER_FIRSTNAME="YourFirstName" \
+-e BOOTSTRAP_USER_LASTNAME="YourLastName" \
+-e BOOTSTRAP_USER_EMAIL="your_email@example.com" \
+-e BOOTSTRAP_USER_PASSWORD="your_strong_password" \
+-e JWT_SECRET_KEY="your_super_secret_jwt_key" \
+muhsener98/verimly-be-api:latest
+```
 
-⚙️ Yapılandırma (Çevre Değişkenleri)
-Uygulamanın çalışması için aşağıdaki çevre değişkenlerinin ayarlanması gerekmektedir. Detaylar için .env.example dosyasına bakabilirsiniz.
+### ⚙️ Configuration (Environment Variables)
+The following environment variables must be set for the application to run.
 
-Değişken
+| Variable                   | Description                                                        | Example Value                                                  |
+|-----------------------------|--------------------------------------------------------------------|----------------------------------------------------------------|
+| **DB_URL**                  | PostgreSQL database connection URL.                               | `jdbc:postgresql://ep-still-resonance.../neondb?sslmode=require` |
+| **DB_USERNAME**             | Database username.                                                 | `neondb_owner`                                                 |
+| **DB_PASSWORD**             | Database password.                                                 | `your_password`                                                |
+| **FE_ORIGIN**               | Allowed frontend origin for CORS.                                  | `https://verimly-fe-abc.vercel.app`                            |
+| **PROFILE**                 | Active Spring profile (`dev` or `prod`).                           | `prod`                                                         |
+| **SPRING_SQL_INIT_MODE**    | Whether to run `schema.sql` at application startup.                | `never`                                                        |
+| **BOOTSTRAP_USER_FIRSTNAME**| First name of the default bootstrap user.                          | `Muhammet`                                                     |
+| **BOOTSTRAP_USER_LASTNAME** | Last name of the default bootstrap user.                           | `Şener`                                                        |
+| **BOOTSTRAP_USER_EMAIL**    | Email of the default bootstrap user.                               | `muhsener@verimly.com`                                         |
+| **BOOTSTRAP_USER_PASSWORD** | Password of the default bootstrap user.                            | `password`                                                     |
+| **CORS_MAX_AGE**            | Max age (in seconds) for CORS preflight request caching.           | `3600`                                                         |
+| **JWT_EXPIRES_IN**          | Expiration time for JWT tokens (in milliseconds).                  | `86400000`                                                     |
+| **COOKIE_SAME_SITE**        | SameSite attribute for cookies (`None`, `Lax`, or `Strict`).       | `None`                                                         |
+| **COOKIE_MAX_AGE**          | Cookie expiration time (in seconds).                               | `86400`                                                        |
+| **COOKIE_DOMAIN**           | Domain attribute for cookies (leave empty for default).             | *(empty)*                                                      |
+| **JWT_SECRET_KEY**          | Secret key used to sign JWT tokens.                                | `a7gH!asdasdaksjdaksd1234`                                     |
 
-Açıklama
 
-Örnek Değer
-
-DB_URL
-
-PostgreSQL veritabanı bağlantı adresi.
-
-jdbc:postgresql://host:port/dbname
-
-DB_USERNAME
-
-Veritabanı kullanıcı adı.
-
-postgres
-
-DB_PASSWORD
-
-Veritabanı şifresi.
-
-your_password
-
-PROFILE
-
-Aktif Spring profili (dev veya prod).
-
-prod
-
-FE_ORIGIN
-
-CORS için izin verilen frontend adresi.
-
-http://localhost:3000
-
-SPRING_SQL_INIT_MODE
-
-Uygulama başlangıcında schema.sql'in çalışıp çalışmayacağı.
-
-never
-
-BOOTSTRAP_USER_EMAIL
-
-İlk başlangıçta oluşturulacak varsayılan kullanıcı emaili.
-
-admin@verimly.com
-
-BOOTSTRAP_USER_PASSWORD
-
-Varsayılan kullanıcının şifresi.
-
-strongpassword123
-
-JWT_SECRET_KEY
-
-JWT imzalamak için kullanılacak gizli anahtar.
-
-çok_güçlü_ve_uzun_bir_anahtar
-
-...
-
-Diğer cookie ve JWT ayarları...
-
-...
-
-📖 API Dokümantasyonu
-Uygulama çalıştırıldıktan sonra, interaktif API dokümantasyonuna (Swagger UI) aşağıdaki adresten ulaşabilirsiniz:
-
+### **📖 API Documentation**
+After starting the application, you can access the interactive API documentation (Swagger UI) at the following address:
 http://localhost:8080/swagger-ui.html
