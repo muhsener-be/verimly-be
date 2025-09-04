@@ -36,9 +36,7 @@ public class CreateTaskIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     TaskWriteRepository taskRepo;
-    FolderWriteRepository folderRepo;
-    @Autowired
-    private CreateUserCommandHandler createUserCommandHandler;
+
     @Autowired
     private UserJpaRepository userJpaRepository;
     @Autowired
