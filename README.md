@@ -98,7 +98,7 @@ docker pull muhsener98/verimly-be-api:latest
 
 2. **Run the container:**
 
-Before running the following command, make sure to add all variables from [the table](#-configuration-environment-variables) to your command using the -e parameter.
+Before running the following command, make sure to add all variables from [the table](#configuration-environment-variables) to your command using the -e parameter.
 ```
 docker run -p 8080:8080 \
 -e DB_URL="your_database_url_here" \
@@ -115,7 +115,8 @@ docker run -p 8080:8080 \
 muhsener98/verimly-be-api:latest
 ```
 
-### ⚙️ Configuration (Environment Variables)
+
+### Configuration (Environment Variables)
 The following environment variables must be set for the application to run.
 
 | Variable                   | Description                                                        | Example Value                                                  |
