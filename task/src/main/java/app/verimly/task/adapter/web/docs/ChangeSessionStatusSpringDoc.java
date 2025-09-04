@@ -1,9 +1,12 @@
 package app.verimly.task.adapter.web.docs;
 
+import app.verimly.commons.core.web.response.BadRequestErrorResponse;
+import app.verimly.commons.core.web.response.NoPermissionErrorResponse;
+import app.verimly.commons.core.web.response.NotFoundErrorResponse;
+import app.verimly.commons.docs.ApiExamples;
 import app.verimly.task.adapter.web.dto.request.ChangeSessionStatusWebRequest;
 import app.verimly.task.adapter.web.dto.response.SessionSummaryWebResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,10 +41,10 @@ import java.lang.annotation.Target;
                                 name = "Pause Session Example",
                                 summary = "Example request to pause a session",
                                 value = """
-                                {
-                                    "action": "PAUSE"
-                                }
-                                """
+                                        {
+                                            "action": "PAUSE"
+                                        }
+                                        """
                         )
                 )
         )
@@ -57,10 +60,10 @@ import java.lang.annotation.Target;
         ),
         @ApiResponse(
                 responseCode = "400",
-                description = "Invalid request data or invalid action",
+                description = "Invalid request data or invalid transition. For example, finished session cannot be paused.",
                 content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = app.verimly.commons.core.web.response.ErrorResponse.class)
+                        schema = @Schema(implementation = BadRequestErrorResponse.class),
+                        examples = @ExampleObject(value = ApiExamples.BAD_REQUEST)
                 )
         ),
         @ApiResponse(
@@ -72,30 +75,22 @@ import java.lang.annotation.Target;
                 responseCode = "403",
                 description = "Forbidden - User doesn't have permission to modify this session",
                 content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = app.verimly.commons.core.web.response.ErrorResponse.class)
+                        schema = @Schema(implementation = NoPermissionErrorResponse.class),
+                        examples = @ExampleObject(ApiExamples.FORBIDDEN)
                 )
         ),
         @ApiResponse(
                 responseCode = "404",
                 description = "Session not found",
-                ref = "#/components/responses/NotFoundResponse"
-        ),
-        @ApiResponse(
-                responseCode = "409",
-                description = "Conflict - Invalid status transition (e.g., trying to pause an already paused session)",
                 content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = app.verimly.commons.core.web.response.ErrorResponse.class)
+                        schema = @Schema(implementation = NotFoundErrorResponse.class),
+                        examples = @ExampleObject(TaskApiExamples.SESSION_NOT_FOUND)
                 )
         ),
         @ApiResponse(
                 responseCode = "500",
                 description = "Internal server error",
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = app.verimly.commons.core.web.response.ErrorResponse.class)
-                )
+                ref = "#/components/responses/InternalErrorResponse"
         )
 })
 public @interface ChangeSessionStatusSpringDoc {

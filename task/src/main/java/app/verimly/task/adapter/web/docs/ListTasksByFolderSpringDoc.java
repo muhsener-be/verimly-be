@@ -1,12 +1,16 @@
 package app.verimly.task.adapter.web.docs;
 
 import app.verimly.commons.core.web.response.ErrorResponse;
+import app.verimly.commons.core.web.response.NoPermissionErrorResponse;
+import app.verimly.commons.core.web.response.NotFoundErrorResponse;
+import app.verimly.commons.docs.ApiExamples;
 import app.verimly.task.adapter.web.dto.response.TaskSummaryWebResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,16 +34,46 @@ import java.lang.annotation.Target;
 @ApiResponses({
         @ApiResponse(responseCode = "200", description = "List of tasks returned successfully",
                 content = @Content(array = @ArraySchema(schema = @Schema(implementation = TaskSummaryWebResponse.class)))),
-        @ApiResponse(responseCode = "400", description = "Invalid folderId supplied", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "401", description = "Unauthenticated", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "403", description = "Forbidden to view folder", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(
+                responseCode = "400",
+                description = "FolderId required",
+                content = @Content(
+                        schema = @Schema(implementation = ErrorResponse.class),
+                        examples = @ExampleObject(value = ApiExamples.BAD_REQUEST)
+                )
+        ),
+        @ApiResponse(
+                responseCode = "401",
+                description = "Unauthenticated",
+                ref = "#/components/responses/UnauthenticatedResponse"
+        ),
+        @ApiResponse(
+                responseCode = "403",
+                description = "Forbidden to view folder",
+                content = @Content(
+                        schema = @Schema(implementation = NoPermissionErrorResponse.class),
+                        examples = @ExampleObject(
+                                value = ApiExamples.FORBIDDEN
+                        )
+                )
+        ),
         @ApiResponse(
                 responseCode = "404",
                 description = "Folder not found",
-                ref = "#/components/responses/NotFoundResponse"
+                content = @Content(
+                        schema = @Schema(implementation = NotFoundErrorResponse.class),
+                        examples = @ExampleObject(
+                                name = "Folder not found",
+                                value = TaskApiExamples.FOLDER_NOT_FOUND
+                        )
+                )
         ),
-        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+        @ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                ref = "#/components/responses/InternalErrorResponse"
 
+        )
 })
 public @interface ListTasksByFolderSpringDoc {
 }

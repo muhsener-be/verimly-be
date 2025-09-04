@@ -68,7 +68,8 @@ import java.lang.annotation.*;
                                               }
                                         }
                                         """
-                        ))
+                        )
+                )
         ),
 
         @ApiResponse(
